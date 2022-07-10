@@ -1,0 +1,32 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: Current File",
+      "type": "python",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
+      "name": "Python: Test Cube",
+      "type": "python",
+      "request": "launch",
+      "program": "test/test_cube.py",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
+      "name": "Python: Solver",
+      "type": "python",
+      "request": "launch",
+      "program": "rubiksolver/simple_solver.py",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    }
+  ]
+}

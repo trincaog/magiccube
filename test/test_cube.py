@@ -166,33 +166,14 @@ def test_print_simple_move():
     print(rcube)
 
 def test_wide_move():
-    rcube = Cube(6)
-    rcube.rotate("3Rw'")
-    rcube.scramble(seed=333, num_steps=1000)
-    print(rcube)
-
+    rcube = Cube(10)
+    rcube.scramble(seed=333, num_steps=2000)
+    rcube.rotate(rcube.reverse_history())
+    assert rcube.is_done()
 
 if __name__ == "__main__" :
     #test_get_all_pieces()
     #test_print_simple_move()
-    test_wide_move()
+    #test_wide_move()
     #test_get_piece()
-    # x = Cube(3)
-    # rotation_plane=tuple([slice(None),2,slice(None)])#U'
-    # print("rp", rotation_plane)
-    # print("matrix1",x.cube[rotation_plane])
-    # print("   rot1",np.rot90(x.cube[rotation_plane], 1))
-
-    # rotation_plane=tuple([slice(None),slice(None),2])#F'
-    # print("rp2", rotation_plane)
-    # print("matrix2",x.cube[rotation_plane])
-    # print("   rot2",np.rot90(x.cube[rotation_plane], 1))
-
-    # rotation_plane=tuple([2,slice(None),slice(None)]) #R'
-    # print("rp3", rotation_plane)
-    # print("matrix3",x.cube[rotation_plane])
-    # print("   rot3",np.rot90(x.cube[rotation_plane], 1))
-
-    # # print(x)
-    # # x=CubeMove.create("Rw")
-    # # print("x", x,"--")
+    pass

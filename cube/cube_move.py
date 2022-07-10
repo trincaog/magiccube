@@ -1,5 +1,4 @@
 import re
-
 from cube.constants import CubeFace
 
 class CubeMove():
@@ -29,6 +28,8 @@ class CubeMove():
             layer=1
         elif result[0] == "" and wide:
             layer=2
+        elif result[0] == "1" and wide:
+            raise Exception("wide movement not allowed for 1 layer")
         else:
             layer=int(result[0])
         move=CubeMove(face, reversed, wide, layer)

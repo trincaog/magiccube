@@ -58,7 +58,7 @@ class Cube:
         movements = [CubeMove(
             random.choice(possible_moves),
             random.choice([False,True]),
-            random.choice([False,True]),
+            False,
             random.randint(1,self.size)
             )
             for _ in range(num_steps)]

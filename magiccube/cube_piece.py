@@ -69,4 +69,3 @@ class CubePiece:
 
     def __str__(self):
         return str(self.get_piece_colors())
-

@@ -14,30 +14,28 @@ class CubeFace(Enum):
         """Return axis of movement (x=0, y=1, z=2)"""
         if self in (CubeFace.L,CubeFace.R):
             return 0
-        elif self in (CubeFace.D, CubeFace.U):
+        if self in (CubeFace.D, CubeFace.U):
             return 1
-        elif self in (CubeFace.B, CubeFace.F):
+        if self in (CubeFace.B, CubeFace.F):
             return 2
-        else:
-            raise Exception("invalid face" + str(self.value))
+        raise Exception("invalid face" + str(self.value))
 
     @staticmethod
     def create(face_str:str):
         """Create a CubeFace"""
         if face_str == "L":
             return CubeFace.L
-        elif face_str == "R":
+        if face_str == "R":
             return CubeFace.R
-        elif face_str == "D":
+        if face_str == "D":
             return CubeFace.D
-        elif face_str == "U":
+        if face_str == "U":
             return CubeFace.U
-        elif face_str == "B":
+        if face_str == "B":
             return CubeFace.B
-        elif face_str == "F":
+        if face_str == "F":
             return CubeFace.F
-        else:
-            raise Exception("invalid face " + str(face_str))
+        raise Exception("invalid face " + str(face_str))
 
 class CubeColor(Enum):
     """Representation of the color of a Cube Piece"""

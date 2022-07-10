@@ -2,7 +2,8 @@ from colorama import Back
 from magiccube.constants import CubeColor,CubeFace
 
 class CubePrintStr:
-    color_map = {
+    """Prints a cube to stdout"""
+    _color_map = {
         CubeColor.G: Back.GREEN,
         CubeColor.B: Back.BLUE,
         CubeColor.R: Back.RED,
@@ -16,7 +17,7 @@ class CubePrintStr:
 
     def _format_color(self, color:CubeColor):
         """Format color to TTY"""
-        return CubePrintStr.color_map.get(color, "") + " " + color.name + " "+Back.RESET
+        return CubePrintStr._color_map.get(color, "") + " " + color.name + " "+Back.RESET
 
     def _print_face(self, cube, face):
         result =""
@@ -54,4 +55,3 @@ class CubePrintStr:
         # BOTTOM
         result += self._print_face(cube, CubeFace.D)
         return result
-

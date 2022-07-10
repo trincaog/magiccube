@@ -1,6 +1,4 @@
-# MagicCube
-
-A Rubik Cube NxNxN implementation
+MagiCube: A Rubik Cube NxNxN implementation
 =================================
 
 Installation

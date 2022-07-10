@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Tuple
+from typing import Optional, Tuple
 
 class CubeFace(Enum):
     """Representation of a Cube Face"""
@@ -46,4 +46,31 @@ class CubeColor(Enum):
     B=4
     G=5
 
+    def __lt__(self, other):
+        return self.name < other.name
+
+    @staticmethod
+    def create(color_str:str):
+        """Create a CubeColor"""
+        if color_str == "R":
+            return CubeColor.R
+        if color_str == "O":
+            return CubeColor.O
+        if color_str == "W":
+            return CubeColor.W
+        if color_str == "Y":
+            return CubeColor.Y
+        if color_str == "B":
+            return CubeColor.B
+        if color_str == "G":
+            return CubeColor.G
+        raise Exception("invalid color " + str(color_str))
+
 CubeCoordinates=Tuple[int,int,int]
+PieceColor = Tuple[Optional[CubeColor], Optional[CubeColor], Optional[CubeColor]]
+
+class PieceType(Enum):
+    CORNER=3
+    EDGE=2
+    CENTER=1
+    INNER=0

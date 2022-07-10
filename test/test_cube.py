@@ -1,117 +1,119 @@
 import numpy as np
 from magiccube import Cube
+from magiccube.cube_base import PieceType
 from magiccube.cube_piece import CubeColor, CubeFace
 import pytest
+import random
 
 def test_reset():
-    rcube = Cube(3)
-    rcube.check_consistency()
-    rcube.rotate("R' D'")
-    rcube.check_consistency()
-    rcube.reset()
-    assert rcube.is_done()
+    c = Cube(3)
+    c.check_consistency()
+    c.rotate("R' D'")
+    c.check_consistency()
+    c.reset()
+    assert c.is_done()
 
 def test_12_moves():
-    rcube = Cube(3)
-    rcube.check_consistency()
+    c = Cube(3)
+    c.check_consistency()
     for i in range(12):
-        rcube.rotate("R' D' R D")
-    rcube.check_consistency()
-    assert rcube.is_done()
+        c.rotate("R' D' R D")
+    c.check_consistency()
+    assert c.is_done()
 
 def test_12_moves_2d():
-    rcube = Cube(2)
-    rcube.check_consistency()
+    c = Cube(2)
+    c.check_consistency()
     for i in range(12):
-        rcube.rotate("R' D' R D")
-    rcube.check_consistency()
-    assert rcube.is_done()
+        c.rotate("R' D' R D")
+    c.check_consistency()
+    assert c.is_done()
 
 
 def test_all_rotations():
-    rcube = Cube(3)
-    rcube.rotate("R R' L L' B B' F F' U U' D D'")
-    rcube.check_consistency()
-    assert rcube.is_done()
+    c = Cube(3)
+    c.rotate("R R' L L' B B' F F' U U' D D'")
+    c.check_consistency()
+    assert c.is_done()
 
 def test_all_rotations_2d():
-    rcube = Cube(2)
-    rcube.rotate("R R' L L' B B' F F' U U' D D'")
-    rcube.check_consistency()
-    assert rcube.is_done()
+    c = Cube(2)
+    c.rotate("R R' L L' B B' F F' U U' D D'")
+    c.check_consistency()
+    assert c.is_done()
 
 def test_is_done():
-    rcube = Cube(3)
-    assert rcube.is_done()
-    rcube.rotate("R")
-    assert not rcube.is_done()
-    rcube.reset()
-    assert rcube.is_done()
+    c = Cube(3)
+    assert c.is_done()
+    c.rotate("R")
+    assert not c.is_done()
+    c.reset()
+    assert c.is_done()
 
 def test_print_pattern1():
-    rcube = Cube(3)
-    rcube.rotate("R R L' L' B B F' F' U U D' D'")
-    rcube.check_consistency()
-    print(rcube)
+    c = Cube(3)
+    c.rotate("R R L' L' B B F' F' U U D' D'")
+    c.check_consistency()
+    print(c)
 
 def test_print_pattern2():
-    rcube = Cube(3)
-    rcube.rotate("R' L U D' F B' R' L")
-    rcube.check_consistency()
-    print(rcube)
+    c = Cube(3)
+    c.rotate("R' L U D' F B' R' L")
+    c.check_consistency()
+    print(c)
 
 def test_print_2d():
-    rcube = Cube(2)
-    rcube.check_consistency()
-    print(rcube)
+    c = Cube(2)
+    c.check_consistency()
+    print(c)
 
 def test_print_4d():
-    rcube = Cube(4)
-    rcube.check_consistency()
-    print(rcube)
+    c = Cube(4)
+    c.check_consistency()
+    print(c)
 
 def test_history():
-    rcube = Cube(3)
+    c = Cube(3)
     moves = "R' L U D' F B' R' L"
-    rcube.rotate(moves)
-    assert rcube.history() == moves
+    c.rotate(moves)
+    assert c.history() == moves
 
 def test_reverse():
-    rcube = Cube(3)
+    c = Cube(3)
     moves = "R' L U D' F B' R' L"
-    rcube.rotate(moves)
-    assert rcube.reverse_history() == "L' R B F' D U' L' R"
-    rcube.rotate(rcube.reverse_history())
-    assert rcube.is_done()
+    c.rotate(moves)
+    assert c.reverse_history() == "L' R B F' D U' L' R"
+    c.rotate(c.reverse_history())
+    assert c.is_done()
 
 def test_scramble():
-    rcube = Cube(3)
-    steps = rcube.scramble(num_steps=50)
-    print(rcube)
-    assert(not rcube.is_done())
+    c = Cube(3)
+    c.scramble(num_steps=50)
+    print(c)
+    assert(not c.is_done())
 
 def test_scramble_2d():
-    rcube = Cube(2)
-    steps = rcube.scramble(num_steps=50)
-    print(rcube)
-    assert(not rcube.is_done())
+    c = Cube(2)
+    c.scramble(num_steps=50)
+    print(c)
+    assert(not c.is_done())
 
 def test_get_piece():
-    rcube = Cube(3)
-    piece = rcube.get_piece((2,0,0))
-    assert piece.get_piece_color(CubeFace.R)==CubeColor.O
-    assert piece.get_piece_color(CubeFace.D)==CubeColor.W
-    assert piece.get_piece_color(CubeFace.B)==CubeColor.B
+    c = Cube(3)
+    piece = c.get_piece((2,0,0))
+    assert piece.get_piece_color(CubeFace.R.get_axis())==CubeColor.O
+    assert piece.get_piece_color(CubeFace.D.get_axis())==CubeColor.W
+    assert piece.get_piece_color(CubeFace.B.get_axis())==CubeColor.B
 
-    piece = rcube.get_piece((0,2,2))
-    assert piece.get_piece_color(CubeFace.L)==CubeColor.R
-    assert piece.get_piece_color(CubeFace.U)==CubeColor.Y
-    assert piece.get_piece_color(CubeFace.F)==CubeColor.G
+    piece = c.get_piece((0,2,2))
+    assert piece.get_piece_color(CubeFace.L.get_axis())==CubeColor.R
+    assert piece.get_piece_color(CubeFace.U.get_axis())==CubeColor.Y
+    assert piece.get_piece_color(CubeFace.F.get_axis())==CubeColor.G
 
 
 def test_get_all_faces():
-    rcube = Cube(3)
-    faces = rcube.get_all_faces()
+    c = Cube(3)
+    faces = c.get_all_faces()
     assert np.all(np.array(faces[CubeFace.F]).flatten()==CubeColor.G)
     assert np.all(np.array(faces[CubeFace.B]).flatten()==CubeColor.B)
     assert np.all(np.array(faces[CubeFace.L]).flatten()==CubeColor.R)
@@ -120,61 +122,124 @@ def test_get_all_faces():
     assert np.all(np.array(faces[CubeFace.D]).flatten()==CubeColor.W)
 
 def test_get_all_pieces():
-    rcube=Cube(3)
-    pieces = rcube.get_all_pieces()
+    c=Cube(3)
+    pieces = c.get_all_pieces()
     assert len(pieces) == 26
 
-    rcube=Cube(4)
-    pieces = rcube.get_all_pieces()
+    c=Cube(4)
+    pieces = c.get_all_pieces()
     assert len(pieces) == 56
 
+def test_move():
+    c = Cube(3)
+    c.rotate("L")
+    assert c.get_piece((1,0,0)).get_piece_colors()==(None,CubeColor.W,CubeColor.B)
+    assert c.get_piece((0,0,0)).get_piece_colors()==(CubeColor.R,CubeColor.G,CubeColor.W)
+    assert c.get_piece((0,0,2)).get_piece_colors()==(CubeColor.R,CubeColor.G,CubeColor.Y)
+
+def test_move_special():
+    c = Cube(3)
+    c.rotate("X'")
+    #print(c)
+    assert c.get_piece((2,2,2)).get_piece_colors()==(CubeColor.O,CubeColor.B,CubeColor.Y)
+
+def test_move_noloc():
+    c = Cube(3)
+    c.rotate("L")
+    assert c.get_piece((1,0,0)).get_piece_colors(no_loc=True)==(CubeColor.B,CubeColor.W)
+    assert c.get_piece((0,0,0)).get_piece_colors(no_loc=True)==(CubeColor.G,CubeColor.R,CubeColor.W)
+    assert c.get_piece((0,0,2)).get_piece_colors(no_loc=True)==(CubeColor.G,CubeColor.R,CubeColor.Y)
+
+
+
 def test_move_outcome():
-    rcube = Cube(3)
-    rcube.rotate("B'")
-    print(rcube)
-    assert rcube.get_piece((2,0,0)).get_piece_colors()==(CubeColor.Y,CubeColor.O,CubeColor.B)
-    assert rcube.get_piece((0,0,0)).get_piece_colors()==(CubeColor.W,CubeColor.O,CubeColor.B)
+    c = Cube(3)
+    c.rotate("B'")
+    print(c)
+    assert c.get_piece((0,2,0)).get_piece_colors_str()=='WRB'
+    assert c.get_piece((0,0,0)).get_piece_colors_str()=='WOB'
 
-    rcube = Cube(3)
-    rcube.rotate("F")
-    print(rcube)
-    assert rcube.get_piece((2,0,2)).get_piece_colors()==(CubeColor.Y,CubeColor.O,CubeColor.G)
-    assert rcube.get_piece((0,0,2)).get_piece_colors()==(CubeColor.W,CubeColor.O,CubeColor.G)
+    c = Cube(3)
+    c.rotate("F")
+    print(repr(c))
+    print(c)
+    assert c.get_piece((2,0,2)).get_piece_colors_str()=='YOG'
+    assert c.get_piece((0,0,2)).get_piece_colors_str()=='WOG'
 
-    rcube = Cube(3)
-    rcube.rotate("R")
-    assert rcube.get_piece((2,0,0)).get_piece_colors()==(CubeColor.O,CubeColor.B,CubeColor.Y)
-    assert rcube.get_piece((2,0,2)).get_piece_colors()==(CubeColor.O,CubeColor.B,CubeColor.W)
+    c = Cube(3)
+    c.rotate("R")
+    assert c.get_piece((2,0,0)).get_piece_colors_str()=='OBY'
+    assert c.get_piece((2,0,2)).get_piece_colors_str()=='OBW'
 
-    rcube = Cube(3)
-    rcube.rotate("L")
-    assert rcube.get_piece((0,0,0)).get_piece_colors()==(CubeColor.R,CubeColor.G,CubeColor.W)
-    assert rcube.get_piece((0,0,2)).get_piece_colors()==(CubeColor.R,CubeColor.G,CubeColor.Y)
+    c = Cube(3)
+    c.rotate("L")
+    assert c.get_piece((0,0,1)).get_piece_colors_str()=='RG'
+    assert c.get_piece((0,0,0)).get_piece_colors_str()=='RGW'
+    assert c.get_piece((0,0,2)).get_piece_colors_str()=='RGY'
 
-    rcube = Cube(3)
-    rcube.rotate("D")
-    assert rcube.get_piece((2,0,0)).get_piece_colors()==(CubeColor.G,CubeColor.W,CubeColor.O)
-    assert rcube.get_piece((2,0,2)).get_piece_colors()==(CubeColor.G,CubeColor.W,CubeColor.R)
+    c = Cube(3)
+    c.rotate("D")
+    assert c.get_piece((2,0,0)).get_piece_colors_str()=='GWO',c.get_piece((2,0,0)).get_piece_colors_str()
+    assert c.get_piece((2,0,2)).get_piece_colors_str()=='GWR'
 
-    rcube = Cube(3)
-    rcube.rotate("U")
-    assert rcube.get_piece((0,2,0)).get_piece_colors()==(CubeColor.G,CubeColor.Y,CubeColor.R)
-    assert rcube.get_piece((0,2,2)).get_piece_colors()==(CubeColor.G,CubeColor.Y,CubeColor.O)
+    c = Cube(3)
+    c.rotate("U")
+    assert c.get_piece((0,2,0)).get_piece_colors_str()=='GYR'
+    assert c.get_piece((0,2,2)).get_piece_colors_str()=='GYO'
+
+def test_find():
+    c = Cube(3)
+    c.rotate("R")
+    print(c)
+    coord,_=c.find_piece("GOY")
+    assert coord == (2,2,0)
+    coord,_=c.find_piece("BRW")
+    assert coord == (0,0,0)
+
 
 def test_print_simple_move():
-    rcube = Cube(3)
-    rcube.rotate("D")
-    print(rcube)
+    c = Cube(3)
+    print(c)
+    print(repr(c))
+    print("XXXXXXXXXXXXXXXXXXXXXX")
+    c.rotate("F")
+    print(repr(c))
+    print(c)
 
 def test_wide_move():
-    rcube = Cube(10)
-    rcube.scramble(seed=333, num_steps=2000)
-    rcube.rotate(rcube.reverse_history())
-    assert rcube.is_done()
+    c = Cube(3)
+
+    c.reset()
+    c.rotate("Fw")
+    c.rotate(c.reverse_history())
+    assert c.is_done()
+
+    c.reset()
+    c.rotate("1Fw")
+    c.rotate(c.reverse_history())
+    assert c.is_done()
+
+    c.reset()
+    c.rotate("2Fw")
+    c.rotate(c.reverse_history())
+    assert c.is_done()
+
+
+def test_scramble_wide_move():
+    c = Cube(6)
+    random.seed(42)
+    c.scramble(num_steps=500, wide=True)
+    c.rotate(c.reverse_history())
+    assert c.is_done()
+
+def test_get_piece_type():
+    c = Cube(3)
+    assert c.get_piece(coordinates=(0,0,2)).get_piece_type()==PieceType.CORNER
+    assert c.get_piece(coordinates=(1,0,1)).get_piece_type()==PieceType.CENTER
+    assert c.get_piece(coordinates=(2,1,2)).get_piece_type()==PieceType.EDGE
+    inner = c.get_piece(coordinates=(1,1,1))
+    assert inner is None or inner.get_piece_type()==PieceType.INNER
 
 if __name__ == "__main__" :
     pytest.main()
-    #test_get_all_pieces()
-    #test_print_simple_move()
-    #test_wide_move()
-    #test_get_piece()
+    pass

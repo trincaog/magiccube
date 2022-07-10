@@ -1,5 +1,6 @@
+"""Stdout Cube Print implementation"""
 from colorama import Back
-from magiccube.constants import CubeColor,CubeFace
+from magiccube.cube_base import CubeColor,CubeFace
 
 class CubePrintStr:
     """Prints a cube to stdout"""
@@ -35,7 +36,7 @@ class CubePrintStr:
         "Print the cube to stdout"
         cube = self.cube
 
-        # flatten midle layer 
+        # flatten midle layer
         print_order_mid = zip(cube.get_face(CubeFace.L), cube.get_face(CubeFace.F),
                               cube.get_face(CubeFace.R), cube.get_face(CubeFace.B))
 

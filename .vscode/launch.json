@@ -4,6 +4,7 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
+
     {
       "name": "Python: Current File",
       "type": "python",
@@ -21,10 +22,18 @@
       "justMyCode": true
     },
     {
-      "name": "Python: Solver",
+      "name": "Python: RL Solver",
       "type": "python",
       "request": "launch",
-      "program": "rubiksolver/simple_solver.py",
+      "program": "magiccube/solver/rl/rl_solver.py",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
+      "name": "Python: Basic Solver example",
+      "type": "python",
+      "request": "launch",
+      "program": "examples/solve_cube_3x3.py",
       "console": "integratedTerminal",
       "justMyCode": true
     }

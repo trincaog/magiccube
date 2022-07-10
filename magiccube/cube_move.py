@@ -1,11 +1,15 @@
+"""Cube Move implementation"""
 import re
-from magiccube.constants import CubeFace
+from magiccube.cube_base import CubeFace
 
 class CubeMove():
     """Cube movement class
     Ex: F B' 2R 3Rw'
     """
-    regex_pattern = re.compile("^([0-9]*)([LRDUBF])([w]?)([']?)$")
+
+    __slots__ = ('face', 'is_reversed', 'wide','layer')
+
+    regex_pattern = re.compile("^(?:([0-9]*)([LRDUBF])([w]?)([']?)|([XYZ])([']?))$")
 
     def __init__(self, face:CubeFace, is_reversed:bool, wide:bool=False, layer:int=1):
         self.face=face
@@ -20,18 +24,27 @@ class CubeMove():
         if result is None:
             raise Exception("invalid movement" + str(move_str))
         result=result.groups()
-        wide=(result[2]=="w")
-        is_reversed=(result[3]=="'")
-        face=CubeFace.create(result[1])
-
-        if result[0]=="" and not wide:
-            layer=1
-        elif result[0] == "" and wide:
-            layer=2
-        elif result[0] == "1" and wide:
-            raise Exception("wide movement not allowed for 1 layer")
+        special_move = result[4]
+        if special_move is not None:
+            is_reversed=(result[5]=="'")
+            if special_move=="X":
+                return CubeMove(CubeFace.R, is_reversed, True, layer=-1)
+            elif special_move=="Y":
+                return CubeMove(CubeFace.U, is_reversed, True, layer=-1)
+            elif special_move=="Z":
+                return CubeMove(CubeFace.F, is_reversed, True, layer=-1)
         else:
-            layer=int(result[0])
+            face=CubeFace.create(result[1])
+            wide=(result[2]=="w")
+            is_reversed=(result[3]=="'")
+
+            if result[0]=="" and not wide:
+                layer=1
+            elif result[0] == "" and wide:
+                layer=2
+            else:
+                layer=int(result[0])
+
         move=CubeMove(face, is_reversed, wide, layer)
         return move
 
@@ -40,8 +53,12 @@ class CubeMove():
         return CubeMove(self.face, not self.is_reversed, self.wide, self.layer)
 
     def __str__(self):
-        return ("" if self.layer==1 else str(self.layer)) + \
-            self.face.name + \
-            ("w" if self.wide else "") + \
-            ("'" if self.is_reversed else "")
+        if (self.wide and self.layer==2)\
+        or (not self.wide and self.layer==1):
+            layer=""
+        else:
+            layer=self.layer
+        wide="w" if self.wide else ""
+        reversed="'" if self.is_reversed else ""
+        return f"{layer}{self.face.name}{wide}{reversed}"
             

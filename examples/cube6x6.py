@@ -11,4 +11,3 @@ print("Moves: ", cube.history())
 
 cube.rotate(cube.reverse_history())
 assert cube.is_done()
-

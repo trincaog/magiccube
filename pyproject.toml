@@ -5,7 +5,7 @@ authors = [
   { name="Gonçalo Trincão Cunha", email="goncalo.cunha@gmail.com" },
 ]
 description = "NxNxN Rubik Cube implementation"
-keywords = ["rubik", "cube", "Rubik Cube", "NxNxN"]
+keywords = ["rubik", "cube", "solver", "Rubik Cube", "NxNxN"]
 readme = "README.md"
 license = { file="LICENSE" }
 requires-python = ">=3.5"

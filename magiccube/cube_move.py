@@ -33,6 +33,8 @@ class CubeMove():
                 return CubeMove(CubeFace.U, is_reversed, True, layer=-1)
             elif special_move=="Z":
                 return CubeMove(CubeFace.F, is_reversed, True, layer=-1)
+            else:
+                assert False, "Invalid special move"
         else:
             face=CubeFace.create(result[1])
             wide=(result[2]=="w")
@@ -44,9 +46,9 @@ class CubeMove():
                 layer=2
             else:
                 layer=int(result[0])
-
-        move=CubeMove(face, is_reversed, wide, layer)
-        return move
+        
+            move=CubeMove(face, is_reversed, wide, layer)
+            return move
 
     def reverse(self):
         """return the reverse move"""
@@ -59,6 +61,6 @@ class CubeMove():
         else:
             layer=self.layer
         wide="w" if self.wide else ""
-        reversed="'" if self.is_reversed else ""
-        return f"{layer}{self.face.name}{wide}{reversed}"
+        reversed_move="'" if self.is_reversed else ""
+        return f"{layer}{self.face.name}{wide}{reversed_move}"
             

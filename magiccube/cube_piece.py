@@ -1,14 +1,13 @@
 """Cube Piece implementation"""
-from typing import List, Optional, Tuple
 import numpy as np
-from magiccube.cube_base import PieceColor, CubeColor, CubeCoordinates, CubeFace, PieceType
+from magiccube.cube_base import PieceColor, CubeColor, CubeCoordinates, PieceType
 
 class CubePiece:
     """Piece of the Cube (aka Cubelet)"""
 
-    __slots__ = ('_colors')
+    __slots__ = ('_colors',)
 
-    def __init__(self, cube_size: int, position:CubeCoordinates, colors:Optional[Tuple[CubeColor,CubeColor,CubeColor]]=None):
+    def __init__(self, cube_size: int, position:CubeCoordinates):
         #self.initial_position = position
         self._colors = self._build_piece_colors(cube_size, position)
 
@@ -63,7 +62,7 @@ class CubePiece:
 
         return tuple(colors)
 
-    def rotate_piece(self, axis:int, direction) -> None:
+    def rotate_piece(self, axis:int) -> None:
         """Rotate the piece colors according to a given movement"""
 
         if axis==0: #LR
@@ -79,6 +78,7 @@ class CubePiece:
             raise Exception("bad rotation type")
 
     def get_piece_type(self)->PieceType:
+        """Return the piece type (ex: EDGE, CORNER, CENTER)"""
         sides = [c for c in self._colors if c is not None]
         num_sides = len(sides)
         if num_sides==3:

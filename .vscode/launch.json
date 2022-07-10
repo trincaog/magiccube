@@ -22,14 +22,6 @@
       "justMyCode": true
     },
     {
-      "name": "Python: RL Solver",
-      "type": "python",
-      "request": "launch",
-      "program": "magiccube/solver/rl/rl_solver.py",
-      "console": "integratedTerminal",
-      "justMyCode": true
-    },
-    {
       "name": "Python: Basic Solver example",
       "type": "python",
       "request": "launch",

@@ -1,7 +1,7 @@
 import numpy as np
 from magiccube import Cube
-from magiccube.cube_base import PieceType
-from magiccube.cube_piece import CubeColor, CubeFace
+from magiccube.cube_base import CubeFace, PieceType
+from magiccube.cube_piece import CubeColor
 import pytest
 import random
 

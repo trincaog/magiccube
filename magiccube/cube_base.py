@@ -1,3 +1,5 @@
+"""Base types for Cube implementation"""
+
 from enum import Enum
 from typing import Optional, Tuple
 
@@ -70,6 +72,7 @@ CubeCoordinates=Tuple[int,int,int]
 PieceColor = Tuple[Optional[CubeColor], Optional[CubeColor], Optional[CubeColor]]
 
 class PieceType(Enum):
+    """Type of piece"""
     CORNER=3
     EDGE=2
     CENTER=1

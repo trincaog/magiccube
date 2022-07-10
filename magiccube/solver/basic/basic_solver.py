@@ -59,8 +59,6 @@ class BasicSolver:
                 self.add(name=init_stage,target_colors=stages[init_stage][0], 
                     pattern_condition_actions=stages[init_stage][1], debug=self.default_debug)
 
-        print("self.stages",self.stages)
-
     def _solve_pattern_stage(self, stage:SolverStage)-> List[str]:
         """Solve one stage of the cube"""
 

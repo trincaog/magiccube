@@ -1,5 +1,5 @@
 """Rubik Cube implementation"""
-from typing import Dict,List, Optional, Tuple
+from typing import Dict,List, Tuple
 import random
 import numpy as np
 from magiccube.cube_base import CubeColor, CubeFace
@@ -64,8 +64,15 @@ class Cube:
         self.cube = np.array(initial_cube, dtype=np.object_)
         self._history = []
 
-    def scramble(self, num_steps:int=50, wide=True):
-        """Scramble the cube with random moves"""
+    def scramble(self, num_steps:int=50, wide=None) -> List[str]:
+        """Scramble the cube with random moves.
+        By default scramble only uses wide moves to cubes with size >=4."""
+        
+        if wide is None and self.size<=3:
+            wide=False
+        elif wide is None and self.size>3:
+            wide=True
+        
         possible_moves = [
             CubeFace.B,CubeFace.F,
             CubeFace.L,CubeFace.R,
@@ -78,9 +85,11 @@ class Cube:
             random.randint(1,self.size) if wide else 1
             )
             for _ in range(num_steps)]
-        movements = " ".join([str(x) for x in movements])
-        self.rotate(movements)
-        return movements
+
+        movements_list = [str(x) for x in movements]
+        movements_str = " ".join(movements_list)
+        self.rotate(movements_str)
+        return movements_list
 
     def find_piece(self, colors:str) -> Tuple[CubeCoordinates, CubePiece]:
         """Find the piece with given colors"""
@@ -170,14 +179,14 @@ class Cube:
         indexes = self._move_to_index(move)
         direction = self._get_direction(move)
         for index in indexes:
-            rotation_plane=tuple([slice(None) if i!=axis else index for i in range(3)])
+            rotation_plane=tuple(slice(None) if i!=axis else index for i in range(3))
 
             plane = self.cube[rotation_plane]
             rotated_plane = np.rot90(plane, direction)
             self.cube[rotation_plane] = rotated_plane
             for piece in self.cube[rotation_plane].flatten():
                 if piece is not None:
-                    piece.rotate_piece(axis,direction)
+                    piece.rotate_piece(axis)
 
     def rotate(self, movements: str):
         """Make one cube movement"""

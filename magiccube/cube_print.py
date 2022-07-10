@@ -1,8 +1,5 @@
-from colorama import Fore, Back, Style
-from cube.constants import CubeColor
-
-from cube.cube_piece import CubeFace, CubePiece
-
+from colorama import Back
+from magiccube.constants import CubeColor,CubeFace
 
 class CubePrintStr:
     color_map = {

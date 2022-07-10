@@ -1,0 +1,23 @@
+[project]
+name = "magiccube"
+version = "0.0.1"
+authors = [
+  { name="Gonçalo Trincão Cunha", email="goncalo.cunha@gmail.com" },
+]
+description = "NxNxN Rubik Cube implementation"
+keywords = ["rubik", "cube", "Rubik Cube", "NxNxN"]
+readme = "README.md"
+license = { file="LICENSE" }
+requires-python = ">=3.5"
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Development Status :: 4 - Beta",
+  "Operating System :: OS Independent",
+]
+dependencies = [
+  "numpy","colorama"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/trincaog/magiccube"
+

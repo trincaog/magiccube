@@ -1,5 +1,5 @@
 import re
-from cube.constants import CubeFace
+from magiccube.constants import CubeFace
 
 class CubeMove():
     """Cube movement class
@@ -14,7 +14,7 @@ class CubeMove():
         self.layer=layer
 
     @staticmethod
-    def create(move_str):
+    def create(move_str:str):
         """Create a CubeMove from string representation"""
         result = CubeMove.regex_pattern.match(move_str)
         if result is None:

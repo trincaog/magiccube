@@ -1,6 +1,7 @@
-from cube import Cube
 import numpy as np
-from cube.cube_piece import CubeColor, CubeFace
+from magiccube import Cube
+from magiccube.cube_piece import CubeColor, CubeFace
+import pytest
 
 def test_reset():
     rcube = Cube(3)
@@ -172,8 +173,8 @@ def test_wide_move():
     assert rcube.is_done()
 
 if __name__ == "__main__" :
+    pytest.main()
     #test_get_all_pieces()
     #test_print_simple_move()
     #test_wide_move()
     #test_get_piece()
-    pass

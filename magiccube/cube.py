@@ -1,15 +1,15 @@
 import random
 import numpy as np
-from cube.constants import CubeFace
-from cube.cube_piece import CubePiece
-from cube.cube_move import CubeMove
-from cube.cube_print import CubePrintStr
+from magiccube.constants import CubeColor, CubeFace
+from magiccube.cube_piece import CubeCoordinates, CubePiece
+from magiccube.cube_move import CubeMove
+from magiccube.cube_print import CubePrintStr
+from typing import Dict,List, Optional, Tuple
 
 class Cube:
 
     def __init__(self, size: int, hist=True):
         self.size = size
-        self._history = []
         self._store_history=hist
         self._cube_face_indexes = [
             [[(0, y, z) for z in range(self.size)] for y in reversed(range(self.size))], #L
@@ -45,10 +45,12 @@ class Cube:
             for x in range(self.size)
         ]
         self.cube = np.array(initial_cube, dtype=np.object_)
+        self._history = []
 
-    def scramble(self, num_steps:int=50, seed:int=42):
+    def scramble(self, num_steps:int=50, seed:Optional[int]=None):
         """Scramble the cube with random moves"""
-        random.seed(seed)
+        if seed is not None:
+            random.seed(seed)
 
         possible_moves = [
             CubeFace.L,CubeFace.R,
@@ -65,7 +67,7 @@ class Cube:
         for move in movements:
             self._rotate_once(move)
 
-    def get_face(self, face:CubeFace)->list:
+    def get_face(self, face:CubeFace)->List[List[CubeColor]]:
         """Get face colors in a multi-dim array"""
         res = [
                 [
@@ -75,22 +77,22 @@ class Cube:
             ]
         return res
 
-    def get_face_flat(self, face:CubeFace)->list:
+    def get_face_flat(self, face:CubeFace)->List[CubeColor]:
         """Get face colors in a flat array"""
         res = self.get_face(face)
         res = list(np.array(res).flatten())
         return res
 
-    def get_all_faces(self) -> dict[CubeFace,list[CubePiece]]:
+    def get_all_faces(self) -> Dict[CubeFace,List[List[CubeColor]]]:
         """Get the CubePiece of all cube faces"""
         faces = {f:self.get_face(f) for f in CubeFace}
         return faces
 
-    def get_piece(self, coordinates: tuple) -> CubePiece:
+    def get_piece(self, coordinates: CubeCoordinates) -> CubePiece:
         """Get the CubePiece at a given coordinate"""
         return self.cube[coordinates]
 
-    def get_all_pieces(self)->dict[tuple,CubePiece]:
+    def get_all_pieces(self)->Dict[Tuple,CubePiece]:
         """Return a dictionary of coordinates:CubePiece"""
         res = [self.cube[x] for x in self._cube_piece_indexes]
         
@@ -100,7 +102,7 @@ class Cube:
         }
         return res
 
-    def move_to_index(self, move:CubeMove):
+    def _move_to_index(self, move:CubeMove):
         """return the indexes affted by a given CubeMove"""
         if move.layer>self.size:
             raise Exception("invalid layer " + str(move.layer))
@@ -116,7 +118,7 @@ class Cube:
                 return (move.layer-1,)
 
 
-    def get_direction(self,move:CubeMove):
+    def _get_direction(self,move:CubeMove)->int:
         """get the rotation direction for a give CubeMove"""
         if move.face in (CubeFace.L,CubeFace.U,CubeFace.B):
             dir = 1
@@ -134,8 +136,8 @@ class Cube:
             self._history.append(move)
 
         axis = move.face.get_axis()
-        indexes = self.move_to_index(move)
-        direction = self.get_direction(move)
+        indexes = self._move_to_index(move)
+        direction = self._get_direction(move)
         for index in indexes:
             rotation_plane=tuple([slice(None) if i!=axis else index for i in range(3)])
 

@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Tuple
 
 class CubeFace(Enum):
     """Representation of a Cube Face"""
@@ -47,3 +48,4 @@ class CubeColor(Enum):
     B=4
     G=5
 
+CubeCoordinates=Tuple[int,int,int]

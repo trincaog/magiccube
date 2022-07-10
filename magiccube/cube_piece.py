@@ -1,15 +1,15 @@
+from typing import Tuple
 import numpy as np
-from cube.constants import CubeColor, CubeFace
-
+from magiccube.constants import CubeColor, CubeCoordinates, CubeFace
 
 class CubePiece:
 
-    def __init__(self, cube_size: int, position:tuple[int,int,int]):
+    def __init__(self, cube_size: int, position:CubeCoordinates):
         self.initial_position = position
         self._colors = self._build_piece_colors(cube_size, position)
         self._initial_colors = self._build_piece_colors(cube_size, self.initial_position)
 
-    def _build_piece_colors(self, cube_size:int, position:tuple[int,int,int]):
+    def _build_piece_colors(self, cube_size:int, position:CubeCoordinates) ->np.ndarray:
         (x,y,z)=position
 
         colors = [
@@ -27,7 +27,7 @@ class CubePiece:
         """Return the CuberPiece color of a given CubeFace"""
         return self._colors[face.value]
 
-    def get_piece_colors(self)->tuple[CubeColor,CubeColor,CubeColor]:
+    def get_piece_colors(self)->Tuple[CubeColor,CubeColor,CubeColor]:
         """Return a tuple of CubeColor for x,y,z axis"""
         x = self.get_piece_color(CubeFace.L) \
             if self.get_piece_color(CubeFace.L) is not None \

@@ -1,5 +1,5 @@
 # MagicCube: A NxNxN Rubik Cube implementation
-An efficient implementation of the Rubik cube based in Python 3.x. 
+A fast implementation of the Rubik Cube based in Python 3.x. 
 
 Allows creation of cubes of various sizes (2x2x2, 3x3x3, 4x4x4, 6x6x6, ...., 100x100x100).
 
@@ -19,7 +19,7 @@ import magiccube
 cube = magiccube.Cube(3)
 print(cube)
 ```
-![Cube](/imgs/cube3x3w.png)
+![Cube](https://trincaopub.s3.amazonaws.com/imgs/magiccube/cube3x3.png)
 
 ```python
 # Rotate the cube
@@ -58,11 +58,9 @@ See examples folder.
 |3Fw 3Fw' | Wide rotation of 3 layers.|
 |3F 3F' | Rotation of the 3rd layer.|
 
-### Cube Coordinates
+## Cube Coordinates
 
-Cube coordinates are expressed as a tuple of x,y,z.
-
-(0,0,0) is the piece on the LEFT,DOWN,BACK corner.
-
-In a 3x3x3, (2,2,2) is the piece on the RIGH,UP,FRONT corner.
+- Cube coordinates are expressed as a tuple of x,y,z.
+- (0,0,0) is the piece on the LEFT,DOWN,BACK corner.
+- In a 3x3x3, (2,2,2) is the piece on the RIGH,UP,FRONT corner.
 

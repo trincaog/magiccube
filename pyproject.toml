@@ -1,6 +1,6 @@
 [project]
 name = "magiccube"
-version = "0.0.1"
+version = "0.0.2"
 authors = [
   { name="Gonçalo Trincão Cunha", email="goncalo.cunha@gmail.com" },
 ]
@@ -21,3 +21,5 @@ dependencies = [
 [project.urls]
 "Homepage" = "https://github.com/trincaog/magiccube"
 
+[tool.setuptools]
+packages = ["magiccube"]

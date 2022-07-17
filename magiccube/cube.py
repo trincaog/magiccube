@@ -88,9 +88,9 @@ class Cube:
         ]
         movements = [CubeMove(
             random.choice(possible_moves),
-            random.choice([False,True]),
-            random.choice([False,True]) if wide else False,
-            random.randint(1,self.size) if wide else 1
+            random.choice([False,True]), #reversed
+            random.choice([False,True]) if wide else False, # wide
+            random.randint(1,self.size//2) if wide else 1 #layer
             )
             for _ in range(num_steps)]
 

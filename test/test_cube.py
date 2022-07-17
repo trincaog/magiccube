@@ -1,6 +1,7 @@
 import numpy as np
 from magiccube import Cube
 from magiccube.cube_base import CubeFace, PieceType
+from magiccube.cube_move import CubeMove
 from magiccube.cube_piece import CubeColor
 import pytest
 import random
@@ -76,13 +77,13 @@ def test_history():
     c = Cube(3)
     moves = "R' L U D' F B' R' L"
     c.rotate(moves)
-    assert c.history() == moves
+    assert c.history(to_str=True) == moves
 
 def test_reverse():
     c = Cube(3)
     moves = "R' L U D' F B' R' L"
     c.rotate(moves)
-    assert c.reverse_history() == "L' R B F' D U' L' R"
+    assert c.reverse_history(to_str=True) == "L' R B F' D U' L' R"
     c.rotate(c.reverse_history())
     assert c.is_done()
 
@@ -137,11 +138,25 @@ def test_move():
     assert c.get_piece((0,0,0)).get_piece_colors()==(CubeColor.R,CubeColor.G,CubeColor.W)
     assert c.get_piece((0,0,2)).get_piece_colors()==(CubeColor.R,CubeColor.G,CubeColor.Y)
 
-def test_move_special():
+def test_move_special_rot():
     c = Cube(3)
     c.rotate("X'")
-    #print(c)
     assert c.get_piece((2,2,2)).get_piece_colors()==(CubeColor.O,CubeColor.B,CubeColor.Y)
+    c.reset()
+    c.rotate("Y")
+    assert c.get_piece((2,2,2)).get_piece_colors()==(CubeColor.B,CubeColor.Y,CubeColor.O)
+    c.reset()
+    c.rotate("Z")
+    assert c.get_piece((2,2,2)).get_piece_colors()==(CubeColor.Y,CubeColor.R,CubeColor.G)
+
+def test_move_special_mid():
+    c = Cube(3)
+    c.rotate("M")
+    assert c.get_piece((1,2,2)).get_piece_colors()==(None,CubeColor.B,CubeColor.Y)
+    c.rotate("E'")
+    assert c.get_piece((2,1,2)).get_piece_colors()==(CubeColor.B,None,CubeColor.O)
+    c.rotate("S")
+    assert c.get_piece((2,2,1)).get_piece_colors()==(CubeColor.Y,CubeColor.R,None)
 
 def test_move_noloc():
     c = Cube(3)

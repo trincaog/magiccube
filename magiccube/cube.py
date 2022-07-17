@@ -4,7 +4,7 @@ import random
 import numpy as np
 from magiccube.cube_base import CubeColor, CubeFace
 from magiccube.cube_piece import CubeCoordinates, CubePiece
-from magiccube.cube_move import CubeMove
+from magiccube.cube_move import CubeMove, CubeMoveType
 from magiccube.cube_print import CubePrintStr
 
 class Cube:
@@ -64,8 +64,16 @@ class Cube:
         self.cube = np.array(initial_cube, dtype=np.object_)
         self._history = []
 
-    def scramble(self, num_steps:int=50, wide=None) -> List[str]:
+    def scramble(self, num_steps:int=50, wide=None) -> List[CubeMove]:
         """Scramble the cube with random moves.
+        By default scramble only uses wide moves to cubes with size >=4."""
+
+        movements = self.generate_random_moves(num_steps=num_steps, wide=wide)
+        self.rotate(movements)
+        return movements
+
+    def generate_random_moves(self, num_steps:int=50, wide=None) -> List[CubeMove]:
+        """Generate a list of random moves (but don't apply them).
         By default scramble only uses wide moves to cubes with size >=4."""
         
         if wide is None and self.size<=3:
@@ -74,9 +82,9 @@ class Cube:
             wide=True
         
         possible_moves = [
-            CubeFace.B,CubeFace.F,
-            CubeFace.L,CubeFace.R,
-            CubeFace.D,CubeFace.U,
+            CubeMoveType.L,CubeMoveType.R, #CubeMoveType.M,
+            CubeMoveType.D,CubeMoveType.U, #CubeMoveType.E,
+            CubeMoveType.B,CubeMoveType.F, #CubeMoveType.S,
         ]
         movements = [CubeMove(
             random.choice(possible_moves),
@@ -86,10 +94,7 @@ class Cube:
             )
             for _ in range(num_steps)]
 
-        movements_list = [str(x) for x in movements]
-        movements_str = " ".join(movements_list)
-        self.rotate(movements_str)
-        return movements_list
+        return movements
 
     def find_piece(self, colors:str) -> Tuple[CubeCoordinates, CubePiece]:
         """Find the piece with given colors"""
@@ -140,42 +145,44 @@ class Cube:
 
     def _move_to_index(self, move:CubeMove):
         """return the indexes affted by a given CubeMove"""
-        if move.layer>self.size:
-            raise Exception("invalid layer " + str(move.layer))
 
-        if move.layer==-1:
-            move.layer=self.size
+        assert move.layer>=1 and move.layer<=self.size,"invalid layer " + str(move.layer)
 
-        if move.face in (CubeFace.R, CubeFace.U, CubeFace.F):
+        if move.type in (CubeMoveType.R, CubeMoveType.U, CubeMoveType.F):
             if move.wide:
                 return tuple(range(self.size - move.layer,self.size))
             else:
                 return (self.size - move.layer,)
-        else:
+        elif move.type in (CubeMoveType.L, CubeMoveType.D, CubeMoveType.B):
             if move.wide:
                 return tuple(range(move.layer))
             else:
                 return (move.layer-1,)
-
+        elif move.type in (CubeMoveType.M, CubeMoveType.E, CubeMoveType.S):
+            assert self.size%2==1, "M,E,S moves not allow for even sizes"
+            return (self.size//2,)
+        else: # move.type in (CubeMoveType.X, CubeMoveType.Y, CubeMoveType.Z):
+            return tuple(range(self.size))
 
     def _get_direction(self,move:CubeMove)->int:
         """get the rotation direction for a give CubeMove"""
-        if move.face in (CubeFace.R,CubeFace.D,CubeFace.F):
+        if move.type in (CubeMoveType.R,CubeMoveType.D,CubeMoveType.F, CubeMoveType.E, CubeMoveType.S, CubeMoveType.X, CubeMoveType.Z):
             direction = -1
-        elif move.face in (CubeFace.L,CubeFace.U,CubeFace.B):
+        elif move.type in (CubeMoveType.L,CubeMoveType.U,CubeMoveType.B,CubeMoveType.M, CubeMoveType.Y):
             direction = 1
         else:
-            raise Exception("invalid move face " + str(move.face))
+            raise Exception("invalid move face " + str(move.type))
 
         if move.is_reversed:
             direction=direction*-1
         return direction
 
     def _rotate_once(self, move:CubeMove):
+        """Make one cube movement"""
         if self._store_history:
             self._history.append(move)
 
-        axis = move.face.get_axis()
+        axis = move.type.get_axis()
         indexes = self._move_to_index(move)
         direction = self._get_direction(move)
         for index in indexes:
@@ -188,13 +195,14 @@ class Cube:
                 if piece is not None:
                     piece.rotate_piece(axis)
 
-    def rotate(self, movements: str):
-        """Make one cube movement"""
-        for movement_str in movements.split(" "):
-            if movement_str == "":
-                continue
+    def rotate(self, movements):
+        """Make multiple cube movements"""
+        if isinstance(movements, str):
+            movements_list = [CubeMove.create(move_str) for move_str in movements.split(" ") if move_str != ""]
+        else:
+            movements_list=movements
 
-            move = CubeMove.create(movement_str)
+        for move in movements_list:
             self._rotate_once(move)
 
 
@@ -216,14 +224,20 @@ class Cube:
                 return False
             return True
 
-    def history(self):
+    def history(self, to_str=False):
         """Return the movement history of the cube"""
-        history_str = [str(x) for x in self._history]
-        return " ".join(history_str)
+        if to_str:
+            return " ".join([str(x) for x in self._history])
+        else:
+            return self._history
 
-    def reverse_history(self):
+    def reverse_history(self, to_str=False):
         """Return the list of moves to revert the cube history"""
-        return " ".join([str(x.reverse()) for x in reversed(self._history)])
+        reverse = [x.reverse() for x in reversed(self._history)]
+        if to_str:
+            return " ".join([str(x) for x in reverse])
+        else:
+            return reverse
 
     def __repr__(self):
         return str(self.cube)

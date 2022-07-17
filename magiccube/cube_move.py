@@ -1,18 +1,73 @@
 """Cube Move implementation"""
+from enum import Enum
 import re
-from magiccube.cube_base import CubeFace
+
+class CubeMoveType(Enum):
+    L="L"
+    R="R"
+    D="D"
+    U="U"
+    B="B"
+    F="F"
+    X="X"
+    Y="Y"
+    Z="Z"
+    M="M"
+    E="E"
+    S="S"
+
+    @staticmethod
+    def create(move_str:str):
+        """Create a CubeMoveType"""
+        if move_str == "L":
+            return CubeMoveType.L
+        if move_str == "R":
+            return CubeMoveType.R
+        if move_str == "D":
+            return CubeMoveType.D
+        if move_str == "U":
+            return CubeMoveType.U
+        if move_str == "B":
+            return CubeMoveType.B
+        if move_str == "F":
+            return CubeMoveType.F
+        if move_str == "X":
+            return CubeMoveType.X
+        if move_str == "Y":
+            return CubeMoveType.Y
+        if move_str == "Z":
+            return CubeMoveType.Z
+        if move_str == "M":
+            return CubeMoveType.M
+        if move_str == "E":
+            return CubeMoveType.E
+        if move_str == "S":
+            return CubeMoveType.S
+        raise Exception("invalid CubeMoveType " + str(move_str))
+
+    def get_axis(self):
+        """Return axis of movement (x=0, y=1, z=2)"""
+        if self in (CubeMoveType.L,CubeMoveType.R,CubeMoveType.M,CubeMoveType.X):
+            return 0
+        if self in (CubeMoveType.D, CubeMoveType.U,CubeMoveType.E,CubeMoveType.Y):
+            return 1
+        if self in (CubeMoveType.B, CubeMoveType.F,CubeMoveType.S,CubeMoveType.Z):
+            return 2
+        raise Exception("invalid CubeMoveType" + str(self.value))
+
+
 
 class CubeMove():
     """Cube movement class
     Ex: F B' 2R 3Rw'
     """
 
-    __slots__ = ('face', 'is_reversed', 'wide','layer')
+    __slots__ = ('type','is_reversed', 'wide','layer')
 
-    regex_pattern = re.compile("^(?:([0-9]*)([LRDUBF])([w]?)([']?)|([XYZ])([']?))$")
+    regex_pattern = re.compile("^(?:([0-9]*)([LRDUBF])([w]?)([']?)|([XYZMES])([']?))$")
 
-    def __init__(self, face:CubeFace, is_reversed:bool, wide:bool=False, layer:int=1):
-        self.face=face
+    def __init__(self, type:CubeMoveType, is_reversed:bool=False, wide:bool=False, layer:int=1):
+        self.type=type
         self.is_reversed=is_reversed
         self.wide=wide
         self.layer=layer
@@ -28,15 +83,21 @@ class CubeMove():
         if special_move is not None:
             is_reversed=(result[5]=="'")
             if special_move=="X":
-                return CubeMove(CubeFace.R, is_reversed, True, layer=-1)
+                return CubeMove(CubeMoveType.X, is_reversed)
             elif special_move=="Y":
-                return CubeMove(CubeFace.U, is_reversed, True, layer=-1)
+                return CubeMove(CubeMoveType.Y, is_reversed)
             elif special_move=="Z":
-                return CubeMove(CubeFace.F, is_reversed, True, layer=-1)
+                return CubeMove(CubeMoveType.Z, is_reversed)
+            if special_move=="M":
+                return CubeMove(CubeMoveType.M, is_reversed)
+            elif special_move=="E":
+                return CubeMove(CubeMoveType.E, is_reversed)
+            elif special_move=="S":
+                return CubeMove(CubeMoveType.S, is_reversed)
             else:
                 assert False, "Invalid special move"
         else:
-            face=CubeFace.create(result[1])
+            type=CubeMoveType.create(result[1])
             wide=(result[2]=="w")
             is_reversed=(result[3]=="'")
 
@@ -47,12 +108,12 @@ class CubeMove():
             else:
                 layer=int(result[0])
         
-            move=CubeMove(face, is_reversed, wide, layer)
+            move=CubeMove(type, is_reversed, wide, layer)
             return move
 
     def reverse(self):
         """return the reverse move"""
-        return CubeMove(self.face, not self.is_reversed, self.wide, self.layer)
+        return CubeMove(self.type, not self.is_reversed, self.wide, self.layer)
 
     def __str__(self):
         if (self.wide and self.layer==2)\
@@ -62,5 +123,7 @@ class CubeMove():
             layer=self.layer
         wide="w" if self.wide else ""
         reversed_move="'" if self.is_reversed else ""
-        return f"{layer}{self.face.name}{wide}{reversed_move}"
+        return f"{layer}{self.type.name}{wide}{reversed_move}"
             
+    def __repr__(self):
+        return str(self)

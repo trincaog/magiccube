@@ -54,6 +54,9 @@ See examples folder.
 |X X' | Cube rotation on X axis. X is the axis that points from LEFT to the RIGHT face.|
 |Y Y' | Cube rotation on Y axis. Y is the axis that points from DOWN to the UP face.|
 |Z Z' | Cube rotation on Z axis. Z is the axis that points from BACK to the FRONT face.|
+|M M' | Rotation of the center layer on the X axis.|
+|E E' | Rotation of the center layer on the Y axis.|
+|S S' | Rotation of the center layer on the Z axis.|
 |Fw Fw'| Wide rotation of 2 layers.|
 |3Fw 3Fw' | Wide rotation of 3 layers.|
 |3F 3F' | Rotation of the 3rd layer.|

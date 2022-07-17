@@ -1,16 +1,19 @@
 """Stdout Cube Print implementation"""
-from colorama import Back
 from magiccube.cube_base import CubeColor,CubeFace
+
+C_BG="\x1b[47m"
+C_MAGENTA="\x1b[45m"
+C_RESET="\x1b[49m"
 
 class CubePrintStr:
     """Prints a cube to stdout"""
     _color_map = {
-        CubeColor.G: Back.GREEN,
-        CubeColor.B: Back.BLUE,
-        CubeColor.R: Back.RED,
-        CubeColor.O: Back.LIGHTMAGENTA_EX,
-        CubeColor.Y: Back.YELLOW,
-        CubeColor.W: Back.WHITE,
+        CubeColor.G: "\x1b[42m",
+        CubeColor.B: "\x1b[44m",
+        CubeColor.R: "\x1b[41m",
+        CubeColor.O: "\x1b[48;5;208m",
+        CubeColor.Y: "\x1b[43m",
+        CubeColor.W: "\x1b[48;5;248m",
     }
 
     def __init__(self, cube):
@@ -18,17 +21,18 @@ class CubePrintStr:
 
     def _format_color(self, color:CubeColor):
         """Format color to TTY"""
-        return CubePrintStr._color_map.get(color, "") + " " + color.name + " "+Back.RESET
+        return CubePrintStr._color_map.get(color, "") + " " + color.name + " "+C_RESET
 
-    def _print_face(self, cube, face):
+    def _print_top_down_face(self, cube, face):
         result =""
         for index,color in enumerate(cube.get_face_flat(face)):
             if index % cube.size == 0:
-                result += (" " * ((3*cube.size+1)))
+                result += C_BG+(" " * ((3*cube.size)))+C_RESET
 
             result += self._format_color(color)
 
             if index % cube.size == cube.size-1:
+                result += C_BG+(" " * ((2*3*cube.size)))+C_RESET
                 result += "\n"
         return result
 
@@ -41,7 +45,7 @@ class CubePrintStr:
                               cube.get_face(CubeFace.R), cube.get_face(CubeFace.B))
 
         # TOP
-        result = self._print_face(cube, CubeFace.U)
+        result = self._print_top_down_face(cube, CubeFace.U)
         # MID
         for line in print_order_mid:
             for line_index,face_line in enumerate(line):
@@ -49,10 +53,10 @@ class CubePrintStr:
                     result += self._format_color(color)
 
                     if face_line_index % cube.size == cube.size-1:
-                        result += "|"
+                        result += ""
                 if line_index == 3:
                     result += "\n"
 
         # BOTTOM
-        result += self._print_face(cube, CubeFace.D)
+        result += self._print_top_down_face(cube, CubeFace.D)
         return result

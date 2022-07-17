@@ -1,6 +1,6 @@
 [project]
 name = "magiccube"
-version = "0.0.2"
+version = "0.0.3"
 authors = [
   { name="Gonçalo Trincão Cunha", email="goncalo.cunha@gmail.com" },
 ]
@@ -15,7 +15,7 @@ classifiers = [
   "Operating System :: OS Independent",
 ]
 dependencies = [
-  "numpy","colorama"
+  "numpy"
 ]
 
 [project.urls]

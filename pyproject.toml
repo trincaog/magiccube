@@ -1,13 +1,13 @@
 [project]
 name = "magiccube"
-version = "0.0.3"
+version = "0.0.4"
 authors = [
   { name="Gonçalo Trincão Cunha", email="goncalo.cunha@gmail.com" },
 ]
 description = "NxNxN Rubik Cube implementation"
 keywords = ["rubik", "cube", "solver", "Rubik Cube", "NxNxN"]
 readme = "README.md"
-license = "BSD-3-Clause"
+license = {text = "BSD-3-Clause"}
 requires-python = ">=3.5"
 classifiers = [
   "Programming Language :: Python :: 3",

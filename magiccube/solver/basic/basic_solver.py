@@ -1,5 +1,6 @@
 from typing import List, Tuple
 from magiccube.cube import Cube
+from magiccube.optimizer.move_optimizer import MoveOptimizer
 from magiccube.solver.basic.solver_base import SolverStage
 from magiccube.solver.basic.solver_stages import *
 
@@ -76,7 +77,7 @@ class BasicSolver:
 
             actions,is_continue = stage.get_moves(target_pieces)
 
-            self.cube.rotate(" ".join(actions))
+            self.cube.rotate(actions)
             full_actions += actions
 
             if stage.debug:
@@ -90,7 +91,7 @@ class BasicSolver:
         assert iteration < max_iter, f"stage iteration limit exceeded: {stage}"
         return full_actions
 
-    def solve(self):
+    def solve(self, optimize=True):
         """Solve the cube by running all the registered pattern stages"""
         full_actions=[]
         for stage in self.stages:
@@ -100,6 +101,9 @@ class BasicSolver:
             full_actions += actions
 
         #assert self.cube.is_done() , "cube not done"
+        if optimize:
+            full_actions = MoveOptimizer().optimize(full_actions)
+
         return full_actions
 
 

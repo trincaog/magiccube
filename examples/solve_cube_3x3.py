@@ -22,5 +22,5 @@ for _ in range(5):
 
     # Solve the cube
     actions = solver.solve()
-    print("Solution actions:", " ".join(actions))
+    print("Solution actions:", actions)
     print()

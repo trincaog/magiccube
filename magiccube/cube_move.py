@@ -55,7 +55,8 @@ class CubeMoveType(Enum):
             return 2
         raise Exception("invalid CubeMoveType" + str(self.value))
 
-
+    def is_cube_rotation(self):
+        return self in (CubeMoveType.X, CubeMoveType.Y, CubeMoveType.Z)
 
 class CubeMove():
     """Cube movement class
@@ -77,7 +78,7 @@ class CubeMove():
         """Create a CubeMove from string representation"""
         result = CubeMove.regex_pattern.match(move_str)
         if result is None:
-            raise Exception("invalid movement" + str(move_str))
+            raise Exception("invalid movement " + str(move_str))
         result=result.groups()
         special_move = result[4]
         if special_move is not None:
@@ -127,3 +128,12 @@ class CubeMove():
             
     def __repr__(self):
         return str(self)
+
+
+    def __eq__(self, other):
+        if (isinstance(other, CubeMove)):
+            return self.layer == other.layer and self.type == other.type and self.wide == other.wide and self.is_reversed == other.is_reversed
+        return False
+
+    def __hash__(self):
+        return hash(tuple([self.type,self.is_reversed,self.wide,self.layer]))

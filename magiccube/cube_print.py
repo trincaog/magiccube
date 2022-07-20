@@ -1,19 +1,19 @@
 """Stdout Cube Print implementation"""
 from magiccube.cube_base import CubeColor,CubeFace
 
-C_BG="\x1b[47m"
-C_MAGENTA="\x1b[45m"
-C_RESET="\x1b[49m"
+C_BG="\x1b[48;5;231m"
+#C_RESET="\x1b[49m\x1b[38;5;7m"
+C_RESET="\x1b[0;0m"
 
 class CubePrintStr:
     """Prints a cube to stdout"""
     _color_map = {
-        CubeColor.G: "\x1b[42m",
-        CubeColor.B: "\x1b[44m",
-        CubeColor.R: "\x1b[41m",
-        CubeColor.O: "\x1b[48;5;208m",
-        CubeColor.Y: "\x1b[43m",
-        CubeColor.W: "\x1b[48;5;248m",
+        CubeColor.G: "\x1b[48;5;40m\x1b[38;5;232m",
+        CubeColor.B: "\x1b[48;5;21m\x1b[38;5;7m",
+        CubeColor.R: "\x1b[48;5;196m\x1b[38;5;232m",
+        CubeColor.O: "\x1b[48;5;208m\x1b[38;5;232m",
+        CubeColor.Y: "\x1b[48;5;226m\x1b[38;5;232m",
+        CubeColor.W: "\x1b[48;5;248m\x1b[38;5;232m",
     }
 
     def __init__(self, cube):

@@ -1,9 +1,13 @@
 # MagicCube: A NxNxN Rubik Cube implementation
 A fast implementation of the Rubik Cube based in Python 3.x. 
 
-Allows creation of cubes of various sizes (2x2x2, 3x3x3, 4x4x4, 6x6x6, ...., 100x100x100).
+Makes it easy to create cubes of various sizes (2x2x2, 3x3x3, 4x4x4, 6x6x6, ...., 100x100x100).
 
-Has a simple (not so efficient) solver for the 3x3x3 cube.
+Fast rotation speed when compared with other Python implementations, which makes it suitable for Rubik Cube simulations.
+
+Includes:
+- Simple solver for the 3x3x3 cube.
+- Move optimizer which reduces the number of moves.
 
 
 ## Installation
@@ -67,3 +71,13 @@ See examples folder.
 - (0,0,0) is the piece on the LEFT,DOWN,BACK corner.
 - In a 3x3x3, (2,2,2) is the piece on the RIGH,UP,FRONT corner.
 
+## Solver
+
+The solver uses the [beginner method](https://ruwix.com/the-rubiks-cube/how-to-solve-the-rubiks-cube-beginners-method/) to solve the cube
+
+## Move Optimizer
+
+The move optimizer does the following optimizations:
+- Eliminates redundant moves (ex: L L L L)
+- Converts 3x moves to the inverse (ex: F F F -> F')
+- Eliminates cube rotations (ex: Y F -> R)

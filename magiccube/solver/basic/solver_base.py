@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Tuple
 from magiccube.cube_base import PieceColor, CubeColor, CubeCoordinates
+from magiccube.cube_move import CubeMove
 from magiccube.cube_piece import CubePiece
 
 ColorOrientation = Tuple[Optional[CubeColor]]
@@ -71,7 +72,7 @@ class ConditionAction:
         self.conditions=conditions
 
         action_list=action.split(" ")
-        action_list = [a for a in action_list if a!=""]
+        action_list = [CubeMove.create(a) for a in action_list if a!=""]
 
         self.action=action_list
         self.is_continue=is_continue
@@ -87,7 +88,6 @@ class ConditionAction:
         result = not any((not self._is_any_match(coord,piece) for coord,piece in pieces))
         return result
 
-
 class SolverStage:
     """Defines an individual solver stage.
     target_colors describe the pieces in which the conditions (cond_actions) are going to be checked against.
@@ -98,7 +98,7 @@ class SolverStage:
         self.debug=debug
         self.name=name
 
-    def get_moves(self, target_pieces:List[Tuple[CubeCoordinates, CubePiece]]) -> Tuple[List[str],bool]:
+    def get_moves(self, target_pieces:List[Tuple[CubeCoordinates, CubePiece]]) -> Tuple[List[CubeMove],bool]:
         """Run through the stage conditions and check for match.
         Return the matched action."""
         for p_cond_action in self.cond_actions:

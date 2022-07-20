@@ -18,9 +18,6 @@ cube.reset()
 # Scramble the cube
 cube.scramble()
 
-# Print the cube
-print(cube)
-
 # Print the move history
 print("Moves: ", cube.history())
 

@@ -10,7 +10,7 @@ random.seed(42)
 cube = Cube(hist=False, size=3)
 solver = BasicSolver(cube)
 
-# Solve the cube 100 times
+# Solve the cube N times
 for _ in range(5):
     # Reset & Scramble the cube
     cube.reset()
@@ -23,4 +23,5 @@ for _ in range(5):
     # Solve the cube
     actions = solver.solve()
     print("Solution actions:", actions)
-    print()
+
+    assert cube.is_done()

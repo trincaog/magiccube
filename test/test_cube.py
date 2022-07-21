@@ -1,3 +1,4 @@
+from kiwisolver import Solver
 import numpy as np
 from magiccube import Cube
 from magiccube.cube_base import CubeFace, PieceType
@@ -5,6 +6,8 @@ from magiccube.cube_move import CubeMove
 from magiccube.cube_piece import CubeColor
 import pytest
 import random
+
+from magiccube.solver.basic.basic_solver import BasicSolver, SolverException
 
 def test_reset():
     c = Cube(3)
@@ -254,6 +257,64 @@ def test_get_piece_type():
     assert c.get_piece(coordinates=(2,1,2)).get_piece_type()==PieceType.EDGE
     inner = c.get_piece(coordinates=(1,1,1))
     assert inner is None or inner.get_piece_type()==PieceType.INNER
+
+def test_set_cube():
+    c = Cube(3)
+    c.set("YYYYYYYYYRRRRRRRRRGGGGGGGGGOOOOOOOOOBBBBBBBBBWWWWWWWWW")
+    assert c.is_done()
+
+def test_set_cube_4x():
+    c = Cube(4)
+    c.set("YYYYYYYYYYYYYYYYRRRRRRRRRRRRRRRRGGGGGGGGGGGGGGGGOOOOOOOOOOOOOOOOBBBBBBBBBBBBBBBBWWWWWWWWWWWWWWWW")
+    assert c.is_done()
+
+def test_set_cube_initial_state():
+    c = Cube(3, state="YYYYYYGGGGGWRRRRRROOOGGWGGWYBBOOOOOORRRYBBYBBWWBWWBWWB")
+    c.rotate("U' R'")
+
+    assert c.is_done()
+
+def test_set_cube_initial_state_4X():
+    c = Cube(4, state="""
+    YYYYYYYYYYYYGGGG
+    GGGWRRRRRRRRRRRR
+    OOOOGGGWGGGWGGGW
+    YBBBOOOOOOOOOOOO
+    RRRRYBBBYBBBYBBB
+    WWWBWWWBWWWBWWWB
+    """)
+    c.rotate("U' R'")
+
+    assert c.is_done()
+
+def test_set_cube_not_done():
+    c = Cube(3)
+    c.set("""
+       RBB BYO GGO
+       YRO YRW WWW
+       YYB GGW BRW
+       YYR OOW GGW
+       YYG BBR OOG
+       RGO RWO RBB
+       """)
+    c.rotate("D' B' R' F' L' U'")
+
+    assert c.is_done()
+
+def test_set_cube_bad_cube():
+    c = Cube(3)
+    c.set("""
+       RBB BYO OGG
+       YRO YRW WWW
+       YYB GGW BRW
+       YYR OOW GGW
+       YYG BBR OOG
+       RGO RWO RBB
+       """)
+    solver = BasicSolver(c)
+    with pytest.raises(SolverException):
+        solver.solve()
+
 
 if __name__ == "__main__" :
     pytest.main()

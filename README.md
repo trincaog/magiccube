@@ -20,7 +20,7 @@ pip install magiccube
 import magiccube
 
 # 3x3x3 Cube
-cube = magiccube.Cube(3)
+cube = magiccube.Cube(3,"YYYYYYYYYRRRRRRRRRGGGGGGGGGOOOOOOOOOBBBBBBBBBWWWWWWWWW")
 print(cube)
 ```
 ![Cube](https://trincaopub.s3.amazonaws.com/imgs/magiccube/cube3x3.png)

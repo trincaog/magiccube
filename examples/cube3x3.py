@@ -1,7 +1,10 @@
 import magiccube
 
-# Create the cube
-cube = magiccube.Cube(3)
+# Create the cube in solved state
+cube = magiccube.Cube(3,"YYYYYYYYYRRRRRRRRRGGGGGGGGGOOOOOOOOOBBBBBBBBBWWWWWWWWW")
+
+# Print the cube
+print(cube)
 
 # Make some cube rotations
 cube.rotate("R' L U D' F B' R' L")
@@ -9,15 +12,14 @@ cube.rotate("R' L U D' F B' R' L")
 # Print the cube
 print(cube)
 
+# Create the cube with a fixed state
+cube = magiccube.Cube(3, "YYYYYYGGGGGWRRRRRROOOGGWGGWYBBOOOOOORRRYBBYBBWWBWWBWWB")
+
 # Reset to the initial position
 cube.reset()
 
 # Scramble the cube
 cube.scramble()
-
-# Print the cube
-print("Scrambled cube")
-print(cube)
 
 # Print the move history
 print("History: ", cube.history())

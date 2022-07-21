@@ -1,4 +1,5 @@
 """Cube Piece implementation"""
+from typing import List, Optional
 import numpy as np
 from magiccube.cube_base import PieceColor, CubeColor, CubeCoordinates, PieceType
 
@@ -7,11 +8,17 @@ class CubePiece:
 
     __slots__ = ('_colors',)
 
-    def __init__(self, cube_size: int, position:CubeCoordinates):
-        #self.initial_position = position
-        self._colors = self._build_piece_colors(cube_size, position)
+    def __init__(self, cube_size: Optional[int]=None, position:Optional[CubeCoordinates]=None, 
+        colors:Optional[List[Optional[CubeColor]]]=None):
+        if cube_size is not None and position is not None:
+            self._colors = self._build_piece_colors(cube_size, position)
+        elif colors is not None and len(colors)==3:
+            self._colors = np.array(colors)
+        else:
+            assert False, "Can't create CubePiece. Either position or color must be specified."
 
     def _build_piece_colors(self, cube_size:int, position:CubeCoordinates) ->np.ndarray:
+        """Creates the default piece colors"""
         (_z,_y,_x)=position
 
         if _x == 0:
@@ -61,6 +68,10 @@ class CubePiece:
             colors = sorted(colors)
 
         return tuple(colors)
+
+    def set_piece_color(self, axis:int, color:CubeColor):
+        """Set the piece colors"""
+        self._colors[axis]=color
 
     def rotate_piece(self, axis:int) -> None:
         """Rotate the piece colors according to a given movement"""

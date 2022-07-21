@@ -1,5 +1,5 @@
 from typing import List, Tuple
-from magiccube.cube import Cube
+from magiccube.cube import Cube, CubeException
 from magiccube.optimizer.move_optimizer import MoveOptimizer
 from magiccube.solver.basic.solver_base import SolverStage
 from magiccube.solver.basic.solver_stages import *
@@ -43,11 +43,14 @@ stages = {
     "stage_turn_top_corners": (("YRG","YRB","YBO","YGO"), stage_turn_top_corners),
 }
 
+class SolverException(Exception):
+    pass
 
 class BasicSolver:
     
     def __init__(self, cube:Cube, init_stages=None):
-        assert cube.size==3, "Solver only works with 3x3x3 cube"
+        if cube.size!=3:
+            raise SolverException("Solver only works with 3x3x3 cube")
         self.cube = cube
         self.stages:List[SolverStage]=[]
         self.default_debug =False
@@ -88,23 +91,28 @@ class BasicSolver:
                 # stage is complete
                 break
         
-        assert iteration < max_iter, f"stage iteration limit exceeded: {stage}"
+        if iteration >= max_iter:
+            raise SolverException(f"stage iteration limit exceeded: {stage}")
+
         return full_actions
 
     def solve(self, optimize=True):
         """Solve the cube by running all the registered pattern stages"""
-        full_actions=[]
-        for stage in self.stages:
-            if stage.debug:
-                print("starting stage",stage)
-            actions = self._solve_pattern_stage(stage)
-            full_actions += actions
+        try:
+            full_actions=[]
+            for stage in self.stages:
+                if stage.debug:
+                    print("starting stage",stage)
+                actions = self._solve_pattern_stage(stage)
+                full_actions += actions
 
-        #assert self.cube.is_done() , "cube not done"
-        if optimize:
-            full_actions = MoveOptimizer().optimize(full_actions)
+            #assert self.cube.is_done() , "cube not done"
+            if optimize:
+                full_actions = MoveOptimizer().optimize(full_actions)
 
-        return full_actions
+            return full_actions
+        except CubeException as e:
+            raise SolverException("unable to solve cube",e)
 
 
     def add(self,name, target_colors:Tuple[str,...], pattern_condition_actions:Tuple[ConditionAction, ...], debug=False):

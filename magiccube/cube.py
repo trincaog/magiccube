@@ -7,19 +7,24 @@ from magiccube.cube_piece import CubeCoordinates, CubePiece
 from magiccube.cube_move import CubeMove, CubeMoveType
 from magiccube.cube_print import CubePrintStr
 
+class CubeException(Exception):
+    pass
+
 class Cube:
     """Rubik Cube implementation"""
 
     __slots__=("size","_store_history","_cube_face_indexes","_cube_piece_indexes",
     "_cube_piece_indexes_inv","cube","_history")
 
-    def __init__(self, size: int=3, hist=True):
+    def __init__(self, size: int=3, state=None, hist=True):
 
         if size<=1:
-            raise Exception("Cube size must be >= 2")
+            raise CubeException("Cube size must be >= 2")
 
         self.size = size
         self._store_history = hist
+        
+        # record the indexes of every cube face
         self._cube_face_indexes = [
             [[(0,y,z) for z in range(self.size)]
                 for y in reversed(range(self.size))], #L
@@ -35,6 +40,7 @@ class Cube:
                 for y in reversed(range(self.size))], #F
         ]
 
+        # record the indexes of every cube piece
         self._cube_piece_indexes = [
             (x,y,z)
             for z in range(self.size)
@@ -44,9 +50,12 @@ class Cube:
         ]
         self._cube_piece_indexes_inv={v:idx for idx,v in enumerate(self._cube_piece_indexes)}
 
-        self.reset()
+        if state is None:
+            self.reset()
+        else:
+            self.set(state)
 
-    def _is_outer_position(self,_z:int,_y:int,_x:int)->bool:
+    def _is_outer_position(self,_x:int,_y:int,_z:int)->bool:
         """Test if the coordinates indicate and outer cube position"""
         return _x==0 or _x==self.size-1 \
             or _y==0 or _y==self.size-1 \
@@ -63,6 +72,51 @@ class Cube:
         ]
         self.cube = np.array(initial_cube, dtype=np.object_)
         self._history = []
+
+    def set(self, image:str):
+        """Sets the cube state"""
+        image = image.replace(" ", "")
+        image = image.replace("\n", "")
+
+        if len(image) != 6*self.size*self.size:
+            raise CubeException("Cube state has an invalid size. Should be: " + str(6*self.size*self.size))
+
+        img = [CubeColor.create(x) for x in image]
+
+        self.reset()
+        for i,c in enumerate(img):
+            face = i // (self.size**2)
+            remain = i%(self.size**2)
+            if face ==0: #U
+                x=remain%self.size
+                y = self.size-1
+                z=remain//self.size
+                self.get_piece((x,y,z)).set_piece_color(1,c)
+            elif face == 5: #D
+                x=remain%self.size
+                y = 0
+                z=self.size-(remain//self.size)-1
+                self.get_piece((x,y,z)).set_piece_color(1,c)
+            elif face == 1: #L
+                x = 0
+                y=self.size-(remain//self.size)-1
+                z=remain%self.size
+                self.get_piece((x,y,z)).set_piece_color(0,c)
+            elif face == 3: #R
+                x = self.size-1
+                y=self.size-(remain//self.size)-1
+                z=self.size-(remain%self.size)-1
+                self.get_piece((x,y,z)).set_piece_color(0,c)
+            elif face == 4: #B
+                x=self.size-(remain%self.size)-1
+                y = self.size-(remain//self.size)-1
+                z=0
+                self.get_piece((x,y,z)).set_piece_color(2,c)
+            elif face == 2: #F
+                x=remain%self.size
+                y=self.size-(remain//self.size)-1
+                z=self.size-1
+                self.get_piece((x,y,z)).set_piece_color(2,c)
 
     def scramble(self, num_steps:int=50, wide=None) -> List[CubeMove]:
         """Scramble the cube with random moves.
@@ -102,7 +156,7 @@ class Cube:
         for coord, piece in self.get_all_pieces().items():
             if colors == piece.get_piece_colors_str(no_loc=True):
                 return coord,piece
-        raise Exception ("piece not found " + colors)
+        raise CubeException("piece not found " + colors)
 
     def get_face(self, face:CubeFace)->List[List[CubeColor]]:
         """Get face colors in a multi-dim array"""
@@ -146,7 +200,8 @@ class Cube:
     def _move_to_index(self, move:CubeMove):
         """return the indexes affted by a given CubeMove"""
 
-        assert move.layer>=1 and move.layer<=self.size,"invalid layer " + str(move.layer)
+        if not(move.layer>=1 and move.layer<=self.size):
+            raise CubeException("invalid layer " + str(move.layer))
 
         if move.type in (CubeMoveType.R, CubeMoveType.U, CubeMoveType.F):
             if move.wide:
@@ -159,7 +214,9 @@ class Cube:
             else:
                 return (move.layer-1,)
         elif move.type in (CubeMoveType.M, CubeMoveType.E, CubeMoveType.S):
-            assert self.size%2==1, "M,E,S moves not allow for even sizes"
+            if self.size%2 != 1:
+                raise CubeException("M,E,S moves not allowed for even size cubes")
+
             return (self.size//2,)
         else: # move.type in (CubeMoveType.X, CubeMoveType.Y, CubeMoveType.Z):
             return tuple(range(self.size))
@@ -171,7 +228,7 @@ class Cube:
         elif move.type in (CubeMoveType.L,CubeMoveType.U,CubeMoveType.B,CubeMoveType.M, CubeMoveType.Y):
             direction = 1
         else:
-            raise Exception("invalid move face " + str(move.type))
+            raise CubeException("invalid move face " + str(move.type))
 
         if move.is_reversed:
             direction=direction*-1
@@ -220,7 +277,7 @@ class Cube:
             face = self.get_face(face_name)
             if any((x is None for x in face)):
                 if raise_exception:
-                    raise Exception("cube is not consistent on face "+ str(face_name))
+                    raise CubeException("cube is not consistent on face "+ str(face_name))
                 return False
             return True
 

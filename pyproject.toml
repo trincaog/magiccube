@@ -1,6 +1,6 @@
 [project]
 name = "magiccube"
-version = "0.0.5"
+version = "0.0.6"
 authors = [
   { name="Gonçalo Trincão Cunha", email="goncalo.cunha@gmail.com" },
 ]

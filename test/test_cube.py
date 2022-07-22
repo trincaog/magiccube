@@ -40,6 +40,32 @@ def test_all_rotations():
     c.check_consistency()
     assert c.is_done()
 
+def test_rotations_4x():
+    c = Cube(4)
+    c.rotate("R R'")
+    c.check_consistency()
+    assert c.is_done()
+
+    c.rotate("2R")
+    c.check_consistency()
+    assert c.get_face_flat(Face.F)==[
+        Color.G,Color.G,Color.W,Color.G,
+        Color.G,Color.G,Color.W,Color.G,
+        Color.G,Color.G,Color.W,Color.G,
+        Color.G,Color.G,Color.W,Color.G,
+        ]
+
+    c.reset()
+    c.rotate("Uw")
+    assert c.get_face_flat(Face.F)==[
+        Color.O,Color.O,Color.O,Color.O,
+        Color.O,Color.O,Color.O,Color.O,
+        Color.G,Color.G,Color.G,Color.G,
+        Color.G,Color.G,Color.G,Color.G,
+        ]
+
+    c.check_consistency()
+
 def test_all_rotations_2d():
     c = Cube(2)
     c.rotate("R R' L L' B B' F F' U U' D D'")
@@ -317,5 +343,6 @@ def test_set_cube_bad_cube():
 
 
 if __name__ == "__main__" :
-    pytest.main()
+    #pytest.main()
+    test_move()
     pass

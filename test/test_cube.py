@@ -1,9 +1,9 @@
 from kiwisolver import Solver
 import numpy as np
 from magiccube import Cube
-from magiccube.cube_base import CubeFace, PieceType
+from magiccube.cube_base import Face, PieceType
 from magiccube.cube_move import CubeMove
-from magiccube.cube_piece import CubeColor
+from magiccube.cube_piece import Color
 import pytest
 import random
 
@@ -105,25 +105,25 @@ def test_scramble_2d():
 def test_get_piece():
     c = Cube(3)
     piece = c.get_piece((2,0,0))
-    assert piece.get_piece_color(CubeFace.R.get_axis())==CubeColor.O
-    assert piece.get_piece_color(CubeFace.D.get_axis())==CubeColor.W
-    assert piece.get_piece_color(CubeFace.B.get_axis())==CubeColor.B
+    assert piece.get_piece_color(Face.R.get_axis())==Color.O
+    assert piece.get_piece_color(Face.D.get_axis())==Color.W
+    assert piece.get_piece_color(Face.B.get_axis())==Color.B
 
     piece = c.get_piece((0,2,2))
-    assert piece.get_piece_color(CubeFace.L.get_axis())==CubeColor.R
-    assert piece.get_piece_color(CubeFace.U.get_axis())==CubeColor.Y
-    assert piece.get_piece_color(CubeFace.F.get_axis())==CubeColor.G
+    assert piece.get_piece_color(Face.L.get_axis())==Color.R
+    assert piece.get_piece_color(Face.U.get_axis())==Color.Y
+    assert piece.get_piece_color(Face.F.get_axis())==Color.G
 
 
 def test_get_all_faces():
     c = Cube(3)
     faces = c.get_all_faces()
-    assert np.all(np.array(faces[CubeFace.F]).flatten()==CubeColor.G)
-    assert np.all(np.array(faces[CubeFace.B]).flatten()==CubeColor.B)
-    assert np.all(np.array(faces[CubeFace.L]).flatten()==CubeColor.R)
-    assert np.all(np.array(faces[CubeFace.R]).flatten()==CubeColor.O)
-    assert np.all(np.array(faces[CubeFace.U]).flatten()==CubeColor.Y)
-    assert np.all(np.array(faces[CubeFace.D]).flatten()==CubeColor.W)
+    assert np.all(np.array(faces[Face.F]).flatten()==Color.G)
+    assert np.all(np.array(faces[Face.B]).flatten()==Color.B)
+    assert np.all(np.array(faces[Face.L]).flatten()==Color.R)
+    assert np.all(np.array(faces[Face.R]).flatten()==Color.O)
+    assert np.all(np.array(faces[Face.U]).flatten()==Color.Y)
+    assert np.all(np.array(faces[Face.D]).flatten()==Color.W)
 
 def test_get_all_pieces():
     c=Cube(3)
@@ -137,36 +137,36 @@ def test_get_all_pieces():
 def test_move():
     c = Cube(3)
     c.rotate("L")
-    assert c.get_piece((1,0,0)).get_piece_colors()==(None,CubeColor.W,CubeColor.B)
-    assert c.get_piece((0,0,0)).get_piece_colors()==(CubeColor.R,CubeColor.G,CubeColor.W)
-    assert c.get_piece((0,0,2)).get_piece_colors()==(CubeColor.R,CubeColor.G,CubeColor.Y)
+    assert c.get_piece((1,0,0)).get_piece_colors()==(None,Color.W,Color.B)
+    assert c.get_piece((0,0,0)).get_piece_colors()==(Color.R,Color.G,Color.W)
+    assert c.get_piece((0,0,2)).get_piece_colors()==(Color.R,Color.G,Color.Y)
 
 def test_move_special_rot():
     c = Cube(3)
     c.rotate("X'")
-    assert c.get_piece((2,2,2)).get_piece_colors()==(CubeColor.O,CubeColor.B,CubeColor.Y)
+    assert c.get_piece((2,2,2)).get_piece_colors()==(Color.O,Color.B,Color.Y)
     c.reset()
     c.rotate("Y")
-    assert c.get_piece((2,2,2)).get_piece_colors()==(CubeColor.B,CubeColor.Y,CubeColor.O)
+    assert c.get_piece((2,2,2)).get_piece_colors()==(Color.B,Color.Y,Color.O)
     c.reset()
     c.rotate("Z")
-    assert c.get_piece((2,2,2)).get_piece_colors()==(CubeColor.Y,CubeColor.R,CubeColor.G)
+    assert c.get_piece((2,2,2)).get_piece_colors()==(Color.Y,Color.R,Color.G)
 
 def test_move_special_mid():
     c = Cube(3)
     c.rotate("M")
-    assert c.get_piece((1,2,2)).get_piece_colors()==(None,CubeColor.B,CubeColor.Y)
+    assert c.get_piece((1,2,2)).get_piece_colors()==(None,Color.B,Color.Y)
     c.rotate("E'")
-    assert c.get_piece((2,1,2)).get_piece_colors()==(CubeColor.B,None,CubeColor.O)
+    assert c.get_piece((2,1,2)).get_piece_colors()==(Color.B,None,Color.O)
     c.rotate("S")
-    assert c.get_piece((2,2,1)).get_piece_colors()==(CubeColor.Y,CubeColor.R,None)
+    assert c.get_piece((2,2,1)).get_piece_colors()==(Color.Y,Color.R,None)
 
 def test_move_noloc():
     c = Cube(3)
     c.rotate("L")
-    assert c.get_piece((1,0,0)).get_piece_colors(no_loc=True)==(CubeColor.B,CubeColor.W)
-    assert c.get_piece((0,0,0)).get_piece_colors(no_loc=True)==(CubeColor.G,CubeColor.R,CubeColor.W)
-    assert c.get_piece((0,0,2)).get_piece_colors(no_loc=True)==(CubeColor.G,CubeColor.R,CubeColor.Y)
+    assert c.get_piece((1,0,0)).get_piece_colors(no_loc=True)==(Color.B,Color.W)
+    assert c.get_piece((0,0,0)).get_piece_colors(no_loc=True)==(Color.G,Color.R,Color.W)
+    assert c.get_piece((0,0,2)).get_piece_colors(no_loc=True)==(Color.G,Color.R,Color.Y)
 
 
 

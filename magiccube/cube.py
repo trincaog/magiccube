@@ -2,8 +2,8 @@
 from typing import Dict,List, Tuple
 import random
 import numpy as np
-from magiccube.cube_base import CubeColor, CubeFace
-from magiccube.cube_piece import CubeCoordinates, CubePiece
+from magiccube.cube_base import Color, Face
+from magiccube.cube_piece import Coordinates, CubePiece
 from magiccube.cube_move import CubeMove, CubeMoveType
 from magiccube.cube_print import CubePrintStr
 
@@ -23,7 +23,7 @@ class Cube:
 
         self.size = size
         self._store_history = hist
-        
+
         # record the indexes of every cube face
         self._cube_face_indexes = [
             [[(0,y,z) for z in range(self.size)]
@@ -81,42 +81,42 @@ class Cube:
         if len(image) != 6*self.size*self.size:
             raise CubeException("Cube state has an invalid size. Should be: " + str(6*self.size*self.size))
 
-        img = [CubeColor.create(x) for x in image]
+        img = [Color.create(x) for x in image]
 
         self.reset()
-        for i,c in enumerate(img):
+        for i,color in enumerate(img):
             face = i // (self.size**2)
             remain = i%(self.size**2)
             if face ==0: #U
-                x=remain%self.size
-                y = self.size-1
-                z=remain//self.size
-                self.get_piece((x,y,z)).set_piece_color(1,c)
+                _x=remain%self.size
+                _y = self.size-1
+                _z=remain//self.size
+                self.get_piece((_x,_y,_z)).set_piece_color(1,color)
             elif face == 5: #D
-                x=remain%self.size
-                y = 0
-                z=self.size-(remain//self.size)-1
-                self.get_piece((x,y,z)).set_piece_color(1,c)
+                _x=remain%self.size
+                _y = 0
+                _z=self.size-(remain//self.size)-1
+                self.get_piece((_x,_y,_z)).set_piece_color(1,color)
             elif face == 1: #L
-                x = 0
-                y=self.size-(remain//self.size)-1
-                z=remain%self.size
-                self.get_piece((x,y,z)).set_piece_color(0,c)
+                _x = 0
+                _y=self.size-(remain//self.size)-1
+                _z=remain%self.size
+                self.get_piece((_x,_y,_z)).set_piece_color(0,color)
             elif face == 3: #R
-                x = self.size-1
-                y=self.size-(remain//self.size)-1
-                z=self.size-(remain%self.size)-1
-                self.get_piece((x,y,z)).set_piece_color(0,c)
+                _x = self.size-1
+                _y=self.size-(remain//self.size)-1
+                _z=self.size-(remain%self.size)-1
+                self.get_piece((_x,_y,_z)).set_piece_color(0,color)
             elif face == 4: #B
-                x=self.size-(remain%self.size)-1
-                y = self.size-(remain//self.size)-1
-                z=0
-                self.get_piece((x,y,z)).set_piece_color(2,c)
+                _x=self.size-(remain%self.size)-1
+                _y = self.size-(remain//self.size)-1
+                _z=0
+                self.get_piece((_x,_y,_z)).set_piece_color(2,color)
             elif face == 2: #F
-                x=remain%self.size
-                y=self.size-(remain//self.size)-1
-                z=self.size-1
-                self.get_piece((x,y,z)).set_piece_color(2,c)
+                _x=remain%self.size
+                _y=self.size-(remain//self.size)-1
+                _z=self.size-1
+                self.get_piece((_x,_y,_z)).set_piece_color(2,color)
 
     def scramble(self, num_steps:int=50, wide=None) -> List[CubeMove]:
         """Scramble the cube with random moves.
@@ -150,7 +150,7 @@ class Cube:
 
         return movements
 
-    def find_piece(self, colors:str) -> Tuple[CubeCoordinates, CubePiece]:
+    def find_piece(self, colors:str) -> Tuple[Coordinates, CubePiece]:
         """Find the piece with given colors"""
         colors = "".join(sorted(colors))
         for coord, piece in self.get_all_pieces().items():
@@ -158,7 +158,7 @@ class Cube:
                 return coord,piece
         raise CubeException("piece not found " + colors)
 
-    def get_face(self, face:CubeFace)->List[List[CubeColor]]:
+    def get_face(self, face:Face)->List[List[Color]]:
         """Get face colors in a multi-dim array"""
         face_indexes = self._cube_face_indexes[face.value]
         res = []
@@ -167,22 +167,22 @@ class Cube:
             res.append(line_color)
         return res
 
-    def get_face_flat(self, face:CubeFace)->List[CubeColor]:
+    def get_face_flat(self, face:Face)->List[Color]:
         """Get face colors in a flat array"""
         res = self.get_face(face)
         res = list(np.array(res).flatten())
         return res
 
-    def get_all_faces(self) -> Dict[CubeFace,List[List[CubeColor]]]:
+    def get_all_faces(self) -> Dict[Face,List[List[Color]]]:
         """Get the CubePiece of all cube faces"""
-        faces = {f:self.get_face(f) for f in CubeFace}
+        faces = {f:self.get_face(f) for f in Face}
         return faces
 
-    def get_piece(self, coordinates: CubeCoordinates) -> CubePiece:
+    def get_piece(self, coordinates: Coordinates) -> CubePiece:
         """Get the CubePiece at a given coordinate"""
         return self.cube[coordinates]
 
-    def get_all_pieces(self)->Dict[CubeCoordinates,CubePiece]:
+    def get_all_pieces(self)->Dict[Coordinates,CubePiece]:
         """Return a dictionary of coordinates:CubePiece"""
         res = [self.cube[x] for x in self._cube_piece_indexes]
 
@@ -265,7 +265,7 @@ class Cube:
 
     def is_done(self):
         """Returns True if the Cube is done"""
-        for face_name in CubeFace:
+        for face_name in Face:
             face = self.get_face_flat(face_name)
             if any(x != face[0] for x in face):
                 return False
@@ -273,7 +273,7 @@ class Cube:
 
     def check_consistency(self, raise_exception = True):
         """Check the cube for internal consistency"""
-        for face_name in CubeFace:
+        for face_name in Face:
             face = self.get_face(face_name)
             if any((x is None for x in face)):
                 if raise_exception:

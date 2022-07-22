@@ -3,7 +3,7 @@
 from enum import Enum
 from typing import Optional, Tuple
 
-class CubeFace(Enum):
+class Face(Enum):
     """Representation of a Cube Face"""
     L=0
     R=1
@@ -14,11 +14,11 @@ class CubeFace(Enum):
 
     def get_axis(self):
         """Return axis of movement (x=0, y=1, z=2)"""
-        if self in (CubeFace.L,CubeFace.R):
+        if self in (Face.L,Face.R):
             return 0
-        if self in (CubeFace.D, CubeFace.U):
+        if self in (Face.D, Face.U):
             return 1
-        if self in (CubeFace.B, CubeFace.F):
+        if self in (Face.B, Face.F):
             return 2
         raise Exception("invalid face" + str(self.value))
 
@@ -26,20 +26,20 @@ class CubeFace(Enum):
     def create(face_str:str):
         """Create a CubeFace"""
         if face_str == "L":
-            return CubeFace.L
+            return Face.L
         if face_str == "R":
-            return CubeFace.R
+            return Face.R
         if face_str == "D":
-            return CubeFace.D
+            return Face.D
         if face_str == "U":
-            return CubeFace.U
+            return Face.U
         if face_str == "B":
-            return CubeFace.B
+            return Face.B
         if face_str == "F":
-            return CubeFace.F
+            return Face.F
         raise Exception("invalid face " + str(face_str))
 
-class CubeColor(Enum):
+class Color(Enum):
     """Representation of the color of a Cube Piece"""
     R=0
     O=1
@@ -55,21 +55,23 @@ class CubeColor(Enum):
     def create(color_str:str):
         """Create a CubeColor"""
         if color_str == "R":
-            return CubeColor.R
+            return Color.R
         if color_str == "O":
-            return CubeColor.O
+            return Color.O
         if color_str == "W":
-            return CubeColor.W
+            return Color.W
         if color_str == "Y":
-            return CubeColor.Y
+            return Color.Y
         if color_str == "B":
-            return CubeColor.B
+            return Color.B
         if color_str == "G":
-            return CubeColor.G
+            return Color.G
         raise Exception("invalid color " + str(color_str))
 
-CubeCoordinates=Tuple[int,int,int]
-PieceColor = Tuple[Optional[CubeColor], Optional[CubeColor], Optional[CubeColor]]
+Coordinates=Tuple[int,int,int]
+
+ColorOrientation = Tuple[Optional[Color],Optional[Color],Optional[Color]]
+"""Defines the color orientation of a given CubePiece"""
 
 class PieceType(Enum):
     """Type of piece"""

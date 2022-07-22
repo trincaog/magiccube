@@ -2,7 +2,7 @@ import pytest
 
 import random
 from magiccube.cube import Cube
-from magiccube.cube_base import CubeColor
+from magiccube.cube_base import Color
 from magiccube.solver.basic.basic_solver import BasicSolver
 
 def test_solve():
@@ -257,16 +257,16 @@ def test_solve_top_cross():
     # TOP cross
 
     p=cube.get_piece((1,2,2))
-    assert p.get_piece_colors()==(None,CubeColor.Y,CubeColor.G),p.get_piece_colors_str()
+    assert p.get_piece_colors()==(None,Color.Y,Color.G),p.get_piece_colors_str()
 
     p=cube.get_piece((2,2,1))
-    assert p.get_piece_colors()==(CubeColor.O,CubeColor.Y,None),p.get_piece_colors_str()
+    assert p.get_piece_colors()==(Color.O,Color.Y,None),p.get_piece_colors_str()
 
     p=cube.get_piece((1,2,0))
-    assert p.get_piece_colors()==(None,CubeColor.Y,CubeColor.B),p.get_piece_colors_str()
+    assert p.get_piece_colors()==(None,Color.Y,Color.B),p.get_piece_colors_str()
 
     p=cube.get_piece((0,2,1))
-    assert p.get_piece_colors()==(CubeColor.R,CubeColor.Y,None),p.get_piece_colors_str()
+    assert p.get_piece_colors()==(Color.R,Color.Y,None),p.get_piece_colors_str()
 
 
 
@@ -351,16 +351,16 @@ def test_solve_top_corners():
     # TOP cross
 
     p=cube.get_piece((1,2,2))
-    assert p.get_piece_colors()==(None,CubeColor.Y,CubeColor.G),p.get_piece_colors_str()
+    assert p.get_piece_colors()==(None,Color.Y,Color.G),p.get_piece_colors_str()
 
     p=cube.get_piece((2,2,1))
-    assert p.get_piece_colors()==(CubeColor.O,CubeColor.Y,None),p.get_piece_colors_str()
+    assert p.get_piece_colors()==(Color.O,Color.Y,None),p.get_piece_colors_str()
 
     p=cube.get_piece((1,2,0))
-    assert p.get_piece_colors()==(None,CubeColor.Y,CubeColor.B),p.get_piece_colors_str()
+    assert p.get_piece_colors()==(None,Color.Y,Color.B),p.get_piece_colors_str()
 
     p=cube.get_piece((0,2,1))
-    assert p.get_piece_colors()==(CubeColor.R,CubeColor.Y,None),p.get_piece_colors_str()
+    assert p.get_piece_colors()==(Color.R,Color.Y,None),p.get_piece_colors_str()
 
     # TOP corners
 

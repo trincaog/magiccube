@@ -1,11 +1,8 @@
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Tuple
-from magiccube.cube_base import PieceColor, CubeColor, CubeCoordinates
+from magiccube.cube_base import Color, ColorOrientation, Coordinates
 from magiccube.cube_move import CubeMove
 from magiccube.cube_piece import CubePiece
-
-ColorOrientation = Tuple[Optional[CubeColor]]
-"""Defines required color orientation for a given condition """
 
 @dataclass
 class Condition:
@@ -16,7 +13,7 @@ class Condition:
           The color condition may be '*' to indicate any color
     """
     @staticmethod
-    def position_to_coord(position:int) -> CubeCoordinates:
+    def position_to_coord(position:int) -> Coordinates:
         """Convert integer position to CubeCoordinates"""
         x=position//100
         y = (position - x*100)//10
@@ -31,12 +28,12 @@ class Condition:
         # build the pattern condition
         for accepted_color in accepted_colors_str:
             color_condition.append(tuple([
-                None if color_str == "*" else CubeColor.create(color_str)
+                None if color_str == "*" else Color.create(color_str)
                 for color_str in accepted_color
             ]))
         self.color_condition:List[ColorOrientation]=color_condition
 
-    def _is_color_match(self,orientation_pattern:ColorOrientation,color:PieceColor)->bool:
+    def _is_color_match(self,orientation_pattern:ColorOrientation,color:ColorOrientation)->bool:
         """ Return True if the piece colors match the orientation pattern """
         
         filtered_color = [c for c in color if c is not None]
@@ -48,7 +45,7 @@ class Condition:
         return True
         
 
-    def is_match(self, target_coordinates:CubeCoordinates, target_piece:CubePiece):
+    def is_match(self, target_coordinates:Coordinates, target_piece:CubePiece):
         """ Return True if the the piece coordinates and color orientation match the PatternCondition  """
         
         assert len(self.color_condition[0]) == target_piece.get_piece_type().value
@@ -77,12 +74,12 @@ class ConditionAction:
         self.action=action_list
         self.is_continue=is_continue
 
-    def _is_any_match(self, coordinates:CubeCoordinates, piece:CubePiece):
+    def _is_any_match(self, coordinates:Coordinates, piece:CubePiece):
         """Return True if the piece coordinates+color orientation match any of the conditions"""
         result = any((condition.is_match(coordinates, piece) for condition in self.conditions))
         return result
 
-    def is_match(self, pieces:List[Tuple[CubeCoordinates, CubePiece]]):
+    def is_match(self, pieces:List[Tuple[Coordinates, CubePiece]]):
         """Return True if the given pieces match the pattern conditions"""
         assert len(pieces)==len(self.conditions)
         result = not any((not self._is_any_match(coord,piece) for coord,piece in pieces))
@@ -98,7 +95,7 @@ class SolverStage:
         self.debug=debug
         self.name=name
 
-    def get_moves(self, target_pieces:List[Tuple[CubeCoordinates, CubePiece]]) -> Tuple[List[CubeMove],bool]:
+    def get_moves(self, target_pieces:List[Tuple[Coordinates, CubePiece]]) -> Tuple[List[CubeMove],bool]:
         """Run through the stage conditions and check for match.
         Return the matched action."""
         for p_cond_action in self.cond_actions:

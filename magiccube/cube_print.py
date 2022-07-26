@@ -1,13 +1,19 @@
 """Stdout Cube Print implementation"""
+from enum import Enum
 from magiccube.cube_base import Color,Face
+import os
 
-C_BG="\x1b[48;5;231m"
-#C_RESET="\x1b[49m\x1b[38;5;7m"
 C_RESET="\x1b[0;0m"
+# C_BG="\x1b[48;5;231m"
+
+
+class Terminal(Enum):
+    default=0
+    x256=1
 
 class CubePrintStr:
     """Prints a cube to stdout"""
-    _color_map = {
+    _xterm256_color_map = {
         Color.G: "\x1b[48;5;40m\x1b[38;5;232m",
         Color.B: "\x1b[48;5;21m\x1b[38;5;7m",
         Color.R: "\x1b[48;5;196m\x1b[38;5;232m",
@@ -18,21 +24,29 @@ class CubePrintStr:
 
     def __init__(self, cube):
         self.cube = cube
+        self.term = Terminal.x256 if os.environ["TERM"]=="xterm-256color" else Terminal.default
 
     def _format_color(self, color:Color):
-        """Format color to TTY"""
-        return CubePrintStr._color_map.get(color, "") + " " + color.name + " "+C_RESET
+        """Format color to TTY
+        Only print colors on supported terminals (xterm-256color)
+        """
+        formated_color = " " + color.name + " "
+
+        if self.term == Terminal.x256:
+            formated_color = CubePrintStr._xterm256_color_map.get(color, "") + formated_color + C_RESET
+
+        return formated_color
 
     def _print_top_down_face(self, cube, face):
         result =""
         for index,color in enumerate(cube.get_face_flat(face)):
             if index % cube.size == 0:
-                result += C_BG+(" " * ((3*cube.size)))+C_RESET
+                result += (" " * ((3*cube.size)))
 
             result += self._format_color(color)
 
             if index % cube.size == cube.size-1:
-                result += C_BG+(" " * ((2*3*cube.size)))+C_RESET
+                result += (" " * ((2*3*cube.size)))
                 result += "\n"
         return result
 

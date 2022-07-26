@@ -24,7 +24,7 @@ class CubePrintStr:
 
     def __init__(self, cube):
         self.cube = cube
-        self.term = Terminal.x256 if os.environ["TERM"]=="xterm-256color" else Terminal.default
+        self.term = Terminal.x256 if os.environ.get("TERM")=="xterm-256color" else Terminal.default
 
     def _format_color(self, color:Color):
         """Format color to TTY

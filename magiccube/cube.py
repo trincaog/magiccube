@@ -2,13 +2,10 @@
 from typing import Dict,List, Tuple
 import random
 import numpy as np
-from magiccube.cube_base import Color, Face
+from magiccube.cube_base import Color, CubeException, Face
 from magiccube.cube_piece import Coordinates, CubePiece
 from magiccube.cube_move import CubeMove, CubeMoveType
 from magiccube.cube_print import CubePrintStr
-
-class CubeException(Exception):
-    pass
 
 class Cube:
     """Rubik Cube implementation"""
@@ -283,14 +280,12 @@ class Cube:
                 return False
         return True
 
-    def check_consistency(self, raise_exception = True)->bool:
+    def check_consistency(self)->bool:
         """Check the cube for internal consistency"""
         for face_name in Face:
-            face = self.get_face(face_name)
+            face = self.get_face_flat(face_name)
             if any((x is None for x in face)):
-                if raise_exception:
-                    raise CubeException("cube is not consistent on face "+ str(face_name))
-                return False
+                raise CubeException("cube is not consistent on face "+ str(face_name))
         return True
 
     def history(self, to_str=False):

@@ -1,7 +1,7 @@
 """Cube Piece implementation"""
 from typing import List, Optional
 import numpy as np
-from magiccube.cube_base import Color, ColorOrientation, Coordinates, PieceType
+from magiccube.cube_base import Color, ColorOrientation, Coordinates, CubeException, PieceType
 
 class CubePiece:
     """Piece of the Cube (aka Cubelet)"""
@@ -15,7 +15,7 @@ class CubePiece:
         elif colors is not None and len(colors)==3:
             self._colors = np.array(colors)
         else:
-            assert False, "Can't create CubePiece. Either position or color must be specified."
+            raise CubeException("Can't create CubePiece. Either position or color must be specified.")
 
     def _build_piece_colors(self, cube_size:int, position:Coordinates) ->np.ndarray:
         """Creates the default piece colors"""
@@ -86,7 +86,7 @@ class CubePiece:
             indexes = [1,0,2]
             self._colors = self._colors[indexes]
         else:
-            raise Exception("bad rotation type")
+            raise CubeException("bad rotation type")
 
     def get_piece_type(self)->PieceType:
         """Return the piece type (ex: EDGE, CORNER, CENTER)"""
@@ -98,15 +98,14 @@ class CubePiece:
             return PieceType.EDGE
         if num_sides==1:
             return PieceType.CENTER
-        if num_sides==0:
-            return PieceType.INNER
-        assert False, "Invalid Piece with num_sides="+str(num_sides)
+        raise CubeException("Invalid Piece with num_sides="+str(num_sides))
 
     def __repr__(self):
         return str(self.get_piece_colors_str())
 
     def __str__(self):
-        return str(self.get_piece_colors_str())
+        return str(self.get_piece_colors_str()) #pragma:no cover
 
     def __lt__(self, other):
-        return self._colors < other._colors
+        return self._colors < other._colors #pragma:no cover
+

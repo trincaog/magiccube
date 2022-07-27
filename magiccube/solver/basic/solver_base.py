@@ -4,6 +4,10 @@ from magiccube.cube_base import Color, ColorOrientation, Coordinates
 from magiccube.cube_move import CubeMove
 from magiccube.cube_piece import CubePiece
 
+class SolverException(Exception):
+    pass
+
+
 @dataclass
 class Condition:
     """Defines the conditions to trigger an action
@@ -58,7 +62,7 @@ class Condition:
                 return True
         return False
 
-    def __str__(self):
+    def __str__(self):#pragma:no cover
         return f"PatternCondition: {self.coordinate_condition} {self.color_condition}"
 
 @dataclass
@@ -101,10 +105,10 @@ class SolverStage:
         for p_cond_action in self.cond_actions:
             if p_cond_action.is_match(target_pieces):
                 return p_cond_action.action,p_cond_action.is_continue
-        assert False, f"{self.name}: no valid conditions found for the pieces: {target_pieces}"
+        raise SolverException(f"{self.name}: no valid conditions found for the pieces: {target_pieces}")#pragma:no cover
 
-    def __str__(self):
+    def __str__(self):#pragma:no cover
         return f"Stage:{self.name} | {self.target_colors}"
 
-    def __repr__(self):
+    def __repr__(self):#pragma:no cover
         return f"Stage:{self.name} | {self.target_colors}"

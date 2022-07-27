@@ -4,9 +4,10 @@ import random
 from magiccube.cube import Cube
 from magiccube.cube_base import Color
 from magiccube.solver.basic.basic_solver import BasicSolver
+from magiccube.solver.basic.solver_base import SolverException
 
 def test_solve():
-    cube = Cube(hist=False, size=3)
+    cube = Cube(size=3)
     solver = BasicSolver(cube)
 
     random.seed(42)
@@ -14,6 +15,32 @@ def test_solve():
 
     solver.solve()
     assert cube.is_done()
+
+def test_solve_nok_size():
+    cube = Cube(size=2)
+    with pytest.raises(SolverException):
+        BasicSolver(cube)
+
+    cube = Cube(size=4)
+    with pytest.raises(SolverException):
+        BasicSolver(cube)
+
+def test_solve_nok_max_iterations():
+    cube = Cube(size=3)
+
+    random.seed(42)
+    cube.scramble(num_steps=50, wide=False)
+    solver = BasicSolver(cube)
+    solver.max_iterations_per_stage=2
+    with pytest.raises(SolverException):
+        solver.solve()
+
+def test_solve_nok_bad_cube():
+    cube = Cube(size=3, state="RYYYYYYYYBRRRRRRRRGGGGGGGGGOOOOOOOOOBBBBBBBBBWWWWWWWWW")
+    solver = BasicSolver(cube)
+    with pytest.raises(SolverException):
+        solver.solve()
+
 
 
 def test_solve_white_cross():

@@ -1,7 +1,7 @@
 from typing import List, Tuple
 from magiccube.cube import Cube, CubeException
 from magiccube.optimizer.move_optimizer import MoveOptimizer
-from magiccube.solver.basic.solver_base import SolverStage
+from magiccube.solver.basic.solver_base import SolverException, SolverStage
 from magiccube.solver.basic.solver_stages import *
 
 
@@ -43,9 +43,6 @@ stages = {
     "stage_turn_top_corners": (("YRG","YRB","YBO","YGO"), stage_turn_top_corners),
 }
 
-class SolverException(Exception):
-    pass
-
 class BasicSolver:
     
     def __init__(self, cube:Cube, init_stages=None):
@@ -54,6 +51,7 @@ class BasicSolver:
         self.cube = cube
         self.stages:List[SolverStage]=[]
         self.default_debug =False
+        self.max_iterations_per_stage=12
 
         if init_stages is None:
             for name,stage in stages.items():
@@ -68,13 +66,12 @@ class BasicSolver:
 
         full_actions = []
         iteration=0
-        max_iter=12
 
-        while iteration < max_iter:
+        while iteration < self.max_iterations_per_stage:
             iteration+=1
             target_pieces = [self.cube.find_piece(target_color) for target_color in stage.target_colors]
 
-            if stage.debug:
+            if stage.debug:#pragma:no cover
                 print("solve_stage start:", stage.name, stage.target_colors, target_pieces)
                 print(self.cube)
 
@@ -83,7 +80,7 @@ class BasicSolver:
             self.cube.rotate(actions)
             full_actions += actions
 
-            if stage.debug:
+            if stage.debug:#pragma:no cover
                 print("solve_stage end:", stage.name,target_pieces, actions, is_continue)
                 print(self.cube)
                 
@@ -91,7 +88,7 @@ class BasicSolver:
                 # stage is complete
                 break
         
-        if iteration >= max_iter:
+        if iteration >= self.max_iterations_per_stage:
             raise SolverException(f"stage iteration limit exceeded: {stage}")
 
         return full_actions
@@ -101,12 +98,11 @@ class BasicSolver:
         try:
             full_actions=[]
             for stage in self.stages:
-                if stage.debug:
+                if stage.debug:#pragma:no cover
                     print("starting stage",stage)
                 actions = self._solve_pattern_stage(stage)
                 full_actions += actions
 
-            #assert self.cube.is_done() , "cube not done"
             if optimize:
                 full_actions = MoveOptimizer().optimize(full_actions)
 

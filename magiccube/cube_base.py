@@ -3,6 +3,9 @@
 from enum import Enum
 from typing import Optional, Tuple
 
+class CubeException(Exception):
+    pass
+
 class Face(Enum):
     """Representation of a Cube Face"""
     L=0
@@ -12,7 +15,7 @@ class Face(Enum):
     B=4
     F=5
 
-    def get_axis(self):
+    def get_axis(self)->int:
         """Return axis of movement (x=0, y=1, z=2)"""
         if self in (Face.L,Face.R):
             return 0
@@ -20,7 +23,8 @@ class Face(Enum):
             return 1
         if self in (Face.B, Face.F):
             return 2
-        raise Exception("invalid face" + str(self.value))
+
+        raise CubeException("invalid face") #pragma: no cover
 
     @staticmethod
     def create(face_str:str):
@@ -37,7 +41,7 @@ class Face(Enum):
             return Face.B
         if face_str == "F":
             return Face.F
-        raise Exception("invalid face " + str(face_str))
+        raise CubeException("invalid face " + str(face_str))
 
 class Color(Enum):
     """Representation of the color of a Cube Piece"""
@@ -66,7 +70,7 @@ class Color(Enum):
             return Color.B
         if color_str == "G":
             return Color.G
-        raise Exception("invalid color " + str(color_str))
+        raise CubeException("invalid color " + str(color_str))
 
 Coordinates=Tuple[int,int,int]
 

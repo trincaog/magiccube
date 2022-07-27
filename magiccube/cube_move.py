@@ -2,6 +2,8 @@
 from enum import Enum
 import re
 
+from magiccube.cube_base import CubeException
+
 class CubeMoveType(Enum):
     L="L"
     R="R"
@@ -43,7 +45,7 @@ class CubeMoveType(Enum):
             return CubeMoveType.E
         if move_str == "S":
             return CubeMoveType.S
-        raise Exception("invalid CubeMoveType " + str(move_str))
+        raise CubeException("invalid CubeMoveType " + str(move_str))
 
     def get_axis(self):
         """Return axis of movement (x=0, y=1, z=2)"""
@@ -53,7 +55,7 @@ class CubeMoveType(Enum):
             return 1
         if self in (CubeMoveType.B, CubeMoveType.F,CubeMoveType.S,CubeMoveType.Z):
             return 2
-        raise Exception("invalid CubeMoveType" + str(self.value))
+        raise CubeException("invalid CubeMoveType" + str(self.value)) #pragma: no cover
 
     def is_cube_rotation(self):
         return self in (CubeMoveType.X, CubeMoveType.Y, CubeMoveType.Z)
@@ -78,7 +80,7 @@ class CubeMove():
         """Create a CubeMove from string representation"""
         result = CubeMove.regex_pattern.match(move_str)
         if result is None:
-            raise Exception("invalid movement " + str(move_str))
+            raise CubeException("invalid movement " + str(move_str))
         result=result.groups()
         special_move = result[4]
         if special_move is not None:
@@ -89,14 +91,15 @@ class CubeMove():
                 return CubeMove(CubeMoveType.Y, is_reversed)
             elif special_move=="Z":
                 return CubeMove(CubeMoveType.Z, is_reversed)
-            if special_move=="M":
+            elif special_move=="M":
                 return CubeMove(CubeMoveType.M, is_reversed)
             elif special_move=="E":
                 return CubeMove(CubeMoveType.E, is_reversed)
             elif special_move=="S":
                 return CubeMove(CubeMoveType.S, is_reversed)
-            else:
-                assert False, "Invalid special move"
+            
+            raise CubeException("Invalid special move") # pragma: no cover
+
         else:
             type=CubeMoveType.create(result[1])
             wide=(result[2]=="w")
@@ -121,13 +124,13 @@ class CubeMove():
         or (not self.wide and self.layer==1):
             layer=""
         else:
-            layer=self.layer
+            layer=self.layer #pragma: no cover
         wide="w" if self.wide else ""
         reversed_move="'" if self.is_reversed else ""
         return f"{layer}{self.type.name}{wide}{reversed_move}"
             
     def __repr__(self):
-        return str(self)
+        return str(self) #pragma: no cover
 
 
     def __eq__(self, other):

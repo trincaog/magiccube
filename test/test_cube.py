@@ -1,13 +1,18 @@
-from kiwisolver import Solver
 import numpy as np
 from magiccube import Cube
+from magiccube.cube import CubeException
 from magiccube.cube_base import Face, PieceType
-from magiccube.cube_move import CubeMove
-from magiccube.cube_piece import Color
+from magiccube.cube_move import CubeMove, CubeMoveType
+from magiccube.cube_piece import Color, CubePiece
 import pytest
 import random
 
 from magiccube.solver.basic.basic_solver import BasicSolver, SolverException
+
+def test_cube_size_1():
+    with pytest.raises(CubeException):
+        c = Cube(1)
+    
 
 def test_reset():
     c = Cube(3)
@@ -102,11 +107,17 @@ def test_print_4d():
     c.check_consistency()
     print(c)
 
-def test_history():
+def test_history_str():
     c = Cube(3)
     moves = "R' L U D' F B' R' L"
     c.rotate(moves)
     assert c.history(to_str=True) == moves
+
+def test_history():
+    c = Cube(5)
+    moves = [CubeMove(CubeMoveType.R, False),CubeMove(CubeMoveType.F, True), CubeMove(CubeMoveType.D, False, wide=True, layer=2)]
+    c.rotate(moves)
+    assert c.history() == moves
 
 def test_reverse():
     c = Cube(3)
@@ -116,16 +127,22 @@ def test_reverse():
     c.rotate(c.reverse_history())
     assert c.is_done()
 
-def test_scramble():
+def test_scramble_3x3():
     c = Cube(3)
     c.scramble(num_steps=50)
     print(c)
     assert(not c.is_done())
 
-def test_scramble_2d():
+def test_scramble_2x2():
     c = Cube(2)
     c.scramble(num_steps=50)
     print(c)
+    assert(not c.is_done())
+
+def test_scramble_4x4():
+    c = Cube(4)
+    c.scramble(num_steps=50)
+    # print(c)
     assert(not c.is_done())
 
 def test_get_piece():
@@ -289,6 +306,11 @@ def test_set_cube():
     c.set("YYYYYYYYYRRRRRRRRRGGGGGGGGGOOOOOOOOOBBBBBBBBBWWWWWWWWW")
     assert c.is_done()
 
+def test_set_cube_invalid():
+    c = Cube(3)
+    with pytest.raises(CubeException):
+        c.set("YYYYYYYYYRRRRRRRRRGGGGGGGGGOOOOOOOOOBBBBBBBBBWWWWWWWWWYYYYYYYYYYYY")
+
 def test_set_cube_4x():
     c = Cube(4)
     c.set("YYYYYYYYYYYYYYYYRRRRRRRRRRRRRRRRGGGGGGGGGGGGGGGGOOOOOOOOOOOOOOOOBBBBBBBBBBBBBBBBWWWWWWWWWWWWWWWW")
@@ -341,8 +363,30 @@ def test_set_cube_bad_cube():
     with pytest.raises(SolverException):
         solver.solve()
 
+def test_inconsistent_cube():
+    c = Cube(3)
+    c.cube[0,0,0]=CubePiece(colors=[None,None,None])
+    with pytest.raises(CubeException):
+        c.check_consistency()
+
+def test_bad_direction():
+    c = Cube(3)
+    with pytest.raises(CubeException):
+        c._get_direction(CubeMove(None))  # type: ignore
+
+def test_mes_move_even_cube():
+    c = Cube(4)
+    with pytest.raises(CubeException):
+        c.rotate("M")
+
+def test_invalid_slice():
+    c = Cube(4)
+    with pytest.raises(CubeException):
+        c._move_to_slice(CubeMove(CubeMoveType.L, layer=-1))
+
+    with pytest.raises(CubeException):
+        c._move_to_slice(CubeMove(CubeMoveType.L, layer=5))
 
 if __name__ == "__main__" :
-    #pytest.main()
-    test_move()
+    pytest.main()
     pass

@@ -8,7 +8,7 @@ from magiccube.solver.basic.basic_solver import BasicSolver
 
 random.seed(42)
 cube = Cube(hist=False, size=3)
-solver = BasicSolver(cube)
+solver = BasicSolver()
 
 # Solve the cube N times
 for _ in range(5):
@@ -21,7 +21,7 @@ for _ in range(5):
     print(cube)
 
     # Solve the cube
-    actions = solver.solve()
+    actions = solver.solve(cube)
     print("Solution actions:", actions)
 
     assert cube.is_done()

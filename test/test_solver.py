@@ -8,38 +8,50 @@ from magiccube.solver.basic.solver_base import SolverException
 
 def test_solve():
     cube = Cube(size=3)
-    solver = BasicSolver(cube)
+    solver = BasicSolver()
 
     random.seed(42)
     cube.scramble(num_steps=50, wide=False)
 
-    solver.solve()
+    solver.solve(cube)
     assert cube.is_done()
+
+def test_solve_actions():
+    cube = Cube(size=3)
+    solver = BasicSolver()
+
+    random.seed(42)
+    cube.scramble(num_steps=50, wide=False)
+
+    actions = solver.get_solve_actions(cube)
+    assert len(actions)>0
 
 def test_solve_nok_size():
     cube = Cube(size=2)
     with pytest.raises(SolverException):
-        BasicSolver(cube)
+        s = BasicSolver()
+        s.solve(cube)
 
     cube = Cube(size=4)
     with pytest.raises(SolverException):
-        BasicSolver(cube)
+        s = BasicSolver()
+        s.solve(cube)
 
 def test_solve_nok_max_iterations():
     cube = Cube(size=3)
 
     random.seed(42)
     cube.scramble(num_steps=50, wide=False)
-    solver = BasicSolver(cube)
+    solver = BasicSolver()
     solver.max_iterations_per_stage=2
     with pytest.raises(SolverException):
-        solver.solve()
+        solver.solve(cube)
 
 def test_solve_nok_bad_cube():
     cube = Cube(size=3, state="RYYYYYYYYBRRRRRRRRGGGGGGGGGOOOOOOOOOBBBBBBBBBWWWWWWWWW")
-    solver = BasicSolver(cube)
+    solver = BasicSolver()
     with pytest.raises(SolverException):
-        solver.solve()
+        solver.solve(cube)
 
 
 
@@ -52,12 +64,12 @@ def test_solve_white_cross():
     ]
 
     cube = Cube(hist=False, size=3)
-    solver = BasicSolver(cube, init_stages=init_stages)
+    solver = BasicSolver(init_stages=init_stages)
 
     random.seed(42)
     cube.scramble(num_steps=50, wide=False)
 
-    solver.solve()
+    solver.solve(cube)
 
     # white cross
     c,p=cube.find_piece("BW")
@@ -89,12 +101,12 @@ def test_solve_white_corners():
     ]
 
     cube = Cube(hist=False, size=3)
-    solver = BasicSolver(cube, init_stages=init_stages)
+    solver = BasicSolver(init_stages=init_stages)
 
     random.seed(42)
     cube.scramble(num_steps=50, wide=False)
 
-    solver.solve()
+    solver.solve(cube)
 
     # white cross
     c,p=cube.find_piece("BW")
@@ -148,12 +160,12 @@ def test_solve_2nd_layer():
     ]
 
     cube = Cube(hist=False, size=3)
-    solver = BasicSolver(cube, init_stages=init_stages)
+    solver = BasicSolver(init_stages=init_stages)
 
     random.seed(42)
     cube.scramble(num_steps=50, wide=False)
 
-    solver.solve()
+    solver.solve(cube)
 
     # white cross
     c,p=cube.find_piece("BW")
@@ -225,12 +237,12 @@ def test_solve_top_cross():
     ]
 
     cube = Cube(hist=False, size=3)
-    solver = BasicSolver(cube, init_stages=init_stages)
+    solver = BasicSolver(init_stages=init_stages)
 
     random.seed(42)
     cube.scramble(num_steps=50, wide=False)
 
-    solver.solve()
+    solver.solve(cube)
 
     # white cross
     c,p=cube.find_piece("BW")
@@ -318,12 +330,12 @@ def test_solve_top_corners():
     ]
 
     cube = Cube(hist=False, size=3)
-    solver = BasicSolver(cube, init_stages=init_stages)
+    solver = BasicSolver(init_stages=init_stages)
 
     random.seed(42)
     cube.scramble(num_steps=50, wide=False)
 
-    solver.solve()
+    solver.solve(cube)
     assert cube.is_done()
 
     # white cross

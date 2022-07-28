@@ -50,7 +50,7 @@ class Cube:
         if state is None:
             self.reset()
         else:
-            self.set(state)
+            self.set_state(state)
 
     def _is_outer_position(self,_x:int,_y:int,_z:int)->bool:
         """Test if the coordinates indicate and outer cube position"""
@@ -70,61 +70,6 @@ class Cube:
         self.cube = np.array(initial_cube, dtype=np.object_)
         self._history = []
 
-    def set(self, image:str):
-        """Sets the cube state. 
-
-        Parameters
-        ----------
-        image: str
-        Colors of every cube face in the following order: UP, LEFT, FRONT, RIGHT, BACK, DOWN.
-
-        Example:
-        YYYYYYYYY
-        RRRRRRRRR GGGGGGGGG OOOOOOOOO BBBBBBBBB
-        WWWWWWWWW
-        """
-        image = image.replace(" ", "")
-        image = image.replace("\n", "")
-
-        if len(image) != 6*self.size*self.size:
-            raise CubeException("Cube state has an invalid size. Should be: " + str(6*self.size*self.size))
-
-        img = [Color.create(x) for x in image]
-
-        self.reset()
-        for i,color in enumerate(img):
-            face = i // (self.size**2)
-            remain = i%(self.size**2)
-            if face ==0: #U
-                _x=remain%self.size
-                _y = self.size-1
-                _z=remain//self.size
-                self.get_piece((_x,_y,_z)).set_piece_color(1,color)
-            elif face == 5: #D
-                _x=remain%self.size
-                _y = 0
-                _z=self.size-(remain//self.size)-1
-                self.get_piece((_x,_y,_z)).set_piece_color(1,color)
-            elif face == 1: #L
-                _x = 0
-                _y=self.size-(remain//self.size)-1
-                _z=remain%self.size
-                self.get_piece((_x,_y,_z)).set_piece_color(0,color)
-            elif face == 3: #R
-                _x = self.size-1
-                _y=self.size-(remain//self.size)-1
-                _z=self.size-(remain%self.size)-1
-                self.get_piece((_x,_y,_z)).set_piece_color(0,color)
-            elif face == 4: #B
-                _x=self.size-(remain%self.size)-1
-                _y = self.size-(remain//self.size)-1
-                _z=0
-                self.get_piece((_x,_y,_z)).set_piece_color(2,color)
-            elif face == 2: #F
-                _x=remain%self.size
-                _y=self.size-(remain//self.size)-1
-                _z=self.size-1
-                self.get_piece((_x,_y,_z)).set_piece_color(2,color)
 
     def scramble(self, num_steps:int=50, wide=None) -> List[CubeMove]:
         """Scramble the cube with random moves.
@@ -181,10 +126,14 @@ class Cube:
         res = list(np.array(res).flatten())
         return res
 
-    def get_all_faces(self) -> Dict[Face,List[List[Color]]]:
-        """Get the CubePiece of all cube faces"""
-        faces = {f:self.get_face(f) for f in Face}
-        return faces
+    def get_state(self) -> str:
+        """Get the cube state in string format"""
+        res = ""
+        for face in [Face.U,Face.L,Face.F,Face.R,Face.B,Face.D]:
+            colors = self.get_face_flat(face)
+            res += "".join([c.name for c in colors])
+        return res
+
 
     def get_piece(self, coordinates: Coordinates) -> CubePiece:
         """Get the CubePiece at a given coordinate"""
@@ -280,6 +229,63 @@ class Cube:
                 return False
         return True
 
+    def set_state(self, image:str):
+        """Sets the cube state. 
+
+        Parameters
+        ----------
+        image: str
+        Colors of every cube face in the following order: UP, LEFT, FRONT, RIGHT, BACK, DOWN.
+
+        Example:
+        YYYYYYYYY
+        RRRRRRRRR GGGGGGGGG OOOOOOOOO BBBBBBBBB
+        WWWWWWWWW
+        """
+        image = image.replace(" ", "")
+        image = image.replace("\n", "")
+
+        if len(image) != 6*self.size*self.size:
+            raise CubeException("Cube state has an invalid size. Should be: " + str(6*self.size*self.size))
+
+        img = [Color.create(x) for x in image]
+
+        self.reset()
+        for i,color in enumerate(img):
+            face = i // (self.size**2)
+            remain = i%(self.size**2)
+            if face ==0: #U
+                _x=remain%self.size
+                _y = self.size-1
+                _z=remain//self.size
+                self.get_piece((_x,_y,_z)).set_piece_color(1,color)
+            elif face == 5: #D
+                _x=remain%self.size
+                _y = 0
+                _z=self.size-(remain//self.size)-1
+                self.get_piece((_x,_y,_z)).set_piece_color(1,color)
+            elif face == 1: #L
+                _x = 0
+                _y=self.size-(remain//self.size)-1
+                _z=remain%self.size
+                self.get_piece((_x,_y,_z)).set_piece_color(0,color)
+            elif face == 3: #R
+                _x = self.size-1
+                _y=self.size-(remain//self.size)-1
+                _z=self.size-(remain%self.size)-1
+                self.get_piece((_x,_y,_z)).set_piece_color(0,color)
+            elif face == 4: #B
+                _x=self.size-(remain%self.size)-1
+                _y = self.size-(remain//self.size)-1
+                _z=0
+                self.get_piece((_x,_y,_z)).set_piece_color(2,color)
+            elif face == 2: #F
+                _x=remain%self.size
+                _y=self.size-(remain//self.size)-1
+                _z=self.size-1
+                self.get_piece((_x,_y,_z)).set_piece_color(2,color)
+
+
     def check_consistency(self)->bool:
         """Check the cube for internal consistency"""
         for face_name in Face:
@@ -309,3 +315,9 @@ class Cube:
     def __str__(self):
         printer = CubePrintStr(self)
         return printer.print_cube()
+
+    def clone(self):
+        """CLone the cube"""
+        c = Cube(self.size, hist=self._store_history)
+        c.set_state(self.get_state())
+        return c

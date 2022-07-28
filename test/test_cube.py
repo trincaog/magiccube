@@ -157,16 +157,26 @@ def test_get_piece():
     assert piece.get_piece_color(Face.U.get_axis())==Color.Y
     assert piece.get_piece_color(Face.F.get_axis())==Color.G
 
+def test_get_state():
+    c = Cube(3)  
+    assert c.get_state()=="YYYYYYYYYRRRRRRRRRGGGGGGGGGOOOOOOOOOBBBBBBBBBWWWWWWWWW"
 
-def test_get_all_faces():
-    c = Cube(3)
-    faces = c.get_all_faces()
-    assert np.all(np.array(faces[Face.F]).flatten()==Color.G)
-    assert np.all(np.array(faces[Face.B]).flatten()==Color.B)
-    assert np.all(np.array(faces[Face.L]).flatten()==Color.R)
-    assert np.all(np.array(faces[Face.R]).flatten()==Color.O)
-    assert np.all(np.array(faces[Face.U]).flatten()==Color.Y)
-    assert np.all(np.array(faces[Face.D]).flatten()==Color.W)
+def test_clone():
+    c1 = Cube(3)  
+    c2 = c1.clone()
+    c1.rotate("R")
+    assert not c1.is_done()
+    assert c2.is_done()
+
+# def test_get_all_faces():
+#     c = Cube(3)
+#     faces = c.get_all_faces()
+#     assert np.all(np.array(faces[Face.F]).flatten()==Color.G)
+#     assert np.all(np.array(faces[Face.B]).flatten()==Color.B)
+#     assert np.all(np.array(faces[Face.L]).flatten()==Color.R)
+#     assert np.all(np.array(faces[Face.R]).flatten()==Color.O)
+#     assert np.all(np.array(faces[Face.U]).flatten()==Color.Y)
+#     assert np.all(np.array(faces[Face.D]).flatten()==Color.W)
 
 def test_get_all_pieces():
     c=Cube(3)
@@ -303,17 +313,17 @@ def test_get_piece_type():
 
 def test_set_cube():
     c = Cube(3)
-    c.set("YYYYYYYYYRRRRRRRRRGGGGGGGGGOOOOOOOOOBBBBBBBBBWWWWWWWWW")
+    c.set_state("YYYYYYYYYRRRRRRRRRGGGGGGGGGOOOOOOOOOBBBBBBBBBWWWWWWWWW")
     assert c.is_done()
 
 def test_set_cube_invalid():
     c = Cube(3)
     with pytest.raises(CubeException):
-        c.set("YYYYYYYYYRRRRRRRRRGGGGGGGGGOOOOOOOOOBBBBBBBBBWWWWWWWWWYYYYYYYYYYYY")
+        c.set_state("YYYYYYYYYRRRRRRRRRGGGGGGGGGOOOOOOOOOBBBBBBBBBWWWWWWWWWYYYYYYYYYYYY")
 
 def test_set_cube_4x():
     c = Cube(4)
-    c.set("YYYYYYYYYYYYYYYYRRRRRRRRRRRRRRRRGGGGGGGGGGGGGGGGOOOOOOOOOOOOOOOOBBBBBBBBBBBBBBBBWWWWWWWWWWWWWWWW")
+    c.set_state("YYYYYYYYYYYYYYYYRRRRRRRRRRRRRRRRGGGGGGGGGGGGGGGGOOOOOOOOOOOOOOOOBBBBBBBBBBBBBBBBWWWWWWWWWWWWWWWW")
     assert c.is_done()
 
 def test_set_cube_initial_state():
@@ -337,7 +347,7 @@ def test_set_cube_initial_state_4X():
 
 def test_set_cube_not_done():
     c = Cube(3)
-    c.set("""
+    c.set_state("""
        RBB BYO GGO
        YRO YRW WWW
        YYB GGW BRW
@@ -351,7 +361,7 @@ def test_set_cube_not_done():
 
 def test_set_cube_bad_cube():
     c = Cube(3)
-    c.set("""
+    c.set_state("""
        RBB BYO OGG
        YRO YRW WWW
        YYB GGW BRW
@@ -359,9 +369,9 @@ def test_set_cube_bad_cube():
        YYG BBR OOG
        RGO RWO RBB
        """)
-    solver = BasicSolver(c)
+    solver = BasicSolver()
     with pytest.raises(SolverException):
-        solver.solve()
+        solver.solve(c)
 
 def test_inconsistent_cube():
     c = Cube(3)

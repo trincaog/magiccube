@@ -1,7 +1,8 @@
+from turtle import position
+from numpy import size
 import magiccube
 from magiccube.solver.basic.basic_solver import BasicSolver
 import tkinter as tk
-import time
 
 from magiccube.cube_base import Color, Face
 
@@ -69,15 +70,29 @@ class CubeGui:
         self.draw_face(self.cube.get_face(Face.B), b_start[0], b_start[1])
         self.draw_face(self.cube.get_face(Face.D), d_start[0], d_start[1])
 
-    def rotate(self, face):
-        self.cube.rotate(face)
+    def reset(self):
+        self.cube.reset()
         self.draw_cube()
 
+    def scramble(self):
+        self.cube.scramble()
+        self.draw_cube()
+
+    def rotate(self, face):
+
+        def rr():
+            self.cube.rotate(face)
+            self.draw_cube()
+        return rr
+
     def apply_moves(self, moves, i=0):
+        if len(moves)==0:
+            return
+
         self.cube.rotate([moves[i]])
         self.draw_cube()
         if i<len(moves)-1:
-            self.canvas.after(ms=500, func=lambda :self.apply_moves(moves, i+1))
+            self.canvas.after(ms=100, func=lambda :self.apply_moves(moves, i+1))
 
     def solve(self):
         solver = BasicSolver()
@@ -87,38 +102,43 @@ class CubeGui:
     def start(self):
         self.root = tk.Tk()
         self.root.title('Rubik')
-        # self.root.geometry('500x400')
+        move_button_width=5
+        move_button_height=2
+        main_button_width=14
+        main_button_height=2
+
 
         self.canvas = tk.Canvas(self.root,height=self.canvas_size[1],width=self.canvas_size[0],bg="white")
         self.canvas.pack()
 
-        btn = tk.Button(self.root, text='F',command=lambda:self.rotate("F"))
-        btn.pack(side=tk.LEFT, fill=tk.X, expand=False)
-        btn = tk.Button(self.root, text="F'",command=lambda:self.rotate("F'"))
-        btn.pack(side=tk.LEFT, fill=tk.X, expand=False)
-        btn = tk.Button(self.root, text='B',command=lambda:self.rotate("B"))
-        btn.pack(side=tk.LEFT, fill=tk.X, expand=False)
-        btn = tk.Button(self.root, text="B'",command=lambda:self.rotate("B'"))
-        btn.pack(side=tk.LEFT, fill=tk.X, expand=False)
-        btn = tk.Button(self.root, text='L',command=lambda:self.rotate("L"))
-        btn.pack(side=tk.LEFT, fill=tk.X, expand=False)
-        btn = tk.Button(self.root, text="L'",command=lambda:self.rotate("L'"))
-        btn.pack(side=tk.LEFT, fill=tk.X, expand=False)
-        btn = tk.Button(self.root, text='R',command=lambda:self.rotate("R"))
-        btn.pack(side=tk.LEFT, fill=tk.X, expand=False)
-        btn = tk.Button(self.root, text="R'",command=lambda:self.rotate("R'"))
-        btn.pack(side=tk.LEFT, fill=tk.X, expand=False)
-        btn = tk.Button(self.root, text='U',command=lambda:self.rotate("U"))
-        btn.pack(side=tk.LEFT, fill=tk.X, expand=False)
-        btn = tk.Button(self.root, text="U'",command=lambda:self.rotate("U'"))
-        btn.pack(side=tk.LEFT, fill=tk.X, expand=False)
-        btn = tk.Button(self.root, text='D',command=lambda:self.rotate("D"))
-        btn.pack(side=tk.LEFT, fill=tk.X, expand=False)
-        btn = tk.Button(self.root, text="D'",command=lambda:self.rotate("D'"))
-        btn.pack(side=tk.LEFT, fill=tk.X, expand=False)
+        button1_frame = tk.Frame(self.root)
+        button1_frame.pack(side=tk.TOP, expand=False)
 
-        btn = tk.Button(self.root, text="solve",command=lambda:self.solve())
-        btn.pack(side=tk.BOTTOM, fill=tk.X, expand=False)
+        for b in ['F','B','L','R','U','D']:
+            btn = tk.Button(button1_frame, text=b,command=self.rotate(b), 
+                    width=move_button_width, height=move_button_height)
+            btn.pack(side=tk.LEFT, expand=False)
+
+        button2_frame = tk.Frame(self.root)
+        button2_frame.pack(side=tk.TOP, expand=False)
+
+        for b in ["F'","B'","L'","R'","U'","D'"]:
+            btn = tk.Button(button2_frame, text=b,command=self.rotate(b), 
+                    width=move_button_width, height=move_button_height)
+            btn.pack(side=tk.LEFT, expand=False)
+
+        button3_frame = tk.Frame(self.root)
+        button3_frame.pack(side=tk.TOP, expand=False)
+
+        btn = tk.Button(button3_frame, text="Reset",command=self.reset,
+                        width=main_button_width, height=main_button_height)
+        btn.pack(side=tk.LEFT, expand=False)
+        btn = tk.Button(button3_frame, text="Scramble",command=self.scramble,
+                        width=main_button_width, height=main_button_height)
+        btn.pack(side=tk.LEFT, expand=False)
+        btn = tk.Button(button3_frame, text="Solve",command=self.solve, 
+                        width=main_button_width, height=main_button_height)
+        btn.pack(side=tk.LEFT, expand=False)
 
         self.root.bind('f', lambda ev:self.rotate("F"))
         self.root.bind('b', lambda ev:self.rotate("B"))
@@ -142,5 +162,3 @@ class CubeGui:
 
 gui = CubeGui()
 gui.start()
-
-

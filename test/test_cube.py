@@ -387,6 +387,17 @@ def test_invalid_slice():
     with pytest.raises(CubeException):
         c._move_to_slice(CubeMove(CubeMoveType.L, layer=5))
 
+def test_rotate_twice():
+    c = Cube(3)
+    c.rotate("U2")
+    assert c.get_face_flat(Face.F)==[
+    Color.B,Color.B,Color.B,
+    Color.G,Color.G,Color.G,
+    Color.G,Color.G,Color.G,
+    ]
+    c.rotate("U'2")
+    assert c.is_done()
+
 if __name__ == "__main__" :
     pytest.main()
     pass

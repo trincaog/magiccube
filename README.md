@@ -78,6 +78,24 @@ The solver uses the [beginner method](https://ruwix.com/the-rubiks-cube/how-to-s
 ## Move Optimizer
 
 The move optimizer does the following optimizations:
+
 - Eliminates redundant moves (ex: L L L L)
 - Converts 3x moves to the inverse (ex: F F F -> F')
 - Eliminates cube rotations (ex: Y F -> R)
+
+## Development
+
+Install `pyenv`
+
+```sh
+curl https://pyenv.run | bash
+```
+
+Setup the environment using `pyenv`
+
+```sh
+pyenv virtualenv 3.11 cube-3.11
+pyenv local cube-3.11
+pip install -r requirements.txt
+direnv allow
+```

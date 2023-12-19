@@ -8,7 +8,7 @@ cube = magiccube.Cube(
 print(cube)
 
 # Make some cube rotations
-cube.rotate("R' L U D' F B' R' L")
+cube.rotate("R' L2 U D' F B'2 R' L")
 
 # Print the cube
 print(cube)

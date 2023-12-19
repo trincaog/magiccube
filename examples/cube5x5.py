@@ -4,7 +4,7 @@ import magiccube
 cube = magiccube.Cube(5)
 
 # Make some cube rotations
-cube.rotate("M M E E S S")
+cube.rotate("M2 E2 S2")
 
 # Print the cube
 print(cube)

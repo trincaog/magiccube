@@ -27,15 +27,20 @@ print(cube)
 
 ```python
 # Rotate the cube
-cube.rotate("R' L U D' F B' R' L")
+cube.rotate("R' L2 U D' F B'2 R' L")
 
 # Solve the 3x3x3 cube
 solver = BasicSolver(cube)
 solver.solve()
 
-# 6x6x6 Cube
+# Complex moves 6x6x6 Cube
 cube = magiccube.Cube(6)
-cube.rotate("Rw' Lw 3Uw'")
+cube.rotate("Lw") # L wide rotation
+cube.rotate("Lw'") # L wide counter-rotation
+cube.rotate("Lw2") # 2x L wide rotation
+cube.rotate("3L") # 3rd line L rotation
+cube.rotate("3Lw") # 3rd line L wide rotation
+cube.rotate("3Lw'2") # 2x 3rd line L wide counter-rotation
 ```
 
 ## Examples
@@ -64,6 +69,7 @@ See examples folder.
 |Fw Fw'| Wide rotation of 2 layers.|
 |3Fw 3Fw' | Wide rotation of 3 layers.|
 |3F 3F' | Rotation of the 3rd layer.|
+|F2 F2' | 2x rotation.|
 
 ## Cube Coordinates
 

@@ -454,6 +454,53 @@ def test_rotate_twice():
     c.rotate("U'2")
     assert c.is_done()
 
+    c.rotate("D2")
+    assert c.get_face_flat(Face.F) == [
+        Color.G, Color.G, Color.G,
+        Color.G, Color.G, Color.G,
+        Color.B, Color.B, Color.B,
+    ]
+    c.rotate("D'2")
+    assert c.is_done()
+
+    c.rotate("L2")
+    assert c.get_face_flat(Face.F) == [
+        Color.B, Color.G, Color.G,
+        Color.B, Color.G, Color.G,
+        Color.B, Color.G, Color.G,
+    ]
+    c.rotate("L'2")
+    assert c.is_done()
+
+    c.rotate("R2")
+    assert c.get_face_flat(Face.F) == [
+        Color.G, Color.G, Color.B,
+        Color.G, Color.G, Color.B,
+        Color.G, Color.G, Color.B,
+    ]
+    c.rotate("R'2")
+    assert c.is_done()
+
+    c.rotate("F2")
+    print(c.get_face_flat(Face.U))
+    assert c.get_face_flat(Face.U) == [
+        Color.Y, Color.Y, Color.Y,
+        Color.Y, Color.Y, Color.Y,
+        Color.W, Color.W, Color.W,
+    ]
+    c.rotate("F'2")
+    assert c.is_done()
+
+    c.rotate("B2")
+    print(c.get_face_flat(Face.U))
+    assert c.get_face_flat(Face.U) == [
+        Color.W, Color.W, Color.W,
+        Color.Y, Color.Y, Color.Y,
+        Color.Y, Color.Y, Color.Y,
+    ]
+    c.rotate("B'2")
+    assert c.is_done()
+
 
 if __name__ == "__main__":
     pytest.main()

@@ -10,8 +10,8 @@ cube = magiccube.Cube(4, state="""
     WWWBWWWBWWWBWWWB
     """)
 
-# Print the cube
-print(cube)
-
 # Make some cube rotations
 cube.rotate("U' R'")
+
+# Print the cube
+print(cube)

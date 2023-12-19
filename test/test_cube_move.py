@@ -23,6 +23,7 @@ def test_create_move():
     with pytest.raises(CubeException):
         CubeMoveType.create("A")
 
+
 def test_create_move_str():
     assert CubeMove.create("F") == CubeMove(CubeMoveType.F)
     assert CubeMove.create("B") == CubeMove(CubeMoveType.B)
@@ -36,5 +37,5 @@ def test_create_move_str():
 
 
 def test_move_eq():
-    assert CubeMove.create("F")==CubeMove.create("F")
-    assert CubeMove.create("B")!=1
+    assert CubeMove.create("F") == CubeMove.create("F")
+    assert CubeMove.create("B") != 1

@@ -1,7 +1,8 @@
 import magiccube
 
 # Create the cube in solved state
-cube = magiccube.Cube(3,"YYYYYYYYYRRRRRRRRRGGGGGGGGGOOOOOOOOOBBBBBBBBBWWWWWWWWW")
+cube = magiccube.Cube(
+    3, "YYYYYYYYYRRRRRRRRRGGGGGGGGGOOOOOOOOOBBBBBBBBBWWWWWWWWW")
 
 # Print the cube
 print(cube)
@@ -13,7 +14,8 @@ cube.rotate("R' L U D' F B' R' L")
 print(cube)
 
 # Create the cube with a fixed state
-cube = magiccube.Cube(3, "YYYYYYGGGGGWRRRRRROOOGGWGGWYBBOOOOOORRRYBBYBBWWBWWBWWB")
+cube = magiccube.Cube(
+    3, "YYYYYYGGGGGWRRRRRROOOGGWGGWYBBOOOOOORRRYBBYBBWWBWWBWWB")
 
 # Reset to the initial position
 cube.reset()

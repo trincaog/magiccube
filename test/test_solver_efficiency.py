@@ -2,12 +2,13 @@ import random
 from magiccube.cube import Cube
 from magiccube.solver.basic.basic_solver import BasicSolver
 
+
 def perf_test_cube():
     random.seed(42)
     cube = Cube(hist=False, size=3)
     solver = BasicSolver(cube)
 
-    action_count_list=[]
+    action_count_list = []
 
     for _ in range(1000):
         # Reset & Scramble the cube
@@ -23,5 +24,5 @@ def perf_test_cube():
     print("Min  actions", min(action_count_list))
 
 
-if __name__ == "__main__" :
+if __name__ == "__main__":
     perf_test_cube()

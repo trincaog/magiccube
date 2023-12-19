@@ -1,7 +1,7 @@
 import magiccube
 
 # Create the cube
-cube = magiccube.Cube(4,state="""
+cube = magiccube.Cube(4, state="""
     YYYYYYYYYYYYGGGG
     GGGWRRRRRRRRRRRR
     OOOOGGGWGGGWGGGW

@@ -3,8 +3,8 @@ from magiccube.cube import Cube, CubeException
 from magiccube.optimizer.move_optimizer import MoveOptimizer
 from magiccube.solver.basic.solver_base import SolverException, SolverStage
 from magiccube.solver.basic.solver_stages import ConditionAction, stage_recenter_down, stage_recenter_front, stage_white_cross, \
-                                                 stage_white_corner, stage_2nd_layer, stage_top_cross, stage_order_top_cross, \
-                                                 stage_order_top_corners, stage_turn_top_corners
+    stage_white_corner, stage_2nd_layer, stage_top_cross, stage_order_top_cross, \
+    stage_order_top_corners, stage_turn_top_corners
 
 
 stages = {
@@ -38,52 +38,57 @@ stages = {
     "stage_2nd_layer_br": (("BR",), stage_2nd_layer),
     "stage_recenter_front_g3": (("G",), stage_recenter_front),
 
-    "stage_top_cross": (("YG","YR","YB","YO"), stage_top_cross),
+    "stage_top_cross": (("YG", "YR", "YB", "YO"), stage_top_cross),
 
-    "stage_order_top_cross": (("YG","YR","YB","YO"), stage_order_top_cross),
-    "stage_order_top_corners": (("YRG","YRB","YBO","YGO"), stage_order_top_corners),
-    "stage_turn_top_corners": (("YRG","YRB","YBO","YGO"), stage_turn_top_corners),
+    "stage_order_top_cross": (("YG", "YR", "YB", "YO"), stage_order_top_cross),
+    "stage_order_top_corners": (("YRG", "YRB", "YBO", "YGO"), stage_order_top_corners),
+    "stage_turn_top_corners": (("YRG", "YRB", "YBO", "YGO"), stage_turn_top_corners),
 }
+
 
 class BasicSolver:
 
-    def __init__(self, cube:Cube, init_stages=None):
-        if cube.size!=3:
+    def __init__(self, cube: Cube, init_stages=None):
+        if cube.size != 3:
             raise SolverException("Solver only works with 3x3x3 cube")
         self.cube = cube
-        self.stages:List[SolverStage]=[]
-        self.default_debug =False
-        self.max_iterations_per_stage=12
+        self.stages: List[SolverStage] = []
+        self.default_debug = False
+        self.max_iterations_per_stage = 12
 
         if init_stages is None:
-            for name,stage in stages.items():
-                self.add(name=name,target_colors=stage[0], pattern_condition_actions=stage[1], debug=self.default_debug)
+            for name, stage in stages.items():
+                self.add(
+                    name=name, target_colors=stage[0], pattern_condition_actions=stage[1], debug=self.default_debug)
         else:
             for init_stage in init_stages:
-                self.add(name=init_stage,target_colors=stages[init_stage][0],
-                    pattern_condition_actions=stages[init_stage][1], debug=self.default_debug)
+                self.add(name=init_stage, target_colors=stages[init_stage][0],
+                         pattern_condition_actions=stages[init_stage][1], debug=self.default_debug)
 
-    def _solve_pattern_stage(self, stage:SolverStage)-> List[str]:
+    def _solve_pattern_stage(self, stage: SolverStage) -> List[str]:
         """Solve one stage of the cube"""
 
         full_actions = []
-        iteration=0
+        iteration = 0
 
         while iteration < self.max_iterations_per_stage:
-            iteration+=1
-            target_pieces = [self.cube.find_piece(target_color) for target_color in stage.target_colors]
+            iteration += 1
+            target_pieces = [self.cube.find_piece(
+                target_color) for target_color in stage.target_colors]
 
-            if stage.debug:#pragma:no cover
-                print("solve_stage start:", stage.name, stage.target_colors, target_pieces)
+            if stage.debug:  # pragma:no cover
+                print("solve_stage start:", stage.name,
+                      stage.target_colors, target_pieces)
                 print(self.cube)
 
-            actions,is_continue = stage.get_moves(target_pieces)
+            actions, is_continue = stage.get_moves(target_pieces)
 
             self.cube.rotate(actions)
             full_actions += actions
 
-            if stage.debug:#pragma:no cover
-                print("solve_stage end:", stage.name,target_pieces, actions, is_continue)
+            if stage.debug:  # pragma:no cover
+                print("solve_stage end:", stage.name,
+                      target_pieces, actions, is_continue)
                 print(self.cube)
 
             if not is_continue:
@@ -98,10 +103,10 @@ class BasicSolver:
     def solve(self, optimize=True):
         """Solve the cube by running all the registered pattern stages"""
         try:
-            full_actions=[]
+            full_actions = []
             for stage in self.stages:
-                if stage.debug:#pragma:no cover
-                    print("starting stage",stage)
+                if stage.debug:  # pragma:no cover
+                    print("starting stage", stage)
                 actions = self._solve_pattern_stage(stage)
                 full_actions += actions
 
@@ -112,8 +117,8 @@ class BasicSolver:
         except CubeException as e:
             raise SolverException("unable to solve cube", e) from e
 
-
-    def add(self,name, target_colors:Tuple[str,...], pattern_condition_actions:Tuple[ConditionAction, ...], debug=False):
+    def add(self, name, target_colors: Tuple[str, ...], pattern_condition_actions: Tuple[ConditionAction, ...], debug=False):
         """Add a stage to the solver."""
-        self.stages.append(SolverStage(target_colors, pattern_condition_actions, name=name,debug=debug))
+        self.stages.append(SolverStage(
+            target_colors, pattern_condition_actions, name=name, debug=debug))
         return self

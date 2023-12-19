@@ -8,6 +8,13 @@ repos:
     -   id: end-of-file-fixer
 -   repo: local
     hooks:
+    -   id: autopep
+        name: autopep
+        entry: "autopep8 --exit-code --diff --recursive ."
+        language: system
+        types: [python]
+        require_serial: true
+        args: []
     -   id: pylint
         name: pylint
         entry: pylint

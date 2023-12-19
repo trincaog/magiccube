@@ -250,16 +250,18 @@ class Cube:
         axis = move.type.get_axis()
         slices = self._move_to_slice(move)
         direction = self._get_direction(move)
+        count = move.count
 
-        rotation_plane=tuple(slice(None) if i!=axis else slices for i in range(3))
-        rotation_axes=tuple(i for i in range(3) if i!=axis)
+        for _ in range(count):
+            rotation_plane=tuple(slice(None) if i!=axis else slices for i in range(3))
+            rotation_axes=tuple(i for i in range(3) if i!=axis)
 
-        plane = self.cube[rotation_plane]
-        rotated_plane = np.rot90(plane, direction, axes=rotation_axes)
-        self.cube[rotation_plane] = rotated_plane
-        for piece in self.cube[rotation_plane].flatten():
-            if piece is not None:
-                piece.rotate_piece(axis)
+            plane = self.cube[rotation_plane]
+            rotated_plane = np.rot90(plane, direction, axes=rotation_axes)
+            self.cube[rotation_plane] = rotated_plane
+            for piece in self.cube[rotation_plane].flatten():
+                if piece is not None:
+                    piece.rotate_piece(axis)
 
     def rotate(self, movements)->None:
         """Make multiple cube movements"""

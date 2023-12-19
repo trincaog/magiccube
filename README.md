@@ -1,4 +1,5 @@
 # MagicCube: A NxNxN Rubik Cube implementation
+
 A fast implementation of the Rubik Cube based in Python 3.x.
 
 Makes it easy to create cubes of various sizes (2x2x2, 3x3x3, 4x4x4, 6x6x6, ...., 100x100x100).
@@ -6,16 +7,18 @@ Makes it easy to create cubes of various sizes (2x2x2, 3x3x3, 4x4x4, 6x6x6, ....
 Fast rotation speed when compared with other Python implementations, which makes it suitable for Rubik Cube simulations.
 
 Includes:
+
 - Simple solver for the 3x3x3 cube.
 - Move optimizer which reduces the number of moves.
 
-
 ## Installation
+
 ```sh
 pip install magiccube
 ```
 
 ## Usage
+
 ```python
 import magiccube
 
@@ -23,6 +26,7 @@ import magiccube
 cube = magiccube.Cube(3,"YYYYYYYYYRRRRRRRRRGGGGGGGGGOOOOOOOOOBBBBBBBBBWWWWWWWWW")
 print(cube)
 ```
+
 ![Cube](https://trincaopub.s3.amazonaws.com/imgs/magiccube/cube3x3.png)
 
 ```python
@@ -44,10 +48,13 @@ cube.rotate("3Lw'2") # 2x 3rd line L wide counter-rotation
 ```
 
 ## Examples
+
 See examples folder.
 
 ## Supported Moves and Notation
+
 ### Basic moves
+
 |Move |                                                             |
 |-----|-------------------------------------------------------------|
 |L L' | Clockwise/Counterclockwise cube rotation of the LEFT face.  |
@@ -58,6 +65,7 @@ See examples folder.
 |B B' | Clockwise/Counterclockwise cube rotation of the BACK face.  |
 
 ### Advanced Moves
+
 |Move |                                                             |
 |-----|-------------------------------------------------------------|
 |X X' | Cube rotation on X axis. X is the axis that points from LEFT to the RIGHT face.|

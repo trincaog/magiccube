@@ -1,6 +1,5 @@
-import pytest
-
 import random
+import pytest
 from magiccube.cube import Cube
 from magiccube.cube_base import Color
 from magiccube.solver.basic.basic_solver import BasicSolver
@@ -204,10 +203,8 @@ def test_solve_2nd_layer():
     assert c==(0,1,0) , c
     assert p.get_piece_colors_str()=="RB",p.get_piece_colors_str()
 
-
-
-
 def test_solve_top_cross():
+    # pylint: disable=too-many-statements
     init_stages = ["stage_recenter_down","stage_recenter_front",
 "stage_white_cross_bw","stage_recenter_front_o1",
 "stage_white_cross_rw","stage_recenter_front_b1",
@@ -249,7 +246,6 @@ def test_solve_top_cross():
     assert p.get_piece_colors_str()=="OW",p.get_piece_colors_str()
 
     # white corners
-
     c,p=cube.find_piece("GOW")
     assert c==(2,0,2) , c
     assert p.get_piece_colors_str()=="OWG",p.get_piece_colors_str()
@@ -282,7 +278,6 @@ def test_solve_top_cross():
     assert p.get_piece_colors_str()=="RB",p.get_piece_colors_str()
 
     # TOP cross
-
     p=cube.get_piece((1,2,2))
     assert p.get_piece_colors()==(None,Color.Y,Color.G),p.get_piece_colors_str()
 
@@ -295,9 +290,8 @@ def test_solve_top_cross():
     p=cube.get_piece((0,2,1))
     assert p.get_piece_colors()==(Color.R,Color.Y,None),p.get_piece_colors_str()
 
-
-
 def test_solve_top_corners():
+    # pylint: disable=too-many-statements
     init_stages = ["stage_recenter_down","stage_recenter_front",
 "stage_white_cross_bw","stage_recenter_front_o1",
 "stage_white_cross_rw","stage_recenter_front_b1",
@@ -413,4 +407,3 @@ def test_solve_top_corners():
 
 if __name__ == "__main__" :
     pytest.main()
-    pass

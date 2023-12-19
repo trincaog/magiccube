@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Tuple
+from typing import List, Tuple
 from magiccube.cube_base import Color, ColorOrientation, Coordinates
 from magiccube.cube_move import CubeMove
 from magiccube.cube_piece import CubePiece
@@ -21,37 +21,37 @@ class Condition:
         """Convert integer position to CubeCoordinates"""
         x=position//100
         y = (position - x*100)//10
-        z = (position-x*100-y*10)
+        z = position-x*100-y*10
         return (x,y,z)
 
 
     def __init__(self, position:int, accepted_colors_str:Tuple[str, ...]):
         self.coordinate_condition=Condition.position_to_coord(position)
         color_condition = []
-        
+
         # build the pattern condition
         for accepted_color in accepted_colors_str:
-            color_condition.append(tuple([
+            color_condition.append(tuple((
                 None if color_str == "*" else Color.create(color_str)
                 for color_str in accepted_color
-            ]))
+            )))
         self.color_condition:List[ColorOrientation]=color_condition
 
     def _is_color_match(self,orientation_pattern:ColorOrientation,color:ColorOrientation)->bool:
         """ Return True if the piece colors match the orientation pattern """
-        
+
         filtered_color = [c for c in color if c is not None]
-        for i in range(len(orientation_pattern)):
-            if orientation_pattern[i] is None:
+        for i, orientation_color in enumerate(orientation_pattern):
+            if orientation_color is None:
                 continue
-            if orientation_pattern[i] != filtered_color[i]:
+            if orientation_color != filtered_color[i]:
                 return False
         return True
-        
+
 
     def is_match(self, target_coordinates:Coordinates, target_piece:CubePiece):
         """ Return True if the the piece coordinates and color orientation match the PatternCondition  """
-        
+
         assert len(self.color_condition[0]) == target_piece.get_piece_type().value
 
         if target_coordinates!= self.coordinate_condition:

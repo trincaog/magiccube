@@ -8,4 +8,3 @@ cube.rotate("M M E E S S")
 
 # Print the cube
 print(cube)
-

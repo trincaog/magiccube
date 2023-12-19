@@ -20,6 +20,7 @@ class CubeMoveType(Enum):
 
     @staticmethod
     def create(move_str:str):
+        # pylint: disable=too-many-return-statements
         """Create a CubeMoveType"""
         if move_str == "L":
             return CubeMoveType.L
@@ -79,6 +80,8 @@ class CubeMove():
     @staticmethod
     def create(move_str:str):
         """Create a CubeMove from string representation"""
+        # pylint: disable=too-many-return-statements
+
         result = CubeMove.regex_pattern.match(move_str)
         if result is None:
             raise CubeException("invalid movement " + str(move_str))
@@ -133,7 +136,7 @@ class CubeMove():
         wide="w" if self.wide else ""
         reversed_move="'" if self.is_reversed else ""
         return f"{layer}{self.type.name}{wide}{reversed_move}"
-            
+
     def __repr__(self):
         return str(self) #pragma: no cover
 
@@ -141,7 +144,7 @@ class CubeMove():
     def __eq__(self, other):
         if isinstance(other, CubeMove):
             return (
-                self.layer == other.layer and self.type == other.type 
+                self.layer == other.layer and self.type == other.type
                 and self.wide == other.wide and self.is_reversed == other.is_reversed
             )
         return False

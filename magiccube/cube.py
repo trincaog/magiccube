@@ -71,7 +71,7 @@ class Cube:
         self._history = []
 
     def set(self, image:str):
-        """Sets the cube state. 
+        """Sets the cube state.
 
         Parameters
         ----------
@@ -137,12 +137,12 @@ class Cube:
     def generate_random_moves(self, num_steps:int=50, wide=None) -> List[CubeMove]:
         """Generate a list of random moves (but don't apply them).
         By default scramble only uses wide moves to cubes with size >=4."""
-        
+
         if wide is None and self.size<=3:
             wide=False
         elif wide is None and self.size>3:
             wide=True
-        
+
         possible_moves = [
             CubeMoveType.L,CubeMoveType.R, #CubeMoveType.M,
             CubeMoveType.D,CubeMoveType.U, #CubeMoveType.E,
@@ -195,7 +195,7 @@ class Cube:
         res = [self.cube[x] for x in self._cube_piece_indexes]
 
         res = {
-            (xi,yi,zi): piece 
+            (xi,yi,zi): piece
                 for xi,x in enumerate(self.cube)
                 for yi,y in enumerate(x)
                 for zi,piece in enumerate(y)
@@ -214,20 +214,23 @@ class Cube:
         if move.type in (CubeMoveType.R, CubeMoveType.U, CubeMoveType.F):
             if move.wide:
                 return slice(self.size - move.layer,self.size)
-            else:
-                return slice(self.size - move.layer,self.size - move.layer+1)
-        elif move.type in (CubeMoveType.L, CubeMoveType.D, CubeMoveType.B):
+
+            return slice(self.size - move.layer,self.size - move.layer+1)
+
+        if move.type in (CubeMoveType.L, CubeMoveType.D, CubeMoveType.B):
             if move.wide:
                 return slice(0,move.layer)
-            else:
-                return slice(move.layer-1,move.layer)
-        elif move.type in (CubeMoveType.M, CubeMoveType.E, CubeMoveType.S):
+
+            return slice(move.layer-1,move.layer)
+
+        if move.type in (CubeMoveType.M, CubeMoveType.E, CubeMoveType.S):
             if self.size%2 != 1:
                 raise CubeException("M,E,S moves not allowed for even size cubes")
 
             return slice(self.size//2,self.size//2+1)
-        else: # move.type in (CubeMoveType.X, CubeMoveType.Y, CubeMoveType.Z):
-            return slice(0,self.size)
+
+        # move.type in (CubeMoveType.X, CubeMoveType.Y, CubeMoveType.Z):
+        return slice(0,self.size)
 
     def _get_direction(self,move:CubeMove)->int:
         """get the rotation direction for a give CubeMove"""
@@ -294,16 +297,16 @@ class Cube:
         """Return the movement history of the cube"""
         if to_str:
             return " ".join([str(x) for x in self._history])
-        else:
-            return self._history
+
+        return self._history
 
     def reverse_history(self, to_str=False):
         """Return the list of moves to revert the cube history"""
         reverse = [x.reverse() for x in reversed(self._history)]
         if to_str:
             return " ".join([str(x) for x in reverse])
-        else:
-            return reverse
+
+        return reverse
 
     def __repr__(self):
         return str(self.cube)

@@ -108,4 +108,3 @@ class CubePiece:
 
     def __lt__(self, other):
         return self._colors < other._colors #pragma:no cover
-

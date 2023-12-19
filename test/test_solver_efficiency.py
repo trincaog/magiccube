@@ -12,7 +12,7 @@ def perf_test_cube():
     for _ in range(1000):
         # Reset & Scramble the cube
         cube.reset()
-        initial_moves = cube.scramble(num_steps=100)
+        cube.scramble(num_steps=100)
 
         # Solve the cube
         actions = solver.solve()
@@ -25,4 +25,3 @@ def perf_test_cube():
 
 if __name__ == "__main__" :
     perf_test_cube()
-    pass

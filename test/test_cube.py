@@ -1,18 +1,18 @@
+import random
+import pytest
 import numpy as np
 from magiccube import Cube
 from magiccube.cube import CubeException
 from magiccube.cube_base import Face, PieceType
 from magiccube.cube_move import CubeMove, CubeMoveType
 from magiccube.cube_piece import Color, CubePiece
-import pytest
-import random
 
 from magiccube.solver.basic.basic_solver import BasicSolver, SolverException
 
 def test_cube_size_1():
     with pytest.raises(CubeException):
-        c = Cube(1)
-    
+        Cube(1)
+
 
 def test_reset():
     c = Cube(3)
@@ -25,7 +25,7 @@ def test_reset():
 def test_12_moves():
     c = Cube(3)
     c.check_consistency()
-    for i in range(12):
+    for _ in range(12):
         c.rotate("R' D' R D")
     c.check_consistency()
     assert c.is_done()
@@ -33,7 +33,7 @@ def test_12_moves():
 def test_12_moves_2d():
     c = Cube(2)
     c.check_consistency()
-    for i in range(12):
+    for _ in range(12):
         c.rotate("R' D' R D")
     c.check_consistency()
     assert c.is_done()
@@ -131,19 +131,19 @@ def test_scramble_3x3():
     c = Cube(3)
     c.scramble(num_steps=50)
     print(c)
-    assert(not c.is_done())
+    assert not c.is_done()
 
 def test_scramble_2x2():
     c = Cube(2)
     c.scramble(num_steps=50)
     print(c)
-    assert(not c.is_done())
+    assert not c.is_done()
 
 def test_scramble_4x4():
     c = Cube(4)
     c.scramble(num_steps=50)
     # print(c)
-    assert(not c.is_done())
+    assert not c.is_done()
 
 def test_get_piece():
     c = Cube(3)
@@ -372,6 +372,7 @@ def test_inconsistent_cube():
 def test_bad_direction():
     c = Cube(3)
     with pytest.raises(CubeException):
+        # pylint: disable=protected-access
         c._get_direction(CubeMove(None))  # type: ignore
 
 def test_mes_move_even_cube():
@@ -382,9 +383,11 @@ def test_mes_move_even_cube():
 def test_invalid_slice():
     c = Cube(4)
     with pytest.raises(CubeException):
+        # pylint: disable=protected-access
         c._move_to_slice(CubeMove(CubeMoveType.L, layer=-1))
 
     with pytest.raises(CubeException):
+        # pylint: disable=protected-access
         c._move_to_slice(CubeMove(CubeMoveType.L, layer=5))
 
 def test_rotate_twice():
@@ -400,4 +403,3 @@ def test_rotate_twice():
 
 if __name__ == "__main__" :
     pytest.main()
-    pass

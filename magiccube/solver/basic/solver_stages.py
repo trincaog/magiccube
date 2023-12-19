@@ -255,10 +255,10 @@ stage_top_cross = (
         Condition( 21,("*Y",)), # L - OK=*Y
     ),"U", True),
     ConditionAction(( # L shape
-        Condition(120,("Y*",)), # B - OK=Y* 
+        Condition(120,("Y*",)), # B - OK=Y*
         Condition(221,("Y*",)), # R - OK=*Y NOK
         Condition(122,("*Y",)), # F - OK=Y* NOK
-        Condition( 21,("*Y",)), # L - OK=*Y 
+        Condition( 21,("*Y",)), # L - OK=*Y
     ),"F R U R' U' F'", True),
     ConditionAction((
         Condition(120,("Y*",)), # B - OK=Y*
@@ -443,4 +443,3 @@ stage_turn_top_corners = (
 
 
 )
-

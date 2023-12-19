@@ -15,5 +15,3 @@ print(cube)
 
 # Make some cube rotations
 cube.rotate("U' R'")
-
-

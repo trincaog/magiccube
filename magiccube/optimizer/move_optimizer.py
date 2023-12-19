@@ -1,8 +1,8 @@
 
 from typing import List
-from magiccube.cube_move import CubeMove, CubeMoveType
+from magiccube.cube_move import CubeMove
 
-"""Cube rotation config"""
+# Cube rotation config
 _cube_rotations={
     "Y":{
         "F":"R",
@@ -72,7 +72,7 @@ _cube_rotations={
     },
 }
 
-def _build_convertions(cube_rotations):
+def _build_convertions():
     """Build convertion structure"""
     def convert_moves(moves):
         return (
@@ -80,10 +80,10 @@ def _build_convertions(cube_rotations):
             {CubeMove.create(k).reverse():CubeMove.create(v).reverse() for k,v in moves.items()}
         )
 
-    convertions = {CubeMove.create(rot):convert_moves(moves) for rot,moves in cube_rotations.items()}
+    convertions = {CubeMove.create(rot):convert_moves(moves) for rot,moves in _cube_rotations.items()}
     return convertions
 
-cube_rotations = _build_convertions(_cube_rotations)
+cube_rotations = _build_convertions()
 
 class MoveOptimizer:
     """Optimizes a sequence of moves
@@ -99,9 +99,7 @@ class MoveOptimizer:
         optimized_moves = []
         current_cube_rotations=[]
 
-        for i in range(len(moves)):
-            move = moves[i]
-
+        for move in moves:
             if move.type.is_cube_rotation():
                 current_cube_rotations.append(move)
                 continue
@@ -119,5 +117,3 @@ class MoveOptimizer:
             else:
                 optimized_moves.append(move)
         return optimized_moves
-
-

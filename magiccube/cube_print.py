@@ -1,7 +1,7 @@
 """Stdout Cube Print implementation"""
+import os
 from enum import Enum
 from magiccube.cube_base import Color,Face
-import os
 
 C_RESET="\x1b[0;0m"
 # C_BG="\x1b[48;5;231m"

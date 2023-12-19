@@ -1,7 +1,6 @@
 
 import pytest
 from magiccube.cube_base import Color, CubeException, PieceType
-from magiccube.cube_move import CubeMove, CubeMoveType
 from magiccube.cube_piece import CubePiece
 
 

@@ -1,5 +1,5 @@
 # MagicCube: A NxNxN Rubik Cube implementation
-A fast implementation of the Rubik Cube based in Python 3.x. 
+A fast implementation of the Rubik Cube based in Python 3.x.
 
 Makes it easy to create cubes of various sizes (2x2x2, 3x3x3, 4x4x4, 6x6x6, ...., 100x100x100).
 
@@ -98,4 +98,10 @@ pyenv virtualenv 3.11 cube-3.11
 pyenv local cube-3.11
 pip install -r requirements.txt
 direnv allow
+```
+
+Install commit hooks
+
+```sh
+pre-commit install
 ```

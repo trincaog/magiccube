@@ -1,7 +1,7 @@
+import pytest
 from magiccube.cube import CubeException
 from magiccube.cube_base import Face
 from magiccube.cube_piece import Color
-import pytest
 
 def test_face_create():
     assert Face.create("F") == Face.F
@@ -13,7 +13,7 @@ def test_face_create():
 
     with pytest.raises(CubeException):
         Face.create("X")
-    
+
 def test_color_create():
     assert Color.create("R")==Color.R
     assert Color.create("O")==Color.O
@@ -27,4 +27,3 @@ def test_color_create():
 
 if __name__ == "__main__" :
     pytest.main()
-    pass

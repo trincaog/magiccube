@@ -1,14 +1,7 @@
-
-
 import pytest
 from magiccube.cube_move import CubeMove
 from magiccube.optimizer.move_optimizer import MoveOptimizer
 
-
-# def test_optimize_rev():
-#     moves = [CubeMove.create(m) for m in "Y Z S M E U' L L L' L' F F F F R' Y' Y".split(" ")]
-#     o_moves = MoveOptimizer().optimize(moves)
-#     print(o_moves)
 
 def test_optimize_rev():
     moves = [CubeMove.create(m) for m in "F L L L' L' R".split(" ")]
@@ -37,4 +30,3 @@ def test_optimize_cube_rot():
 
 if __name__ == "__main__" :
     pytest.main()
-    pass

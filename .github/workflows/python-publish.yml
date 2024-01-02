@@ -24,15 +24,10 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: List files
-      id: list_files
+    - name: Set environment variables
+      id: set_env_variables
       run: |
-        echo PYTHONPATH $PYTHONPATH
-        echo ---
-          ls -l
-        echo ---
-        ls -l magiccube
-        echo ---
+        echo "PYTHONPATH=."" >> "$GITHUB_ENV"
 
     - name: Extract tag name
       id: tag

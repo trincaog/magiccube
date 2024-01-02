@@ -6,13 +6,11 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Upload Python Package to PyPI
-
 on: [push]
 
 jobs:
-  deploy:
-    name: Upload release to PyPI
+  build:
+    name: Build Package
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -25,6 +23,13 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
+
+    - name: List files
+      id: list_files
+      run: |
+        ls -l
+        ls -l magiccube
+        find *
 
     - name: Extract tag name
       id: tag

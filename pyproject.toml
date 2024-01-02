@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "magiccube"
 version = "{{VERSION_PLACEHOLDER}}"
@@ -21,5 +25,5 @@ dependencies = [
 [project.urls]
 "Homepage" = "https://github.com/trincaog/magiccube"
 
-[tool.setuptools]
-packages = ["magiccube"]
+[tool.setuptools.packages.find]
+include = ["magiccube", "magiccube.*"]

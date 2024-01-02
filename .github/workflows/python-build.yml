@@ -1,0 +1,42 @@
+
+on: [workflow_dispatch]
+
+jobs:
+  build:
+    name: Build Package
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11"]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Set environment variables
+      id: set_env_variables
+      run: |
+        echo "PYTHONPATH=." >> "$GITHUB_ENV"
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install build
+        pip install -r requirements.txt
+
+    - name: Test with pytest
+      run: |
+        pip install pytest
+        pytest test/ --doctest-modules --junitxml=junit/test-results-${{ matrix.python-version }}.xml
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results-${{ matrix.python-version }}
+        path: |
+          junit/test-results-${{ matrix.python-version }}.xml
+      if: ${{ always() }}

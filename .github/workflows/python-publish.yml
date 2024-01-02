@@ -27,9 +27,12 @@ jobs:
     - name: List files
       id: list_files
       run: |
-        ls -l
+        echo PYTHONPATH $PYTHONPATH
+        echo ---
+          ls -l
+        echo ---
         ls -l magiccube
-        find *
+        echo ---
 
     - name: Extract tag name
       id: tag

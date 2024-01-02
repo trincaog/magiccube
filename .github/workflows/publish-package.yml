@@ -11,13 +11,16 @@ jobs:
     permissions:
       id-token: write
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11"]
     steps:
     - uses: actions/checkout@v4
 
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: 3.x
+        python-version: ${{ matrix.python-version }}
 
     - name: Set environment variables
       id: set_env_variables
@@ -41,7 +44,7 @@ jobs:
 
     - name: Update version in pyproject.toml
       run: >-
-        sed -i "s/{{VERSION_PLACEHOLDER}}/${{ steps.tag.outputs.PKG_VERSION }}/g" pyproject.toml
+        sed -i "s/{{TAG_NAME}}/${{ steps.tag.outputs.PKG_VERSION }}/g" pyproject.toml
 
     - name: Build package
       run: python -m build

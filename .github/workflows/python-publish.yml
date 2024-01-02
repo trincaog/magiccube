@@ -8,27 +8,23 @@
 
 name: Upload Python Package to PyPI
 
-on:
-  release:
-    types: [published]
-
-permissions:
-  contents: read
+on: [push]
 
 jobs:
   deploy:
     name: Upload release to PyPI
     runs-on: ubuntu-latest
-    environment:
-      name: pypi
-      url: https://pypi.org/p/magiccube
+    strategy:
+      matrix:
+        python-version: ["3.11"]
+
     steps:
     - uses: actions/checkout@v4
 
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.x'
+        python-version: ${{ matrix.python-version }}
 
     - name: Extract tag name
       id: tag
@@ -47,12 +43,15 @@ jobs:
     - name: Test with pytest
       run: |
         pip install pytest
-        pytest test/ --doctest-modules --junitxml=junit/test-results.xml
+        pytest test/ --doctest-modules --junitxml=junit/test-results-${{ matrix.python-version }}.xml
+
+    - name: Upload pytest test results
+      uses: actions/upload-artifact@v3
+      with:
+        name: pytest-results-${{ matrix.python-version }}
+        path: junit/test-results-${{ matrix.python-version }}.xml
+      # Use always() to always run this step to publish test results when there are test failures
+      if: ${{ always() }}
 
     - name: Build package
       run: python -m build
-
-    - name: Publish package distributions to PyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        password: ${{ secrets.PYPI_API_TOKEN }}

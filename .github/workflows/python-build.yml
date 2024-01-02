@@ -6,7 +6,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-on: [push]
+on: [workflow_dispatch]
 
 jobs:
   build:
@@ -29,14 +29,6 @@ jobs:
       run: |
         echo "PYTHONPATH=." >> "$GITHUB_ENV"
 
-    - name: Extract tag name
-      id: tag
-      run: echo "PKG_VERSION=0.0dev1" >> "$GITHUB_OUTPUT"
-
-    - name: Update version in pyproject.toml
-      run: >-
-        sed -i "s/{{VERSION_PLACEHOLDER}}/${{ steps.tag.outputs.PKG_VERSION }}/g" pyproject.toml
-
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -48,15 +40,10 @@ jobs:
         pip install pytest
         pytest test/ --doctest-modules --junitxml=junit/test-results-${{ matrix.python-version }}.xml
 
-    - name: Build package
-      run: python -m build
-
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: build-artifacts-${{ matrix.python-version }}
+        name: test-results-${{ matrix.python-version }}
         path: |
           junit/test-results-${{ matrix.python-version }}.xml
-          dist/
-      # Use always() to always run this step to publish test results when there are test failures
       if: ${{ always() }}

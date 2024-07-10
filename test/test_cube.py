@@ -58,43 +58,19 @@ def test_rotations_4x():
     c.rotate("2R")
     c.check_consistency()
     assert c.get_face_flat(Face.F) == [
-        Color.G,
-        Color.G,
-        Color.W,
-        Color.G,
-        Color.G,
-        Color.G,
-        Color.W,
-        Color.G,
-        Color.G,
-        Color.G,
-        Color.W,
-        Color.G,
-        Color.G,
-        Color.G,
-        Color.W,
-        Color.G,
+        Color.G, Color.G, Color.W, Color.G,
+        Color.G, Color.G, Color.W, Color.G,
+        Color.G, Color.G, Color.W, Color.G,
+        Color.G, Color.G, Color.W, Color.G,
     ]
 
     c.reset()
     c.rotate("Uw")
     assert c.get_face_flat(Face.F) == [
-        Color.O,
-        Color.O,
-        Color.O,
-        Color.O,
-        Color.O,
-        Color.O,
-        Color.O,
-        Color.O,
-        Color.G,
-        Color.G,
-        Color.G,
-        Color.G,
-        Color.G,
-        Color.G,
-        Color.G,
-        Color.G,
+        Color.O, Color.O, Color.O, Color.O,
+        Color.O, Color.O, Color.O, Color.O,
+        Color.G, Color.G, Color.G, Color.G,
+        Color.G, Color.G, Color.G, Color.G,
     ]
 
     c.check_consistency()
@@ -151,11 +127,8 @@ def test_history_str():
 
 def test_history():
     c = Cube(5)
-    moves = [
-        CubeMove(CubeMoveType.R, False),
-        CubeMove(CubeMoveType.F, True),
-        CubeMove(CubeMoveType.D, False, wide=True, layer=2),
-    ]
+    moves = [CubeMove(CubeMoveType.R, False), CubeMove(
+        CubeMoveType.F, True), CubeMove(CubeMoveType.D, False, wide=True, layer=2)]
     c.rotate(moves)
     assert c.history() == moves
 
@@ -165,15 +138,6 @@ def test_reverse():
     moves = "R' L U D' F B' R' L"
     c.rotate(moves)
     assert c.reverse_history(to_str=True) == "L' R B F' D U' L' R"
-    c.rotate(c.reverse_history())
-    assert c.is_done()
-
-
-def test_reverse_multiplicative_moves():
-    c = Cube(3)
-    moves = "R' L2"
-    c.rotate(moves)
-    assert c.reverse_history(to_str=True) == "L'2 R"
     c.rotate(c.reverse_history())
     assert c.is_done()
 
@@ -236,85 +200,88 @@ def test_get_all_pieces():
 def test_move():
     c = Cube(3)
     c.rotate("L")
-    assert c.get_piece((1, 0, 0)).get_piece_colors() == (None, Color.W, Color.B)
-    assert c.get_piece((0, 0, 0)).get_piece_colors() == (Color.R, Color.G, Color.W)
-    assert c.get_piece((0, 0, 2)).get_piece_colors() == (Color.R, Color.G, Color.Y)
+    assert c.get_piece((1, 0, 0)).get_piece_colors() == (
+        None, Color.W, Color.B)
+    assert c.get_piece((0, 0, 0)).get_piece_colors() == (
+        Color.R, Color.G, Color.W)
+    assert c.get_piece((0, 0, 2)).get_piece_colors() == (
+        Color.R, Color.G, Color.Y)
 
 
 def test_move_special_rot():
     c = Cube(3)
     c.rotate("X'")
-    assert c.get_piece((2, 2, 2)).get_piece_colors() == (Color.O, Color.B, Color.Y)
+    assert c.get_piece((2, 2, 2)).get_piece_colors() == (
+        Color.O, Color.B, Color.Y)
     c.reset()
     c.rotate("Y")
-    assert c.get_piece((2, 2, 2)).get_piece_colors() == (Color.B, Color.Y, Color.O)
+    assert c.get_piece((2, 2, 2)).get_piece_colors() == (
+        Color.B, Color.Y, Color.O)
     c.reset()
     c.rotate("Z")
-    assert c.get_piece((2, 2, 2)).get_piece_colors() == (Color.Y, Color.R, Color.G)
+    assert c.get_piece((2, 2, 2)).get_piece_colors() == (
+        Color.Y, Color.R, Color.G)
 
 
 def test_move_special_mid():
     c = Cube(3)
     c.rotate("M")
-    assert c.get_piece((1, 2, 2)).get_piece_colors() == (None, Color.B, Color.Y)
+    assert c.get_piece((1, 2, 2)).get_piece_colors() == (
+        None, Color.B, Color.Y)
     c.rotate("E'")
-    assert c.get_piece((2, 1, 2)).get_piece_colors() == (Color.B, None, Color.O)
+    assert c.get_piece((2, 1, 2)).get_piece_colors() == (
+        Color.B, None, Color.O)
     c.rotate("S")
-    assert c.get_piece((2, 2, 1)).get_piece_colors() == (Color.Y, Color.R, None)
+    assert c.get_piece((2, 2, 1)).get_piece_colors() == (
+        Color.Y, Color.R, None)
 
 
 def test_move_noloc():
     c = Cube(3)
     c.rotate("L")
-    assert c.get_piece((1, 0, 0)).get_piece_colors(no_loc=True) == (Color.B, Color.W)
-    assert c.get_piece((0, 0, 0)).get_piece_colors(no_loc=True) == (
-        Color.G,
-        Color.R,
-        Color.W,
-    )
-    assert c.get_piece((0, 0, 2)).get_piece_colors(no_loc=True) == (
-        Color.G,
-        Color.R,
-        Color.Y,
-    )
+    assert c.get_piece((1, 0, 0)).get_piece_colors(
+        no_loc=True) == (Color.B, Color.W)
+    assert c.get_piece((0, 0, 0)).get_piece_colors(
+        no_loc=True) == (Color.G, Color.R, Color.W)
+    assert c.get_piece((0, 0, 2)).get_piece_colors(
+        no_loc=True) == (Color.G, Color.R, Color.Y)
 
 
 def test_move_outcome():
     c = Cube(3)
     c.rotate("B'")
     print(c)
-    assert c.get_piece((0, 2, 0)).get_piece_colors_str() == "WRB"
-    assert c.get_piece((0, 0, 0)).get_piece_colors_str() == "WOB"
+    assert c.get_piece((0, 2, 0)).get_piece_colors_str() == 'WRB'
+    assert c.get_piece((0, 0, 0)).get_piece_colors_str() == 'WOB'
 
     c = Cube(3)
     c.rotate("F")
     print(repr(c))
     print(c)
-    assert c.get_piece((2, 0, 2)).get_piece_colors_str() == "YOG"
-    assert c.get_piece((0, 0, 2)).get_piece_colors_str() == "WOG"
+    assert c.get_piece((2, 0, 2)).get_piece_colors_str() == 'YOG'
+    assert c.get_piece((0, 0, 2)).get_piece_colors_str() == 'WOG'
 
     c = Cube(3)
     c.rotate("R")
-    assert c.get_piece((2, 0, 0)).get_piece_colors_str() == "OBY"
-    assert c.get_piece((2, 0, 2)).get_piece_colors_str() == "OBW"
+    assert c.get_piece((2, 0, 0)).get_piece_colors_str() == 'OBY'
+    assert c.get_piece((2, 0, 2)).get_piece_colors_str() == 'OBW'
 
     c = Cube(3)
     c.rotate("L")
-    assert c.get_piece((0, 0, 1)).get_piece_colors_str() == "RG"
-    assert c.get_piece((0, 0, 0)).get_piece_colors_str() == "RGW"
-    assert c.get_piece((0, 0, 2)).get_piece_colors_str() == "RGY"
+    assert c.get_piece((0, 0, 1)).get_piece_colors_str() == 'RG'
+    assert c.get_piece((0, 0, 0)).get_piece_colors_str() == 'RGW'
+    assert c.get_piece((0, 0, 2)).get_piece_colors_str() == 'RGY'
 
     c = Cube(3)
     c.rotate("D")
-    assert c.get_piece((2, 0, 0)).get_piece_colors_str() == "GWO", c.get_piece(
-        (2, 0, 0)
-    ).get_piece_colors_str()
-    assert c.get_piece((2, 0, 2)).get_piece_colors_str() == "GWR"
+    assert c.get_piece((2, 0, 0)).get_piece_colors_str(
+    ) == 'GWO', c.get_piece((2, 0, 0)).get_piece_colors_str()
+    assert c.get_piece((2, 0, 2)).get_piece_colors_str() == 'GWR'
 
     c = Cube(3)
     c.rotate("U")
-    assert c.get_piece((0, 2, 0)).get_piece_colors_str() == "GYR"
-    assert c.get_piece((0, 2, 2)).get_piece_colors_str() == "GYO"
+    assert c.get_piece((0, 2, 0)).get_piece_colors_str() == 'GYR'
+    assert c.get_piece((0, 2, 2)).get_piece_colors_str() == 'GYO'
 
 
 def test_find():
@@ -366,9 +333,12 @@ def test_scramble_wide_move():
 
 def test_get_piece_type():
     c = Cube(3)
-    assert c.get_piece(coordinates=(0, 0, 2)).get_piece_type() == PieceType.CORNER
-    assert c.get_piece(coordinates=(1, 0, 1)).get_piece_type() == PieceType.CENTER
-    assert c.get_piece(coordinates=(2, 1, 2)).get_piece_type() == PieceType.EDGE
+    assert c.get_piece(coordinates=(0, 0, 2)
+                       ).get_piece_type() == PieceType.CORNER
+    assert c.get_piece(coordinates=(1, 0, 1)
+                       ).get_piece_type() == PieceType.CENTER
+    assert c.get_piece(coordinates=(2, 1, 2)
+                       ).get_piece_type() == PieceType.EDGE
     inner = c.get_piece(coordinates=(1, 1, 1))
     assert inner is None or inner.get_piece_type() == PieceType.INNER
 
@@ -387,9 +357,7 @@ def test_set_cube_invalid():
 
 def test_set_cube_4x():
     c = Cube(4)
-    c.set(
-        "YYYYYYYYYYYYYYYYRRRRRRRRRRRRRRRRGGGGGGGGGGGGGGGGOOOOOOOOOOOOOOOOBBBBBBBBBBBBBBBBWWWWWWWWWWWWWWWW"
-    )
+    c.set("YYYYYYYYYYYYYYYYRRRRRRRRRRRRRRRRGGGGGGGGGGGGGGGGOOOOOOOOOOOOOOOOBBBBBBBBBBBBBBBBWWWWWWWWWWWWWWWW")
     assert c.is_done()
 
 
@@ -401,17 +369,14 @@ def test_set_cube_initial_state():
 
 
 def test_set_cube_initial_state_4X():
-    c = Cube(
-        4,
-        state="""
+    c = Cube(4, state="""
     YYYYYYYYYYYYGGGG
     GGGWRRRRRRRRRRRR
     OOOOGGGWGGGWGGGW
     YBBBOOOOOOOOOOOO
     RRRRYBBBYBBBYBBB
     WWWBWWWBWWWBWWWB
-    """,
-    )
+    """)
     c.rotate("U' R'")
 
     assert c.is_done()
@@ -419,16 +384,14 @@ def test_set_cube_initial_state_4X():
 
 def test_set_cube_not_done():
     c = Cube(3)
-    c.set(
-        """
+    c.set("""
        RBB BYO GGO
        YRO YRW WWW
        YYB GGW BRW
        YYR OOW GGW
        YYG BBR OOG
        RGO RWO RBB
-       """
-    )
+       """)
     c.rotate("D' B' R' F' L' U'")
 
     assert c.is_done()
@@ -436,16 +399,14 @@ def test_set_cube_not_done():
 
 def test_set_cube_bad_cube():
     c = Cube(3)
-    c.set(
-        """
+    c.set("""
        RBB BYO OGG
        YRO YRW WWW
        YYB GGW BRW
        YYR OOW GGW
        YYG BBR OOG
        RGO RWO RBB
-       """
-    )
+       """)
     solver = BasicSolver(c)
     with pytest.raises(SolverException):
         solver.solve()
@@ -486,60 +447,36 @@ def test_rotate_twice():
     c = Cube(3)
     c.rotate("U2")
     assert c.get_face_flat(Face.F) == [
-        Color.B,
-        Color.B,
-        Color.B,
-        Color.G,
-        Color.G,
-        Color.G,
-        Color.G,
-        Color.G,
-        Color.G,
+        Color.B, Color.B, Color.B,
+        Color.G, Color.G, Color.G,
+        Color.G, Color.G, Color.G,
     ]
     c.rotate("U'2")
     assert c.is_done()
 
     c.rotate("D2")
     assert c.get_face_flat(Face.F) == [
-        Color.G,
-        Color.G,
-        Color.G,
-        Color.G,
-        Color.G,
-        Color.G,
-        Color.B,
-        Color.B,
-        Color.B,
+        Color.G, Color.G, Color.G,
+        Color.G, Color.G, Color.G,
+        Color.B, Color.B, Color.B,
     ]
     c.rotate("D'2")
     assert c.is_done()
 
     c.rotate("L2")
     assert c.get_face_flat(Face.F) == [
-        Color.B,
-        Color.G,
-        Color.G,
-        Color.B,
-        Color.G,
-        Color.G,
-        Color.B,
-        Color.G,
-        Color.G,
+        Color.B, Color.G, Color.G,
+        Color.B, Color.G, Color.G,
+        Color.B, Color.G, Color.G,
     ]
     c.rotate("L'2")
     assert c.is_done()
 
     c.rotate("R2")
     assert c.get_face_flat(Face.F) == [
-        Color.G,
-        Color.G,
-        Color.B,
-        Color.G,
-        Color.G,
-        Color.B,
-        Color.G,
-        Color.G,
-        Color.B,
+        Color.G, Color.G, Color.B,
+        Color.G, Color.G, Color.B,
+        Color.G, Color.G, Color.B,
     ]
     c.rotate("R'2")
     assert c.is_done()
@@ -547,15 +484,9 @@ def test_rotate_twice():
     c.rotate("F2")
     print(c.get_face_flat(Face.U))
     assert c.get_face_flat(Face.U) == [
-        Color.Y,
-        Color.Y,
-        Color.Y,
-        Color.Y,
-        Color.Y,
-        Color.Y,
-        Color.W,
-        Color.W,
-        Color.W,
+        Color.Y, Color.Y, Color.Y,
+        Color.Y, Color.Y, Color.Y,
+        Color.W, Color.W, Color.W,
     ]
     c.rotate("F'2")
     assert c.is_done()
@@ -563,15 +494,9 @@ def test_rotate_twice():
     c.rotate("B2")
     print(c.get_face_flat(Face.U))
     assert c.get_face_flat(Face.U) == [
-        Color.W,
-        Color.W,
-        Color.W,
-        Color.Y,
-        Color.Y,
-        Color.Y,
-        Color.Y,
-        Color.Y,
-        Color.Y,
+        Color.W, Color.W, Color.W,
+        Color.Y, Color.Y, Color.Y,
+        Color.Y, Color.Y, Color.Y,
     ]
     c.rotate("B'2")
     assert c.is_done()

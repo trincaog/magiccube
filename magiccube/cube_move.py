@@ -142,7 +142,8 @@ class CubeMove():
             layer = self.layer  # pragma: no cover
         wide = "w" if self.wide else ""
         reversed_move = "'" if self.is_reversed else ""
-        return f"{layer}{self.type.name}{wide}{reversed_move}"
+        count = "" if int(self.count) == 1 else int(self.count)
+        return f"{layer}{self.type.name}{wide}{reversed_move}{count}"
 
     def __repr__(self):
         return str(self)  # pragma: no cover

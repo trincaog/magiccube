@@ -4,4 +4,3 @@ dist/
 .coverage
 venv/
 junit/
-.venv*

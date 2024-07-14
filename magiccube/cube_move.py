@@ -74,7 +74,7 @@ class CubeMove():
     regex_pattern = re.compile(
         "^(?:([0-9]*)(([LRDUBF])([w]?)|([XYZMES]))([']?)([0-9]?))$")
 
-    def __init__(self, move_type: CubeMoveType, is_reversed: bool = False, wide: bool = False, layer: int = 1, count=1):
+    def __init__(self, move_type: CubeMoveType, is_reversed: bool = False, wide: bool = False, layer: int = 1, count: int = 1):
         self.type = move_type
         self.is_reversed = is_reversed
         self.wide = wide

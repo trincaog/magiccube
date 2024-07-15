@@ -141,6 +141,13 @@ def test_reverse():
     c.rotate(c.reverse_history())
     assert c.is_done()
 
+def test_reverse_multiplicative_moves():
+    c = Cube(3)
+    moves = "R' L2"
+    c.rotate(moves)
+    assert c.reverse_history(to_str=True) == "L'2 R"
+    c.rotate(c.reverse_history())
+    assert c.is_done()
 
 def test_scramble_3x3():
     c = Cube(3)

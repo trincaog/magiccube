@@ -74,12 +74,12 @@ class CubeMove():
     regex_pattern = re.compile(
         "^(?:([0-9]*)(([LRDUBF])([w]?)|([XYZMES]))([']?)([0-9]?))$")
 
-    def __init__(self, move_type: CubeMoveType, is_reversed: bool = False, wide: bool = False, layer: int = 1):
+    def __init__(self, move_type: CubeMoveType, is_reversed: bool = False, wide: bool = False, layer: int = 1, count: int = 1):
         self.type = move_type
         self.is_reversed = is_reversed
         self.wide = wide
         self.layer = layer
-        self.count = 1
+        self.count = count
 
     @staticmethod
     def _create_move(result, special_move):
@@ -132,7 +132,7 @@ class CubeMove():
 
     def reverse(self):
         """return the reverse move"""
-        return CubeMove(self.type, not self.is_reversed, self.wide, self.layer)
+        return CubeMove(self.type, not self.is_reversed, self.wide, self.layer, count=self.count)
 
     def __str__(self):
         if (self.wide and self.layer == 2)\
@@ -142,7 +142,8 @@ class CubeMove():
             layer = self.layer  # pragma: no cover
         wide = "w" if self.wide else ""
         reversed_move = "'" if self.is_reversed else ""
-        return f"{layer}{self.type.name}{wide}{reversed_move}"
+        count = "" if int(self.count) == 1 else int(self.count)
+        return f"{layer}{self.type.name}{wide}{reversed_move}{count}"
 
     def __repr__(self):
         return str(self)  # pragma: no cover

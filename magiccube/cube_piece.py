@@ -24,16 +24,16 @@ class CubePiece:
         (_z, _y, _x) = position
 
         if _x == 0:
-            x_color = Color.R
-        elif _x == cube_size-1:
             x_color = Color.O
+        elif _x == cube_size-1:
+            x_color = Color.R
         else:
             x_color = None
 
         if _y == 0:
-            y_color = Color.W
-        elif _y == cube_size-1:
             y_color = Color.Y
+        elif _y == cube_size-1:
+            y_color = Color.W
         else:
             y_color = None
 

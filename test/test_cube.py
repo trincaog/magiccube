@@ -511,5 +511,19 @@ def test_rotate_twice():
     assert c.is_done()
 
 
+def test_dumps():
+    c = Cube(3)
+
+    assert c.as_kociemba_facelets == 'UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB'
+    assert c.as_visualcube_facelets_definition == 'uuuuuuuuurrrrrrrrrfffffffffdddddddddlllllllllbbbbbbbbb'
+    assert c.as_visualcube_facelets_color == 'wwwwwwwwwrrrrrrrrrgggggggggyyyyyyyyyooooooooobbbbbbbbb'
+
+    moves = 'R F U'
+    c.rotate(moves)
+
+    assert c.as_kociemba_facelets == 'LUULUULFFUBBURRFRRURRFFFDDDRRRDDBDDBFFFLLDLLBLLDUBBUBB'
+    assert c.as_visualcube_facelets_definition == 'luuluulffubburrfrrurrfffdddrrrddbddbffflldllblldubbubb'
+    assert c.as_visualcube_facelets_color == 'owwowwoggwbbwrrgrrwrrgggyyyrrryybyybgggooyoobooywbbwbb'
+
 if __name__ == "__main__":
     pytest.main()

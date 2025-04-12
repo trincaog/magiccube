@@ -315,6 +315,42 @@ class Cube:
 
         return reverse
 
+    @property
+    def get_facelet_colors_in_kociemba_order(self) -> str:
+        faces = [
+            ''.join(
+                [
+                    fc.name
+                    for fc in self.get_face_flat(
+                            Face.create(f),
+                    )
+                ],
+            )
+            for f in ['U', 'R', 'F', 'D', 'L', 'B']
+        ]
+
+        return ''.join(faces)
+
+    @property
+    def as_kociemba_facelets(self) -> str:
+        facelets = self.get_facelet_colors_in_kociemba_order
+
+        for color, face in (
+                ('W', 'U'), ('Y', 'D'),
+                ('G', 'F'), ('O', 'L'),
+        ):
+            facelets = facelets.replace(color, face)
+
+        return facelets
+
+    @property
+    def as_visualcube_facelets_color(self) -> str:
+        return self.get_facelet_colors_in_kociemba_order.lower()
+
+    @property
+    def as_visualcube_facelets_definition(self) -> str:
+        return self.as_kociemba_facelets.lower()
+
     def __repr__(self):
         return str(self.cube)
 

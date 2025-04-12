@@ -53,9 +53,12 @@ class CubePrintStr:
                 result += "\n"
         return result
 
-    def print_cube(self):
+    def print_cube(self, orientation: str = ''):
         "Print the cube to stdout"
         cube = self.cube
+
+        if orientation:
+            cube.rotate([orientation])
 
         # flatten midle layer
         print_order_mid = zip(cube.get_face(Face.L), cube.get_face(Face.F),
@@ -76,4 +79,11 @@ class CubePrintStr:
 
         # BOTTOM
         result += self._print_top_down_face(cube, Face.D)
+
+        if orientation:
+            cube.rotate([orientation])
+            if cube._store_history:
+                cube._history.pop()
+                cube._history.pop()
+
         return result

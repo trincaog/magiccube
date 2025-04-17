@@ -498,5 +498,24 @@ def test_rotate_twice():
     assert c.is_done()
 
 
+def test_undo():
+    c = Cube(3)
+    c.rotate("U F B")
+    assert not c.is_done()
+    assert c.history(to_str=True) == "U F B"
+    c.undo(2)
+    assert c.history(to_str=True) == "U"
+    c.undo()
+    assert c.history(to_str=True) == ""
+    assert c.is_done()
+
+
+def test_undo_fail():
+    c = Cube(3)
+    c.rotate("U F B")
+    with pytest.raises(CubeException):
+        c.undo(4)
+
+
 if __name__ == "__main__":
     pytest.main()

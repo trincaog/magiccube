@@ -49,7 +49,7 @@ cube.rotate("3Lw'2") # 2x 3rd line L wide counter-rotation
 
 ## Examples
 
-See examples folder.
+See [examples](https://github.com/trincaog/magiccube/tree/main/examples) folder.
 
 ## Supported Moves and Notation
 

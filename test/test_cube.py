@@ -1,4 +1,6 @@
+import os
 import random
+from unittest import mock
 import pytest
 import numpy as np
 from magiccube import Cube
@@ -92,30 +94,16 @@ def test_is_done():
     assert c.is_done()
 
 
-def test_print_pattern1():
+def test_pattern1():
     c = Cube(3)
     c.rotate("R R L' L' B B F' F' U U D' D'")
     c.check_consistency()
-    print(c)
 
 
-def test_print_pattern2():
+def test_pattern2():
     c = Cube(3)
     c.rotate("R' L U D' F B' R' L")
     c.check_consistency()
-    print(c)
-
-
-def test_print_2d():
-    c = Cube(2)
-    c.check_consistency()
-    print(c)
-
-
-def test_print_4d():
-    c = Cube(4)
-    c.check_consistency()
-    print(c)
 
 
 def test_history_str():
@@ -154,21 +142,18 @@ def test_reverse_multiplicative_moves():
 def test_scramble_3x3():
     c = Cube(3)
     c.scramble(num_steps=50)
-    print(c)
     assert not c.is_done()
 
 
 def test_scramble_2x2():
     c = Cube(2)
     c.scramble(num_steps=50)
-    print(c)
     assert not c.is_done()
 
 
 def test_scramble_4x4():
     c = Cube(4)
     c.scramble(num_steps=50)
-    # print(c)
     assert not c.is_done()
 
 
@@ -259,14 +244,11 @@ def test_move_noloc():
 def test_move_outcome():
     c = Cube(3)
     c.rotate("B'")
-    print(c)
     assert c.get_piece((0, 2, 0)).get_piece_colors_str() == 'YOB'
     assert c.get_piece((0, 0, 0)).get_piece_colors_str() == 'YRB'
 
     c = Cube(3)
     c.rotate("F")
-    print(repr(c))
-    print(c)
     assert c.get_piece((2, 0, 2)).get_piece_colors_str() == 'WRG'
     assert c.get_piece((0, 0, 2)).get_piece_colors_str() == 'YRG'
 
@@ -296,21 +278,28 @@ def test_move_outcome():
 def test_find():
     c = Cube(3)
     c.rotate("R")
-    print(c)
     coord, _ = c.find_piece("GRW")
     assert coord == (2, 2, 0)
     coord, _ = c.find_piece("BOY")
     assert coord == (0, 0, 0)
 
 
+@mock.patch.dict(os.environ, {"TERM": "none"})
 def test_print_simple_move():
+
     c = Cube(3)
-    print(c)
-    print(repr(c))
-    print("XXXXXXXXXXXXXXXXXXXXXX")
     c.rotate("F")
-    print(repr(c))
-    print(c)
+
+    assert str(c) == \
+        "          W  W  W                   \n" + \
+        "          W  W  W                   \n" + \
+        "          O  O  O                   \n" + \
+        " O  O  Y  G  G  G  W  R  R  B  B  B \n" + \
+        " O  O  Y  G  G  G  W  R  R  B  B  B \n" + \
+        " O  O  Y  G  G  G  W  R  R  B  B  B \n" + \
+        "          R  R  R                   \n" + \
+        "          Y  Y  Y                   \n" + \
+        "          Y  Y  Y                   \n"
 
 
 def test_wide_move():
@@ -491,7 +480,6 @@ def test_rotate_twice():
     assert c.is_done()
 
     c.rotate("F2")
-    print(c.get_face_flat(Face.U))
     assert c.get_face_flat(Face.U) == [
         Color.W, Color.W, Color.W,
         Color.W, Color.W, Color.W,
@@ -501,7 +489,6 @@ def test_rotate_twice():
     assert c.is_done()
 
     c.rotate("B2")
-    print(c.get_face_flat(Face.U))
     assert c.get_face_flat(Face.U) == [
         Color.Y, Color.Y, Color.Y,
         Color.W, Color.W, Color.W,

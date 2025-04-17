@@ -108,8 +108,9 @@ curl https://pyenv.run | bash
 Setup the environment using `pyenv`
 
 ```sh
-pyenv virtualenv 3.11 cube-3.11
-pyenv local cube-3.11
+pyenv install 3.11
+pyenv virtualenv 3.11 cube
+pyenv local cube
 pip install -r requirements.txt
 direnv allow
 ```

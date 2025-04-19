@@ -315,8 +315,9 @@ class Cube:
 
         return reverse
 
-    def get_facelet_colors_in_kociemba_order(self) -> str:
-        """Return the string representation of the cube facelet colors in Kociemba order"""
+    def get_kociemba_facelet_colors(self) -> str:
+        """Return the string representation of the cube facelet colors in Kociemba format
+        (ex: WWWWWWWWWRRRRRRRRRGGGGGGGGGYYYYYYYYYOOOOOOOOOBBBBBBBBB)."""
         faces = [
             ''.join(
                 [
@@ -334,7 +335,7 @@ class Cube:
     def get_kociemba_facelet_positions(self) -> str:
         """Return the string representation of the cube facelet positions in Kociemba format
         (ex: UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB)."""
-        facelets = self.get_facelet_colors_in_kociemba_order()
+        facelets = self.get_kociemba_facelet_colors()
 
         for color, face in (
                 ('W', 'U'), ('Y', 'D'),

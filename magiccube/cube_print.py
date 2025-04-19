@@ -2,6 +2,7 @@
 import os
 from enum import Enum
 from magiccube.cube_base import Color, Face
+from magiccube.cube_move import CubeMove
 
 C_RESET = "\x1b[0;0m"
 C_GREEN = "\x1b[48;5;40m\x1b[38;5;232m"
@@ -61,7 +62,7 @@ class CubePrintStr:
                 result += "\n"
         return result
 
-    def print_cube(self, orientation: str = ''):
+    def print_cube(self, orientation: str | CubeMove = None):
         "Print the cube to stdout"
         cube = self.cube
 
@@ -91,7 +92,6 @@ class CubePrintStr:
         if orientation:
             cube.rotate([orientation])
             if cube._store_history:
-                cube._history.pop()
-                cube._history.pop()
+                cube.undo(2)
 
         return result

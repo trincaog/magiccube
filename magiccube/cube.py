@@ -315,8 +315,8 @@ class Cube:
 
         return reverse
 
-    @property
     def get_facelet_colors_in_kociemba_order(self) -> str:
+        """Return the string representation of the cube facelet colors in Kociemba order"""
         faces = [
             ''.join(
                 [
@@ -331,9 +331,10 @@ class Cube:
 
         return ''.join(faces)
 
-    @property
-    def as_kociemba_facelets(self) -> str:
-        facelets = self.get_facelet_colors_in_kociemba_order
+    def get_kociemba_facelet_positions(self) -> str:
+        """Return the string representation of the cube facelet positions in Kociemba format
+        (ex: UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB)."""
+        facelets = self.get_facelet_colors_in_kociemba_order()
 
         for color, face in (
                 ('W', 'U'), ('Y', 'D'),
@@ -342,15 +343,6 @@ class Cube:
             facelets = facelets.replace(color, face)
 
         return facelets
-
-    @property
-    def as_visualcube_facelets_color(self) -> str:
-        return self.get_facelet_colors_in_kociemba_order.lower()
-
-    @property
-    def as_visualcube_facelets_definition(self) -> str:
-        return self.as_kociemba_facelets.lower()
-
 
     def undo(self, num_moves=1) -> None:
         """Undo the last num_moves"""

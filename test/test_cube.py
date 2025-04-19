@@ -501,16 +501,12 @@ def test_rotate_twice():
 def test_dumps():
     c = Cube(3)
 
-    assert c.as_kociemba_facelets == 'UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB'
-    assert c.as_visualcube_facelets_definition == 'uuuuuuuuurrrrrrrrrfffffffffdddddddddlllllllllbbbbbbbbb'
-    assert c.as_visualcube_facelets_color == 'wwwwwwwwwrrrrrrrrrgggggggggyyyyyyyyyooooooooobbbbbbbbb'
+    assert c.get_kociemba_facelet_positions() == 'UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB'
 
     moves = 'R F U'
     c.rotate(moves)
 
-    assert c.as_kociemba_facelets == 'LUULUULFFUBBURRFRRURRFFFDDDRRRDDBDDBFFFLLDLLBLLDUBBUBB'
-    assert c.as_visualcube_facelets_definition == 'luuluulffubburrfrrurrfffdddrrrddbddbffflldllblldubbubb'
-    assert c.as_visualcube_facelets_color == 'owwowwoggwbbwrrgrrwrrgggyyyrrryybyybgggooyoobooywbbwbb'
+    assert c.get_kociemba_facelet_positions() == 'LUULUULFFUBBURRFRRURRFFFDDDRRRDDBDDBFFFLLDLLBLLDUBBUBB'
 
 
 def test_undo():

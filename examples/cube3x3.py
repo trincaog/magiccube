@@ -26,12 +26,14 @@ cube.scramble()
 # Print the move history
 print("History: ", cube.history())
 
+# Undo last 2 moves
+cube.undo(2)
+
 # Print the moves to reverse the cube history
 cube.rotate(cube.reverse_history())
 
 # Check that the cube is done
-assert cube.is_done()
+print("Is cube solved? ", cube.is_done())
 
 # Print the cube
-print("Solved Cube")
 print(cube)

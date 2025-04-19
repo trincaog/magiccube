@@ -250,7 +250,7 @@ class Cube:
             direction = direction*-1
         return direction
 
-    def _rotate_once(self, move: CubeMove):
+    def _rotate_once(self, move: CubeMove) -> None:
         """Make one cube movement"""
         if self._store_history:
             self._history.append(move)
@@ -300,20 +300,31 @@ class Cube:
                     "cube is not consistent on face " + str(face_name))
         return True
 
-    def history(self, to_str=False):
+    def history(self, to_str=False) -> str | List[CubeMove]:
         """Return the movement history of the cube"""
         if to_str:
             return " ".join([str(x) for x in self._history])
 
         return self._history
 
-    def reverse_history(self, to_str=False):
+    def reverse_history(self, to_str=False) -> str | List[CubeMove]:
         """Return the list of moves to revert the cube history"""
         reverse = [x.reverse() for x in reversed(self._history)]
         if to_str:
             return " ".join([str(x) for x in reverse])
 
         return reverse
+
+    def undo(self, num_moves=1) -> None:
+        """Undo the last num_moves"""
+        if num_moves > len(self._history):
+            raise CubeException("not enough history to undo")
+
+        reverse_moves = self.reverse_history()[:num_moves]
+        self.rotate(reverse_moves)
+
+        for _ in range(2*num_moves):
+            self._history.pop()
 
     def __repr__(self):
         return str(self.cube)

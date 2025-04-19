@@ -4,7 +4,12 @@ from enum import Enum
 from magiccube.cube_base import Color, Face
 
 C_RESET = "\x1b[0;0m"
-# C_BG="\x1b[48;5;231m"
+C_GREEN = "\x1b[48;5;40m\x1b[38;5;232m"
+C_BLUE = "\x1b[48;5;21m\x1b[38;5;7m"
+C_RED = "\x1b[48;5;196m\x1b[38;5;232m"
+C_ORANGE = "\x1b[48;5;208m\x1b[38;5;232m"
+C_YELLOW = "\x1b[48;5;226m\x1b[38;5;232m"
+C_WHITE = "\x1b[48;5;248m\x1b[38;5;232m"
 
 
 class Terminal(Enum):
@@ -15,18 +20,21 @@ class Terminal(Enum):
 class CubePrintStr:
     """Prints a cube to stdout"""
     _xterm256_color_map = {
-        Color.G: "\x1b[48;5;40m\x1b[38;5;232m",
-        Color.B: "\x1b[48;5;21m\x1b[38;5;7m",
-        Color.R: "\x1b[48;5;196m\x1b[38;5;232m",
-        Color.O: "\x1b[48;5;208m\x1b[38;5;232m",
-        Color.Y: "\x1b[48;5;226m\x1b[38;5;232m",
-        Color.W: "\x1b[48;5;248m\x1b[38;5;232m",
+        Color.G: C_GREEN,
+        Color.B: C_BLUE,
+        Color.R: C_RED,
+        Color.O: C_ORANGE,
+        Color.Y: C_YELLOW,
+        Color.W: C_WHITE,
     }
 
-    def __init__(self, cube):
+    def __init__(self, cube, terminal: Terminal | None = None):
         self.cube = cube
-        self.term = Terminal.x256 if os.environ.get(
-            "TERM") == "xterm-256color" else Terminal.default
+        if terminal is not None:
+            self.term = terminal
+        else:
+            self.term = Terminal.x256 if os.environ.get(
+                "TERM") == "xterm-256color" else Terminal.default
 
     def _format_color(self, color: Color):
         """Format color to TTY
@@ -60,7 +68,7 @@ class CubePrintStr:
         if orientation:
             cube.rotate([orientation])
 
-        # flatten midle layer
+        # flatten middle layer
         print_order_mid = zip(cube.get_face(Face.L), cube.get_face(Face.F),
                               cube.get_face(Face.R), cube.get_face(Face.B))
 

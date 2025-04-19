@@ -49,7 +49,7 @@ cube.rotate("3Lw'2") # 2x 3rd line L wide counter-rotation
 
 ## Examples
 
-See examples folder.
+See [examples](https://github.com/trincaog/magiccube/tree/main/examples) folder.
 
 ## Supported Moves and Notation
 
@@ -108,8 +108,9 @@ curl https://pyenv.run | bash
 Setup the environment using `pyenv`
 
 ```sh
-pyenv virtualenv 3.11 cube-3.11
-pyenv local cube-3.11
+pyenv install 3.11
+pyenv virtualenv 3.11 cube
+pyenv local cube
 pip install -r requirements.txt
 direnv allow
 ```

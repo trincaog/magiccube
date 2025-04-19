@@ -37,7 +37,7 @@ class CubePrintStr:
             self.term = Terminal.x256 if os.environ.get(
                 "TERM") == "xterm-256color" else Terminal.default
 
-    def _format_color(self, color: Color):
+    def _format_color(self, color: Color) -> str:
         """Format color to TTY
         Only print colors on supported terminals (xterm-256color)
         """
@@ -49,7 +49,7 @@ class CubePrintStr:
 
         return formated_color
 
-    def _print_top_down_face(self, cube, face):
+    def _print_top_down_face(self, cube, face) -> str:
         result = ""
         for index, color in enumerate(cube.get_face_flat(face)):
             if index % cube.size == 0:
@@ -62,7 +62,7 @@ class CubePrintStr:
                 result += "\n"
         return result
 
-    def print_cube(self, orientation: str | CubeMove = None):
+    def print_cube(self, orientation: CubeMove | str = '') -> str:
         "Print the cube to stdout"
         cube = self.cube
 

@@ -326,9 +326,12 @@ class Cube:
         for _ in range(2*num_moves):
             self._history.pop()
 
+    def print(self, orientation: CubeMove | str = '') -> str:
+        printer = CubePrintStr(self)
+        return printer.print_cube(orientation)
+
     def __repr__(self):
         return str(self.cube)
 
-    def __str__(self):
-        printer = CubePrintStr(self)
-        return printer.print_cube()
+    def __str__(self) -> str:
+        return self.print()

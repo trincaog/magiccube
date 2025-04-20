@@ -315,6 +315,36 @@ class Cube:
 
         return reverse
 
+    def get_kociemba_facelet_colors(self) -> str:
+        """Return the string representation of the cube facelet colors in Kociemba format
+        (ex: WWWWWWWWWRRRRRRRRRGGGGGGGGGYYYYYYYYYOOOOOOOOOBBBBBBBBB)."""
+        faces = [
+            ''.join(
+                [
+                    fc.name
+                    for fc in self.get_face_flat(
+                            Face.create(f),
+                    )
+                ],
+            )
+            for f in ['U', 'R', 'F', 'D', 'L', 'B']
+        ]
+
+        return ''.join(faces)
+
+    def get_kociemba_facelet_positions(self) -> str:
+        """Return the string representation of the cube facelet positions in Kociemba format
+        (ex: UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB)."""
+        facelets = self.get_kociemba_facelet_colors()
+
+        for color, face in (
+                ('W', 'U'), ('Y', 'D'),
+                ('G', 'F'), ('O', 'L'),
+        ):
+            facelets = facelets.replace(color, face)
+
+        return facelets
+
     def undo(self, num_moves=1) -> None:
         """Undo the last num_moves"""
         if num_moves > len(self._history):

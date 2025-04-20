@@ -498,6 +498,17 @@ def test_rotate_twice():
     assert c.is_done()
 
 
+def test_dumps():
+    c = Cube(3)
+
+    assert c.get_kociemba_facelet_positions() == 'UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB'
+
+    moves = 'R F U'
+    c.rotate(moves)
+
+    assert c.get_kociemba_facelet_positions() == 'LUULUULFFUBBURRFRRURRFFFDDDRRRDDBDDBFFFLLDLLBLLDUBBUBB'
+
+
 def test_undo():
     c = Cube(3)
     c.rotate("U F B")

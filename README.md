@@ -45,6 +45,11 @@ cube.rotate("Lw2") # 2x L wide rotation
 cube.rotate("3L") # 3rd line L rotation
 cube.rotate("3Lw") # 3rd line L wide rotation
 cube.rotate("3Lw'2") # 2x 3rd line L wide counter-rotation
+
+# Get cube state
+print("State:", cube.get())
+# Get cube state in Kociemba order
+print("State (Kociemba):", cube.get_kociemba_facelet_colors())
 ```
 
 ## Examples

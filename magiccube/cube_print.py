@@ -1,6 +1,7 @@
 """Stdout Cube Print implementation"""
 import os
 from enum import Enum
+from typing import Union
 from magiccube.cube_base import Color, Face
 
 C_RESET = "\x1b[0;0m"
@@ -28,7 +29,7 @@ class CubePrintStr:
         Color.W: C_WHITE,
     }
 
-    def __init__(self, cube, terminal: Terminal | None = None):
+    def __init__(self, cube, terminal: Union[Terminal, None] = None):
         self.cube = cube
         if terminal is not None:
             self.term = terminal

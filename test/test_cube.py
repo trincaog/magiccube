@@ -498,15 +498,30 @@ def test_rotate_twice():
     assert c.is_done()
 
 
-def test_dumps():
+def test_get_kociemba_facelet_positions():
     c = Cube(3)
 
-    assert c.get_kociemba_facelet_positions() == 'UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB'
+    assert c.get_kociemba_facelet_positions(
+    ) == 'UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB'
 
     moves = 'R F U'
     c.rotate(moves)
 
-    assert c.get_kociemba_facelet_positions() == 'LUULUULFFUBBURRFRRURRFFFDDDRRRDDBDDBFFFLLDLLBLLDUBBUBB'
+    assert c.get_kociemba_facelet_positions(
+    ) == 'LUULUULFFUBBURRFRRURRFFFDDDRRRDDBDDBFFFLLDLLBLLDUBBUBB'
+
+
+def test_get_kociemba_facelet_colors():
+    c = Cube(3)
+
+    assert c.get_kociemba_facelet_colors(
+    ) == 'WWWWWWWWWRRRRRRRRRGGGGGGGGGYYYYYYYYYOOOOOOOOOBBBBBBBBB'
+
+    moves = 'R F U'
+    c.rotate(moves)
+
+    assert c.get_kociemba_facelet_colors(
+    ) == 'OWWOWWOGGWBBWRRGRRWRRGGGYYYRRRYYBYYBGGGOOYOOBOOYWBBWBB'
 
 
 def test_undo():
@@ -521,11 +536,25 @@ def test_undo():
     assert c.is_done()
 
 
-def test_undo_fail():
+def test_undo_fail_history_disabled():
+    c = Cube(3, hist=False)
+    c.rotate("U F B")
+    with pytest.raises(CubeException):
+        c.undo(1)
+
+
+def test_undo_fail_too_many_undos():
     c = Cube(3)
     c.rotate("U F B")
     with pytest.raises(CubeException):
         c.undo(4)
+
+
+def test_history_disabled():
+    c = Cube(3, hist=False)
+    c.rotate("U F B")
+    assert c.history() == []
+    assert c.reverse_history() == []
 
 
 if __name__ == "__main__":

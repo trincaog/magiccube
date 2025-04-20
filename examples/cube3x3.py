@@ -37,3 +37,6 @@ print("Is cube solved? ", cube.is_done())
 
 # Print the cube
 print(cube)
+
+# Get the cube state
+print("Cube State:", cube.get())

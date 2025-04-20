@@ -410,6 +410,18 @@ def test_set_cube_bad_cube():
         solver.solve()
 
 
+def test_get_cube():
+    c = Cube(3)
+    assert c.get() == "WWWWWWWWWOOOOOOOOOGGGGGGGGGRRRRRRRRRBBBBBBBBBYYYYYYYYY"
+    c.rotate("U")
+    assert c.get() == "WWWWWWWWWGGGOOOOOORRRGGGGGGBBBRRRRRROOOBBBBBBYYYYYYYYY"
+
+    state = "YYYYYYYYYRRRRRRRRRGGGGGGGGGOOOOOOOOOBBBBBBBBBWWWWWWWWW"
+    c = Cube(3)
+    c.set(state)
+    assert c.get() == state
+
+
 def test_inconsistent_cube():
     c = Cube(3)
     c.cube[0, 0, 0] = CubePiece(colors=[None, None, None])

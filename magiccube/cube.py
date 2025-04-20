@@ -127,6 +127,21 @@ class Cube:
                 _z = self.size-1
                 self.get_piece((_x, _y, _z)).set_piece_color(2, color)
 
+    def get(self, face_order=None):
+        """
+        Get the cube state as a string with the colors of every cube face in the following order: UP, LEFT, FRONT, RIGHT, BACK, DOWN.
+
+        Example: YYYYYYYYYRRRRRRRRRGGGGGGGGGOOOOOOOOOBBBBBBBBBWWWWWWWWW
+        """
+
+        if face_order is None:
+            face_order = [Face.U, Face.L, Face.F, Face.R, Face.B, Face.D]
+
+        res = []
+        for face in face_order:
+            res += self.get_face_flat(face)
+        return "".join([x.name for x in res])
+
     def scramble(self, num_steps: int = 50, wide=None) -> List[CubeMove]:
         """Scramble the cube with random moves.
         By default scramble only uses wide moves to cubes with size >=4."""
@@ -314,25 +329,17 @@ class Cube:
         return reverse
 
     def get_kociemba_facelet_colors(self) -> str:
-        """Return the string representation of the cube facelet colors in Kociemba format
-        (ex: WWWWWWWWWRRRRRRRRRGGGGGGGGGYYYYYYYYYOOOOOOOOOBBBBBBBBB)."""
-        faces = [
-            ''.join(
-                [
-                    fc.name
-                    for fc in self.get_face_flat(
-                        Face.create(f),
-                    )
-                ],
-            )
-            for f in ['U', 'R', 'F', 'D', 'L', 'B']
-        ]
+        """Return the string representation of the cube facelet colors in Kociemba order.
+        The order is: U, R, F, D, L, B.
 
-        return ''.join(faces)
+        Ex: WWWWWWWWWRRRRRRRRRGGGGGGGGGYYYYYYYYYOOOOOOOOOBBBBBBBBB."""
+        return self.get(face_order=[Face.U, Face.R, Face.F, Face.D, Face.L, Face.B])
 
     def get_kociemba_facelet_positions(self) -> str:
-        """Return the string representation of the cube facelet positions in Kociemba format
-        (ex: UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB)."""
+        """Return the string representation of the cube facelet positions in Kociemba order.
+        The order is: U, R, F, D, L, B.
+
+        Ex: UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB."""
         facelets = self.get_kociemba_facelet_colors()
 
         for color, face in (

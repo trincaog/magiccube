@@ -10,22 +10,20 @@ repos:
     hooks:
     -   id: autopep
         name: autopep
-        entry: "autopep8 --exit-code --diff --recursive ."
+        entry: "autopep8 --exit-code --diff --recursive"
         language: system
         types: [python]
         require_serial: true
-        args: []
     -   id: pylint
         name: pylint
         entry: pylint
         language: system
         types: [python]
         require_serial: true
-        args: []
     -   id: pytest
         name: pytest
-        entry: pytest
+        entry: "pytest test"
         language: system
         types: [python]
         require_serial: true
-        args: []
+        pass_filenames: false

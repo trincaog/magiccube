@@ -1,5 +1,5 @@
 """Rubik Cube implementation"""
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Union
 import random
 import numpy as np
 from magiccube.cube_base import Color, CubeException, Face
@@ -49,9 +49,8 @@ class Cube:
         self._cube_piece_indexes_inv = {
             v: idx for idx, v in enumerate(self._cube_piece_indexes)}
 
-        if state is None:
-            self.reset()
-        else:
+        self.reset()
+        if state is not None:
             self.set(state)
 
     def _is_outer_position(self, _x: int, _y: int, _z: int) -> bool:
@@ -79,11 +78,10 @@ class Cube:
         ----------
         image: str
         Colors of every cube face in the following order: UP, LEFT, FRONT, RIGHT, BACK, DOWN.
+        Spaces and newlines are ignored.
 
         Example:
-        YYYYYYYYY
-        RRRRRRRRR GGGGGGGGG OOOOOOOOO BBBBBBBBB
-        WWWWWWWWW
+        YYYYYYYYY RRRRRRRRR GGGGGGGGG OOOOOOOOO BBBBBBBBB WWWWWWWWW
         """
         image = image.replace(" ", "")
         image = image.replace("\n", "")
@@ -272,7 +270,7 @@ class Cube:
                 if piece is not None:
                     piece.rotate_piece(axis)
 
-    def rotate(self, movements) -> None:
+    def rotate(self, movements: Union[str, List[CubeMove]]) -> None:
         """Make multiple cube movements"""
         if isinstance(movements, str):
             movements_list = [CubeMove.create(
@@ -300,14 +298,14 @@ class Cube:
                     "cube is not consistent on face " + str(face_name))
         return True
 
-    def history(self, to_str=False) -> str | List[CubeMove]:
+    def history(self, to_str: bool = False) -> Union[str, List[CubeMove]]:
         """Return the movement history of the cube"""
         if to_str:
             return " ".join([str(x) for x in self._history])
 
         return self._history
 
-    def reverse_history(self, to_str=False) -> str | List[CubeMove]:
+    def reverse_history(self, to_str: bool = False) -> Union[str, List[CubeMove]]:
         """Return the list of moves to revert the cube history"""
         reverse = [x.reverse() for x in reversed(self._history)]
         if to_str:
@@ -323,7 +321,7 @@ class Cube:
                 [
                     fc.name
                     for fc in self.get_face_flat(
-                            Face.create(f),
+                        Face.create(f),
                     )
                 ],
             )
@@ -345,8 +343,11 @@ class Cube:
 
         return facelets
 
-    def undo(self, num_moves=1) -> None:
+    def undo(self, num_moves: int = 1) -> None:
         """Undo the last num_moves"""
+        if not self._store_history:
+            raise CubeException("can't undo on a cube without history enabled")
+
         if num_moves > len(self._history):
             raise CubeException("not enough history to undo")
 

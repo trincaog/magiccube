@@ -34,6 +34,7 @@ print(cube)
 cube.rotate("R' L2 U D' F B'2 R' L")
 
 # Solve the 3x3x3 cube
+from magiccube.solver.basic.basic_solver import BasicSolver
 solver = BasicSolver(cube)
 solver.solve()
 

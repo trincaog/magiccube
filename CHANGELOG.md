@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.1
+
+### Others
+
+- Fix missing import in README file.
+
 ## 1.1.0
 
 ### Changes

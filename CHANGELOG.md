@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.1.0
+
+### Changes
+
+- **Breaking:** Set minimum Python version as 3.9 (#27).
+- Added `get` method to retrieve cube state (#28).
+- Added `get_kociemba_facelet_colors` and `get_kociemba_facelet_positions` to return cube state in Kociemba order format (#22).
+- Added `undo` move method to Cube (#26).
+- Added an optional terminal parameter to `CubePrintStr` to override the TERM environment variable (#24).
+
 ## 1.0.0
 
 ### Changes

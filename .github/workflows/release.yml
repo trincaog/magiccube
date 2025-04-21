@@ -2,7 +2,7 @@ name: Upload Python Package to PyPI
 
 on:
   release:
-    types: [created]
+    types: [published]
 
 jobs:
   build:
@@ -71,12 +71,14 @@ jobs:
 
       - name: Publish package distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
 
   publish-to-pypi:
     name: Publish to PRD PyPI
     needs: build
     runs-on: ubuntu-latest
-    if: "!github.event.release.prerelease"
+    if: '!github.event.release.prerelease'
     environment: production
     permissions:
       id-token: write

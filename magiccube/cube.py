@@ -1,5 +1,5 @@
 """Rubik Cube implementation"""
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Optional, Tuple, Union
 import random
 import numpy as np
 from magiccube.cube_base import Color, CubeException, Face
@@ -12,14 +12,16 @@ class Cube:
     """Rubik Cube implementation"""
 
     __slots__ = ("size", "_store_history", "_cube_face_indexes", "_cube_piece_indexes",
-                 "_cube_piece_indexes_inv", "cube", "_history")
+                 "_cube_piece_indexes_inv", "_cube", "_history")
 
-    def __init__(self, size: int = 3, state=None, hist=True):
+    def __init__(self, size: int = 3, state: Optional[str] = None, hist: Optional[bool] = True):
 
         if size <= 1:
             raise CubeException("Cube size must be >= 2")
 
         self.size = size
+        """Cube size"""
+
         self._store_history = hist
 
         # record the indexes of every cube face
@@ -68,7 +70,7 @@ class Cube:
              for y in range(self.size)]
             for z in range(self.size)
         ]
-        self.cube = np.array(initial_cube, dtype=np.object_)
+        self._cube = np.array(initial_cube, dtype=np.object_)
         self._history = []
 
     def set(self, image: str):
@@ -127,7 +129,7 @@ class Cube:
                 _z = self.size-1
                 self.get_piece((_x, _y, _z)).set_piece_color(2, color)
 
-    def get(self, face_order=None):
+    def get(self, face_order: Optional[List[Face]] = None):
         """
         Get the cube state as a string with the colors of every cube face in the following order: UP, LEFT, FRONT, RIGHT, BACK, DOWN.
 
@@ -142,7 +144,7 @@ class Cube:
             res += self.get_face_flat(face)
         return "".join([x.name for x in res])
 
-    def scramble(self, num_steps: int = 50, wide=None) -> List[CubeMove]:
+    def scramble(self, num_steps: int = 50, wide: Optional[bool] = None) -> List[CubeMove]:
         """Scramble the cube with random moves.
         By default scramble only uses wide moves to cubes with size >=4."""
 
@@ -150,7 +152,7 @@ class Cube:
         self.rotate(movements)
         return movements
 
-    def generate_random_moves(self, num_steps: int = 50, wide=None) -> List[CubeMove]:
+    def generate_random_moves(self, num_steps: int = 50, wide: Optional[bool] = None) -> List[CubeMove]:
         """Generate a list of random moves (but don't apply them).
         By default scramble only uses wide moves to cubes with size >=4."""
 
@@ -187,7 +189,7 @@ class Cube:
         face_indexes = self._cube_face_indexes[face.value]
         res = []
         for line in face_indexes:
-            line_color = [self.cube[index].get_piece_color(
+            line_color = [self._cube[index].get_piece_color(
                 face.get_axis()) for index in line]
             res.append(line_color)
         return res
@@ -205,15 +207,15 @@ class Cube:
 
     def get_piece(self, coordinates: Coordinates) -> CubePiece:
         """Get the CubePiece at a given coordinate"""
-        return self.cube[coordinates]
+        return self._cube[coordinates]
 
     def get_all_pieces(self) -> Dict[Coordinates, CubePiece]:
         """Return a dictionary of coordinates:CubePiece"""
-        res = [self.cube[x] for x in self._cube_piece_indexes]
+        res = [self._cube[x] for x in self._cube_piece_indexes]
 
         res = {
             (xi, yi, zi): piece
-            for xi, x in enumerate(self.cube)
+            for xi, x in enumerate(self._cube)
             for yi, y in enumerate(x)
             for zi, piece in enumerate(y)
             if xi == 0 or xi == self.size-1
@@ -278,10 +280,10 @@ class Cube:
                 slice(None) if i != axis else slices for i in range(3))
             rotation_axes = tuple(i for i in range(3) if i != axis)
 
-            plane = self.cube[rotation_plane]
+            plane = self._cube[rotation_plane]
             rotated_plane = np.rot90(plane, direction, axes=rotation_axes)
-            self.cube[rotation_plane] = rotated_plane
-            for piece in self.cube[rotation_plane].flatten():
+            self._cube[rotation_plane] = rotated_plane
+            for piece in self._cube[rotation_plane].flatten():
                 if piece is not None:
                     piece.rotate_piece(axis)
 
@@ -365,7 +367,7 @@ class Cube:
             self._history.pop()
 
     def __repr__(self):
-        return str(self.cube)
+        return str(self._cube)
 
     def __str__(self):
         printer = CubePrintStr(self)

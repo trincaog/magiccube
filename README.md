@@ -53,9 +53,10 @@ print("State:", cube.get())
 print("State (Kociemba):", cube.get_kociemba_facelet_colors())
 ```
 
-## Examples
+## Documentation and Examples
 
-See [examples](https://github.com/trincaog/magiccube/tree/main/examples) folder.
+- [Code Samples](https://github.com/trincaog/magiccube/tree/main/examples)
+- [API Documentation](https://trincaog.github.io/magiccube/magiccube/cube.html)
 
 ## Supported Moves and Notation
 

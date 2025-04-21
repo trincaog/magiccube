@@ -6,7 +6,7 @@ from magiccube.cube_piece import CubePiece
 
 
 class SolverException(Exception):
-    pass
+    """Exception raised when the solver fails to find a solution"""
 
 
 @dataclass

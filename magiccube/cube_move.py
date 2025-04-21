@@ -6,6 +6,8 @@ from magiccube.cube_base import CubeException
 
 
 class CubeMoveType(Enum):
+    """Cube Move Type"""
+
     L = "L"
     R = "R"
     D = "D"
@@ -61,6 +63,7 @@ class CubeMoveType(Enum):
                             str(self.value))  # pragma: no cover
 
     def is_cube_rotation(self):
+        """Return True if the movement type is a whole cube rotation on any of the X,Y,Z axis"""
         return self in (CubeMoveType.X, CubeMoveType.Y, CubeMoveType.Z)
 
 
@@ -71,16 +74,25 @@ class CubeMove():
 
     __slots__ = ('type', 'is_reversed', 'wide', 'layer', 'count')
 
-    regex_pattern = re.compile(
+    _regex_pattern = re.compile(
         "^(?:([0-9]*)(([LRDUBF])([w]?)|([XYZMES]))([']?)([0-9]?))$")
 
     # pylint: disable=too-many-positional-arguments
     def __init__(self, move_type: CubeMoveType, is_reversed: bool = False, wide: bool = False, layer: int = 1, count: int = 1):
         self.type = move_type
+        """CubeMoveType"""
+
         self.is_reversed = is_reversed
+        """True if the move is reversed (counter clock wise)"""
+
         self.wide = wide
+        """True if the move is wide (2+ layers)"""
+
         self.layer = layer
+        """Layer of the move (1-N)"""
+
         self.count = count
+        """Number of repetitions of the move"""
 
     @staticmethod
     def _create_move(result, special_move):
@@ -120,7 +132,7 @@ class CubeMove():
         """Create a CubeMove from string representation"""
         # pylint: disable=too-many-return-statements
 
-        result = CubeMove.regex_pattern.match(move_str)
+        result = CubeMove._regex_pattern.match(move_str)
         if result is None:
             raise CubeException("invalid movement " + str(move_str))
         result = result.groups()

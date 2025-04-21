@@ -424,7 +424,9 @@ def test_get_cube():
 
 def test_inconsistent_cube():
     c = Cube(3)
-    c.cube[0, 0, 0] = CubePiece(colors=[None, None, None])
+
+    # pylint: disable=protected-access
+    c._cube[0, 0, 0] = CubePiece(colors=[None, None, None])
     with pytest.raises(CubeException):
         c.check_consistency()
 

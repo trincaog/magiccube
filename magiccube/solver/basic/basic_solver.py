@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 from magiccube.cube import Cube, CubeException
 from magiccube.optimizer.move_optimizer import MoveOptimizer
 from magiccube.solver.basic.solver_base import SolverException, SolverStage
@@ -7,7 +7,7 @@ from magiccube.solver.basic.solver_stages import ConditionAction, stage_recenter
     stage_order_top_corners, stage_turn_top_corners
 
 
-stages = {
+_stages = {
     "stage_recenter_down": (("W",), stage_recenter_down),
     "stage_recenter_front": (("G",), stage_recenter_front),
 
@@ -47,23 +47,28 @@ stages = {
 
 
 class BasicSolver:
+    """Cube Solver using the beginner's method"""
 
-    def __init__(self, cube: Cube, init_stages=None):
+    def __init__(self, cube: Cube):
         if cube.size != 3:
             raise SolverException("Solver only works with 3x3x3 cube")
-        self.cube = cube
-        self.stages: List[SolverStage] = []
-        self.default_debug = False
-        self.max_iterations_per_stage = 12
+        self._cube = cube
+        self._stages: List[SolverStage] = []
+        self._default_debug = False
+        self._max_iterations_per_stage = 12
 
+        self._set_stages()
+
+    def _set_stages(self, init_stages: Optional[List[str]] = None):
+        """Method used for testing: Set the stages to be used for solving the cube."""
         if init_stages is None:
-            for name, stage in stages.items():
-                self.add(
-                    name=name, target_colors=stage[0], pattern_condition_actions=stage[1], debug=self.default_debug)
+            for name, stage in _stages.items():
+                self._add(
+                    name=name, target_colors=stage[0], pattern_condition_actions=stage[1], debug=self._default_debug)
         else:
             for init_stage in init_stages:
-                self.add(name=init_stage, target_colors=stages[init_stage][0],
-                         pattern_condition_actions=stages[init_stage][1], debug=self.default_debug)
+                self._add(name=init_stage, target_colors=_stages[init_stage][0],
+                          pattern_condition_actions=_stages[init_stage][1], debug=self._default_debug)
 
     def _solve_pattern_stage(self, stage: SolverStage) -> List[str]:
         """Solve one stage of the cube"""
@@ -71,31 +76,31 @@ class BasicSolver:
         full_actions = []
         iteration = 0
 
-        while iteration < self.max_iterations_per_stage:
+        while iteration < self._max_iterations_per_stage:
             iteration += 1
-            target_pieces = [self.cube.find_piece(
+            target_pieces = [self._cube.find_piece(
                 target_color) for target_color in stage.target_colors]
 
             if stage.debug:  # pragma:no cover
                 print("solve_stage start:", stage.name,
                       stage.target_colors, target_pieces)
-                print(self.cube)
+                print(self._cube)
 
             actions, is_continue = stage.get_moves(target_pieces)
 
-            self.cube.rotate(actions)
+            self._cube.rotate(actions)
             full_actions += actions
 
             if stage.debug:  # pragma:no cover
                 print("solve_stage end:", stage.name,
                       target_pieces, actions, is_continue)
-                print(self.cube)
+                print(self._cube)
 
             if not is_continue:
                 # stage is complete
                 break
 
-        if iteration >= self.max_iterations_per_stage:
+        if iteration >= self._max_iterations_per_stage:
             raise SolverException(f"stage iteration limit exceeded: {stage}")
 
         return full_actions
@@ -104,7 +109,7 @@ class BasicSolver:
         """Solve the cube by running all the registered pattern stages"""
         try:
             full_actions = []
-            for stage in self.stages:
+            for stage in self._stages:
                 if stage.debug:  # pragma:no cover
                     print("starting stage", stage)
                 actions = self._solve_pattern_stage(stage)
@@ -117,8 +122,8 @@ class BasicSolver:
         except CubeException as e:
             raise SolverException("unable to solve cube", e) from e
 
-    def add(self, name, target_colors: Tuple[str, ...], pattern_condition_actions: Tuple[ConditionAction, ...], debug=False):
+    def _add(self, name, target_colors: Tuple[str, ...], pattern_condition_actions: Tuple[ConditionAction, ...], debug=False):
         """Add a stage to the solver."""
-        self.stages.append(SolverStage(
+        self._stages.append(SolverStage(
             target_colors, pattern_condition_actions, name=name, debug=debug))
         return self

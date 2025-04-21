@@ -1,10 +1,16 @@
 # Changelog
 
+## 1.1.2
+
+### Others
+
+- Improve release process (#31).
+
 ## 1.1.1
 
 ### Others
 
-- Fix missing import in README file.
+- Fix missing import in README file (#30).
 
 ## 1.1.0
 

@@ -1,5 +1,5 @@
 """Rubik Cube implementation"""
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Optional, Tuple, Union
 import random
 import numpy as np
 from magiccube.cube_base import Color, CubeException, Face
@@ -14,7 +14,7 @@ class Cube:
     __slots__ = ("size", "_store_history", "_cube_face_indexes", "_cube_piece_indexes",
                  "_cube_piece_indexes_inv", "_cube", "_history")
 
-    def __init__(self, size: int = 3, state=None, hist=True):
+    def __init__(self, size: int = 3, state: Optional[str] = None, hist: Optional[bool] = True):
 
         if size <= 1:
             raise CubeException("Cube size must be >= 2")
@@ -129,7 +129,7 @@ class Cube:
                 _z = self.size-1
                 self.get_piece((_x, _y, _z)).set_piece_color(2, color)
 
-    def get(self, face_order=None):
+    def get(self, face_order: Optional[List[Face]] = None):
         """
         Get the cube state as a string with the colors of every cube face in the following order: UP, LEFT, FRONT, RIGHT, BACK, DOWN.
 
@@ -144,7 +144,7 @@ class Cube:
             res += self.get_face_flat(face)
         return "".join([x.name for x in res])
 
-    def scramble(self, num_steps: int = 50, wide=None) -> List[CubeMove]:
+    def scramble(self, num_steps: int = 50, wide: Optional[bool] = None) -> List[CubeMove]:
         """Scramble the cube with random moves.
         By default scramble only uses wide moves to cubes with size >=4."""
 
@@ -152,7 +152,7 @@ class Cube:
         self.rotate(movements)
         return movements
 
-    def generate_random_moves(self, num_steps: int = 50, wide=None) -> List[CubeMove]:
+    def generate_random_moves(self, num_steps: int = 50, wide: Optional[bool] = None) -> List[CubeMove]:
         """Generate a list of random moves (but don't apply them).
         By default scramble only uses wide moves to cubes with size >=4."""
 

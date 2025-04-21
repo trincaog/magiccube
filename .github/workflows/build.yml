@@ -15,7 +15,7 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
 
@@ -25,10 +25,7 @@ jobs:
         echo "PYTHONPATH=." >> "$GITHUB_ENV"
 
     - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install build
-        pip install -r requirements.txt
+      run: pip install -r requirements.txt
 
     - name: Check autopep8 compliance
       run: |

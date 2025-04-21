@@ -1,0 +1,35 @@
+name: Build API Docs
+
+on:
+  workflow_dispatch:
+
+# security: restrict permissions for CI jobs.
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: pip install -r requirements.txt
+      - run:  pdoc magiccube -o api_docs
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: api_docs/
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

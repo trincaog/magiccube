@@ -77,6 +77,7 @@ class Color(Enum):
 
 
 Coordinates = Tuple[int, int, int]
+"""Defines the coordinates of a given CubePiece in 3D space"""
 
 ColorOrientation = Tuple[Optional[Color], Optional[Color], Optional[Color]]
 """Defines the color orientation of a given CubePiece"""

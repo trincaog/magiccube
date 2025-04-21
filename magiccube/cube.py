@@ -12,7 +12,7 @@ class Cube:
     """Rubik Cube implementation"""
 
     __slots__ = ("size", "_store_history", "_cube_face_indexes", "_cube_piece_indexes",
-                 "_cube_piece_indexes_inv", "cube", "_history")
+                 "_cube_piece_indexes_inv", "_cube", "_history")
 
     def __init__(self, size: int = 3, state=None, hist=True):
 
@@ -20,6 +20,8 @@ class Cube:
             raise CubeException("Cube size must be >= 2")
 
         self.size = size
+        """Cube size"""
+
         self._store_history = hist
 
         # record the indexes of every cube face
@@ -68,7 +70,7 @@ class Cube:
              for y in range(self.size)]
             for z in range(self.size)
         ]
-        self.cube = np.array(initial_cube, dtype=np.object_)
+        self._cube = np.array(initial_cube, dtype=np.object_)
         self._history = []
 
     def set(self, image: str):
@@ -187,7 +189,7 @@ class Cube:
         face_indexes = self._cube_face_indexes[face.value]
         res = []
         for line in face_indexes:
-            line_color = [self.cube[index].get_piece_color(
+            line_color = [self._cube[index].get_piece_color(
                 face.get_axis()) for index in line]
             res.append(line_color)
         return res
@@ -205,15 +207,15 @@ class Cube:
 
     def get_piece(self, coordinates: Coordinates) -> CubePiece:
         """Get the CubePiece at a given coordinate"""
-        return self.cube[coordinates]
+        return self._cube[coordinates]
 
     def get_all_pieces(self) -> Dict[Coordinates, CubePiece]:
         """Return a dictionary of coordinates:CubePiece"""
-        res = [self.cube[x] for x in self._cube_piece_indexes]
+        res = [self._cube[x] for x in self._cube_piece_indexes]
 
         res = {
             (xi, yi, zi): piece
-            for xi, x in enumerate(self.cube)
+            for xi, x in enumerate(self._cube)
             for yi, y in enumerate(x)
             for zi, piece in enumerate(y)
             if xi == 0 or xi == self.size-1
@@ -278,10 +280,10 @@ class Cube:
                 slice(None) if i != axis else slices for i in range(3))
             rotation_axes = tuple(i for i in range(3) if i != axis)
 
-            plane = self.cube[rotation_plane]
+            plane = self._cube[rotation_plane]
             rotated_plane = np.rot90(plane, direction, axes=rotation_axes)
-            self.cube[rotation_plane] = rotated_plane
-            for piece in self.cube[rotation_plane].flatten():
+            self._cube[rotation_plane] = rotated_plane
+            for piece in self._cube[rotation_plane].flatten():
                 if piece is not None:
                     piece.rotate_piece(axis)
 
@@ -365,7 +367,7 @@ class Cube:
             self._history.pop()
 
     def __repr__(self):
-        return str(self.cube)
+        return str(self._cube)
 
     def __str__(self):
         printer = CubePrintStr(self)

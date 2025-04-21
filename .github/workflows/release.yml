@@ -70,13 +70,6 @@ jobs:
       id-token: write
 
     steps:
-      - name: Fail if branch is not main
-        run: |
-          if [ "${GITHUB_REF}" != "refs/heads/main" ]; then
-            echo "This workflow can only run on the main branch."
-            exit 1
-          fi
-
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:

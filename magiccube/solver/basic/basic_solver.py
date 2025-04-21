@@ -1,5 +1,6 @@
 from typing import List, Optional, Tuple
 from magiccube.cube import Cube, CubeException
+from magiccube.cube_move import CubeMove
 from magiccube.optimizer.move_optimizer import MoveOptimizer
 from magiccube.solver.basic.solver_base import SolverException, SolverStage
 from magiccube.solver.basic.solver_stages import ConditionAction, stage_recenter_down, stage_recenter_front, stage_white_cross, \
@@ -70,7 +71,7 @@ class BasicSolver:
                 self._add(name=init_stage, target_colors=_stages[init_stage][0],
                           pattern_condition_actions=_stages[init_stage][1], debug=self._default_debug)
 
-    def _solve_pattern_stage(self, stage: SolverStage) -> List[str]:
+    def _solve_pattern_stage(self, stage: SolverStage) -> List[CubeMove]:
         """Solve one stage of the cube"""
 
         full_actions = []

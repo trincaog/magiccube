@@ -197,8 +197,7 @@ class Cube:
     def get_face_flat(self, face: Face) -> List[Color]:
         """Get face colors in a flat array"""
         res = self.get_face(face)
-        res = list(np.array(res).flatten())
-        return res
+        return list(np.array(res).flatten())
 
     def get_all_faces(self) -> Dict[Face, List[List[Color]]]:
         """Get the CubePiece of all cube faces"""
@@ -211,10 +210,9 @@ class Cube:
 
     def get_all_pieces(self) -> Dict[Coordinates, CubePiece]:
         """Return a dictionary of coordinates:CubePiece"""
-        res = [self._cube[x] for x in self._cube_piece_indexes]
-
-        res = {
+        result = {
             (xi, yi, zi): piece
+            for xi, x in enumerate(self._cube)
             for xi, x in enumerate(self._cube)
             for yi, y in enumerate(x)
             for zi, piece in enumerate(y)
@@ -222,7 +220,7 @@ class Cube:
             or yi == 0 or yi == self.size-1
             or zi == 0 or zi == self.size-1  # dont include center pieces
         }
-        return res
+        return result
 
     def _move_to_slice(self, move: CubeMove) -> slice:
         """return the slices affected by a given CubeMove"""
@@ -281,7 +279,8 @@ class Cube:
             rotation_axes = tuple(i for i in range(3) if i != axis)
 
             plane = self._cube[rotation_plane]
-            rotated_plane = np.rot90(plane, direction, axes=rotation_axes)
+            rotated_plane = np.rot90(plane, direction, axes=(
+                rotation_axes[0], rotation_axes[1]))
             self._cube[rotation_plane] = rotated_plane
             for piece in self._cube[rotation_plane].flatten():
                 if piece is not None:

@@ -1,9 +1,0 @@
-
-# build whl
-python -m build
-
-# upload to TEST
-twine upload --repository testpypi --verbose dist/magiccube-0.0.2*
-
-# upload to PRD
-twine upload --repository pypi --verbose dist/magiccube-0.0.2*

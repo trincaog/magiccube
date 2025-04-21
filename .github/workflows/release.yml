@@ -6,37 +6,13 @@ on:
 
 jobs:
   build:
-    name: Build and deploy
-    permissions:
-      id-token: write
+    uses: ./.github/workflows/build.yml
+
+  build-package:
+    name: Build Package
+    needs: build
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.11"]
     steps:
-    - uses: actions/checkout@v4
-
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}
-
-    - name: Set environment variables
-      id: set_env_variables
-      run: |
-        echo "PYTHONPATH=." >> "$GITHUB_ENV"
-
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install build
-        pip install -r requirements.txt
-
-    - name: Test with pytest
-      run: |
-        pip install pytest
-        pytest test/ --doctest-modules --junitxml=junit/test-results-${{ matrix.python-version }}.xml
-
     - name: Extract tag name
       id: tag
       run: echo "PKG_VERSION=$(echo $GITHUB_REF | cut -d / -f 3)" >> "$GITHUB_OUTPUT"
@@ -56,7 +32,7 @@ jobs:
 
   publish-to-test-pypi:
     name: Publish to TEST PyPI
-    needs: build
+    needs: build-package
     runs-on: ubuntu-latest
     environment: test
     permissions:
@@ -76,7 +52,7 @@ jobs:
 
   publish-to-pypi:
     name: Publish to PRD PyPI
-    needs: build
+    needs: build-package
     runs-on: ubuntu-latest
     if: '!github.event.release.prerelease'
     environment: production
@@ -84,6 +60,13 @@ jobs:
       id-token: write
 
     steps:
+      - name: Fail if branch is not main
+        run: |
+          if [ "${GITHUB_REF}" != "refs/heads/main" ]; then
+            echo "This workflow can only run on the main branch."
+            exit 1
+          fi
+
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:

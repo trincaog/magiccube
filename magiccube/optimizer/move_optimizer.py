@@ -102,8 +102,8 @@ class MoveOptimizer:
 
     def optimize(self, moves: List[CubeMove]) -> List[CubeMove]:
         """Returns the optimized moves"""
-        optimized_moves = []
-        current_cube_rotations = []
+        optimized_moves: List[CubeMove] = []
+        current_cube_rotations: List[CubeMove] = []
 
         for move in moves:
             if move.type.is_cube_rotation():

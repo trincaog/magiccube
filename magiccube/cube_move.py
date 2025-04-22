@@ -132,10 +132,10 @@ class CubeMove():
         """Create a CubeMove from string representation"""
         # pylint: disable=too-many-return-statements
 
-        result = CubeMove._regex_pattern.match(move_str)
-        if result is None:
+        result_match = CubeMove._regex_pattern.match(move_str)
+        if result_match is None:
             raise CubeException("invalid movement " + str(move_str))
-        result = result.groups()
+        result = result_match.groups()
         special_move = result[4]
         move_count = result[-1]
 

@@ -35,11 +35,11 @@ class CubeMoveType(Enum):
             return CubeMoveType.B
         if move_str == "F":
             return CubeMoveType.F
-        if move_str == "X":
+        if move_str in ("X", 'x'):
             return CubeMoveType.X
-        if move_str == "Y":
+        if move_str in ("Y", 'y'):
             return CubeMoveType.Y
-        if move_str == "Z":
+        if move_str in ("Z", 'z'):
             return CubeMoveType.Z
         if move_str == "M":
             return CubeMoveType.M
@@ -72,7 +72,7 @@ class CubeMove():
     __slots__ = ('type', 'is_reversed', 'wide', 'layer', 'count')
 
     regex_pattern = re.compile(
-        "^(?:([0-9]*)(([LRDUBF])([w]?)|([XYZMES]))([']?)(2?))$")
+        "^(?:([0-9]*)(([LRDUBF])([w]?)|([xyzXYZMES]))([']?)(2?))$")
 
     # pylint: disable=too-many-positional-arguments
     def __init__(self, move_type: CubeMoveType, is_reversed: bool = False, wide: bool = False, layer: int = 1, count: int = 1):
@@ -86,11 +86,11 @@ class CubeMove():
     def _create_move(result, special_move):
         if special_move is not None:
             is_reversed = result[-2] == "'"
-            if special_move == "X":
+            if special_move in ("X", "x"):
                 return CubeMove(CubeMoveType.X, is_reversed)
-            if special_move == "Y":
+            if special_move in ("Y", "y"):
                 return CubeMove(CubeMoveType.Y, is_reversed)
-            if special_move == "Z":
+            if special_move in ("Z", "z"):
                 return CubeMove(CubeMoveType.Z, is_reversed)
             if special_move == "M":
                 return CubeMove(CubeMoveType.M, is_reversed)

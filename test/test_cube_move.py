@@ -39,3 +39,11 @@ def test_create_move_str():
 def test_move_eq():
     assert CubeMove.create("F") == CubeMove.create("F")
     assert CubeMove.create("B") != 1
+
+
+def test_move_from_doc():
+    assert CubeMove.create("F2")
+    assert CubeMove.create("F'2")
+
+    with pytest.raises(CubeException):
+        CubeMove.create("F2'")

@@ -34,6 +34,7 @@ print(cube)
 cube.rotate("R' L2 U D' F B'2 R' L")
 
 # Solve the 3x3x3 cube
+from magiccube.solver.basic.basic_solver import BasicSolver
 solver = BasicSolver(cube)
 solver.solve()
 
@@ -45,11 +46,17 @@ cube.rotate("Lw2") # 2x L wide rotation
 cube.rotate("3L") # 3rd line L rotation
 cube.rotate("3Lw") # 3rd line L wide rotation
 cube.rotate("3Lw'2") # 2x 3rd line L wide counter-rotation
+
+# Get cube state
+print("State:", cube.get())
+# Get cube state in Kociemba order
+print("State (Kociemba):", cube.get_kociemba_facelet_colors())
 ```
 
-## Examples
+## Documentation and Examples
 
-See [examples](https://github.com/trincaog/magiccube/tree/main/examples) folder.
+- [Code Samples](https://github.com/trincaog/magiccube/tree/main/examples)
+- [API Documentation](https://trincaog.github.io/magiccube/magiccube/cube.html)
 
 ## Supported Moves and Notation
 

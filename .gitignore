@@ -6,3 +6,4 @@ venv/
 junit/
 .venv*
 .python-version
+api_docs/

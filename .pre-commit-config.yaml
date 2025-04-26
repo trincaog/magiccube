@@ -9,23 +9,27 @@ repos:
 -   repo: local
     hooks:
     -   id: autopep
-        name: autopep
-        entry: "autopep8 --exit-code --diff --recursive ."
+        name: Check code format with autopep
+        entry: "autopep8 --exit-code --diff --recursive"
         language: system
         types: [python]
         require_serial: true
-        args: []
     -   id: pylint
-        name: pylint
+        name: Run pylint linter
         entry: pylint
         language: system
         types: [python]
         require_serial: true
-        args: []
-    -   id: pytest
-        name: pytest
-        entry: pytest
+    -   id: mypy
+        name: Run mypy type checker
+        entry: bash -c "PYTHONPATH=$(pwd) mypy magiccube"
         language: system
         types: [python]
         require_serial: true
-        args: []
+    -   id: pytest
+        name: Run unit tests
+        entry: "pytest test"
+        language: system
+        types: [python]
+        require_serial: true
+        pass_filenames: false

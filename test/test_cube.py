@@ -410,9 +410,23 @@ def test_set_cube_bad_cube():
         solver.solve()
 
 
+def test_get_cube():
+    c = Cube(3)
+    assert c.get() == "WWWWWWWWWOOOOOOOOOGGGGGGGGGRRRRRRRRRBBBBBBBBBYYYYYYYYY"
+    c.rotate("U")
+    assert c.get() == "WWWWWWWWWGGGOOOOOORRRGGGGGGBBBRRRRRROOOBBBBBBYYYYYYYYY"
+
+    state = "YYYYYYYYYRRRRRRRRRGGGGGGGGGOOOOOOOOOBBBBBBBBBWWWWWWWWW"
+    c = Cube(3)
+    c.set(state)
+    assert c.get() == state
+
+
 def test_inconsistent_cube():
     c = Cube(3)
-    c.cube[0, 0, 0] = CubePiece(colors=[None, None, None])
+
+    # pylint: disable=protected-access
+    c._cube[0, 0, 0] = CubePiece(colors=[None, None, None])
     with pytest.raises(CubeException):
         c.check_consistency()
 
@@ -498,6 +512,32 @@ def test_rotate_twice():
     assert c.is_done()
 
 
+def test_get_kociemba_facelet_positions():
+    c = Cube(3)
+
+    assert c.get_kociemba_facelet_positions(
+    ) == 'UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB'
+
+    moves = 'R F U'
+    c.rotate(moves)
+
+    assert c.get_kociemba_facelet_positions(
+    ) == 'LUULUULFFUBBURRFRRURRFFFDDDRRRDDBDDBFFFLLDLLBLLDUBBUBB'
+
+
+def test_get_kociemba_facelet_colors():
+    c = Cube(3)
+
+    assert c.get_kociemba_facelet_colors(
+    ) == 'WWWWWWWWWRRRRRRRRRGGGGGGGGGYYYYYYYYYOOOOOOOOOBBBBBBBBB'
+
+    moves = 'R F U'
+    c.rotate(moves)
+
+    assert c.get_kociemba_facelet_colors(
+    ) == 'OWWOWWOGGWBBWRRGRRWRRGGGYYYRRRYYBYYBGGGOOYOOBOOYWBBWBB'
+
+
 def test_undo():
     c = Cube(3)
     c.rotate("U F B")
@@ -510,11 +550,25 @@ def test_undo():
     assert c.is_done()
 
 
-def test_undo_fail():
+def test_undo_fail_history_disabled():
+    c = Cube(3, hist=False)
+    c.rotate("U F B")
+    with pytest.raises(CubeException):
+        c.undo(1)
+
+
+def test_undo_fail_too_many_undos():
     c = Cube(3)
     c.rotate("U F B")
     with pytest.raises(CubeException):
         c.undo(4)
+
+
+def test_history_disabled():
+    c = Cube(3, hist=False)
+    c.rotate("U F B")
+    assert c.history() == []
+    assert c.reverse_history() == []
 
 
 if __name__ == "__main__":

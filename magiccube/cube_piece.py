@@ -1,7 +1,7 @@
 """Cube Piece implementation"""
-from typing import List, Optional
+from typing import List, Optional, Tuple
 import numpy as np
-from magiccube.cube_base import Color, ColorOrientation, Coordinates, CubeException, PieceType
+from magiccube.cube_base import Color, Coordinates, CubeException, PieceType
 
 
 class CubePiece:
@@ -45,8 +45,7 @@ class CubePiece:
             z_color = None
 
         colors = [x_color, y_color, z_color]
-        colors = np.array(colors)
-        return colors
+        return np.array(colors)
 
     def get_piece_color(self, axis) -> Color:
         """Return the CuberPiece color of a given axis"""
@@ -55,10 +54,10 @@ class CubePiece:
     def get_piece_colors_str(self, no_loc=False) -> str:
         """Return a  string with the colors for xyz axis"""
         colors = self.get_piece_colors(no_loc=no_loc)
-        colors = [c.name for c in colors if c is not None]
-        return "".join(colors)
+        color_names = [c.name for c in colors if c is not None]
+        return "".join(color_names)
 
-    def get_piece_colors(self, no_loc=False) -> ColorOrientation:
+    def get_piece_colors(self, no_loc=False) -> Tuple[Optional[Color], ...]:
         """Return CubeColors of the piece. Order is XYZ"""
         x_color = self.get_piece_color(0)
         y_color = self.get_piece_color(1)

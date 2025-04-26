@@ -1,5 +1,5 @@
 """Rubik Cube implementation"""
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple, Union
 import random
 import numpy as np
 from magiccube.cube_base import Color, CubeException, Face
@@ -12,14 +12,16 @@ class Cube:
     """Rubik Cube implementation"""
 
     __slots__ = ("size", "_store_history", "_cube_face_indexes", "_cube_piece_indexes",
-                 "_cube_piece_indexes_inv", "cube", "_history")
+                 "_cube_piece_indexes_inv", "_cube", "_history")
 
-    def __init__(self, size: int = 3, state=None, hist=True):
+    def __init__(self, size: int = 3, state: Optional[str] = None, hist: Optional[bool] = True):
 
         if size <= 1:
             raise CubeException("Cube size must be >= 2")
 
         self.size = size
+        """Cube size"""
+
         self._store_history = hist
 
         # record the indexes of every cube face
@@ -49,9 +51,8 @@ class Cube:
         self._cube_piece_indexes_inv = {
             v: idx for idx, v in enumerate(self._cube_piece_indexes)}
 
-        if state is None:
-            self.reset()
-        else:
+        self.reset()
+        if state is not None:
             self.set(state)
 
     def _is_outer_position(self, _x: int, _y: int, _z: int) -> bool:
@@ -69,7 +70,7 @@ class Cube:
              for y in range(self.size)]
             for z in range(self.size)
         ]
-        self.cube = np.array(initial_cube, dtype=np.object_)
+        self._cube = np.array(initial_cube, dtype=np.object_)
         self._history = []
 
     def set(self, image: str):
@@ -79,11 +80,10 @@ class Cube:
         ----------
         image: str
         Colors of every cube face in the following order: UP, LEFT, FRONT, RIGHT, BACK, DOWN.
+        Spaces and newlines are ignored.
 
         Example:
-        YYYYYYYYY
-        RRRRRRRRR GGGGGGGGG OOOOOOOOO BBBBBBBBB
-        WWWWWWWWW
+        YYYYYYYYY RRRRRRRRR GGGGGGGGG OOOOOOOOO BBBBBBBBB WWWWWWWWW
         """
         image = image.replace(" ", "")
         image = image.replace("\n", "")
@@ -129,7 +129,22 @@ class Cube:
                 _z = self.size-1
                 self.get_piece((_x, _y, _z)).set_piece_color(2, color)
 
-    def scramble(self, num_steps: int = 50, wide=None) -> List[CubeMove]:
+    def get(self, face_order: Optional[List[Face]] = None):
+        """
+        Get the cube state as a string with the colors of every cube face in the following order: UP, LEFT, FRONT, RIGHT, BACK, DOWN.
+
+        Example: YYYYYYYYYRRRRRRRRRGGGGGGGGGOOOOOOOOOBBBBBBBBBWWWWWWWWW
+        """
+
+        if face_order is None:
+            face_order = [Face.U, Face.L, Face.F, Face.R, Face.B, Face.D]
+
+        res = []
+        for face in face_order:
+            res += self.get_face_flat(face)
+        return "".join([x.name for x in res])
+
+    def scramble(self, num_steps: int = 50, wide: Optional[bool] = None) -> List[CubeMove]:
         """Scramble the cube with random moves.
         By default scramble only uses wide moves to cubes with size >=4."""
 
@@ -137,7 +152,7 @@ class Cube:
         self.rotate(movements)
         return movements
 
-    def generate_random_moves(self, num_steps: int = 50, wide=None) -> List[CubeMove]:
+    def generate_random_moves(self, num_steps: int = 50, wide: Optional[bool] = None) -> List[CubeMove]:
         """Generate a list of random moves (but don't apply them).
         By default scramble only uses wide moves to cubes with size >=4."""
 
@@ -174,7 +189,7 @@ class Cube:
         face_indexes = self._cube_face_indexes[face.value]
         res = []
         for line in face_indexes:
-            line_color = [self.cube[index].get_piece_color(
+            line_color = [self._cube[index].get_piece_color(
                 face.get_axis()) for index in line]
             res.append(line_color)
         return res
@@ -182,8 +197,7 @@ class Cube:
     def get_face_flat(self, face: Face) -> List[Color]:
         """Get face colors in a flat array"""
         res = self.get_face(face)
-        res = list(np.array(res).flatten())
-        return res
+        return list(np.array(res).flatten())
 
     def get_all_faces(self) -> Dict[Face, List[List[Color]]]:
         """Get the CubePiece of all cube faces"""
@@ -192,22 +206,21 @@ class Cube:
 
     def get_piece(self, coordinates: Coordinates) -> CubePiece:
         """Get the CubePiece at a given coordinate"""
-        return self.cube[coordinates]
+        return self._cube[coordinates]
 
     def get_all_pieces(self) -> Dict[Coordinates, CubePiece]:
         """Return a dictionary of coordinates:CubePiece"""
-        res = [self.cube[x] for x in self._cube_piece_indexes]
-
-        res = {
+        result = {
             (xi, yi, zi): piece
-            for xi, x in enumerate(self.cube)
+            for xi, x in enumerate(self._cube)
+            for xi, x in enumerate(self._cube)
             for yi, y in enumerate(x)
             for zi, piece in enumerate(y)
             if xi == 0 or xi == self.size-1
             or yi == 0 or yi == self.size-1
             or zi == 0 or zi == self.size-1  # dont include center pieces
         }
-        return res
+        return result
 
     def _move_to_slice(self, move: CubeMove) -> slice:
         """return the slices affected by a given CubeMove"""
@@ -265,14 +278,15 @@ class Cube:
                 slice(None) if i != axis else slices for i in range(3))
             rotation_axes = tuple(i for i in range(3) if i != axis)
 
-            plane = self.cube[rotation_plane]
-            rotated_plane = np.rot90(plane, direction, axes=rotation_axes)
-            self.cube[rotation_plane] = rotated_plane
-            for piece in self.cube[rotation_plane].flatten():
+            plane = self._cube[rotation_plane]
+            rotated_plane = np.rot90(plane, direction, axes=(
+                rotation_axes[0], rotation_axes[1]))
+            self._cube[rotation_plane] = rotated_plane
+            for piece in self._cube[rotation_plane].flatten():
                 if piece is not None:
                     piece.rotate_piece(axis)
 
-    def rotate(self, movements) -> None:
+    def rotate(self, movements: Union[str, List[CubeMove]]) -> None:
         """Make multiple cube movements"""
         if isinstance(movements, str):
             movements_list = [CubeMove.create(
@@ -300,14 +314,14 @@ class Cube:
                     "cube is not consistent on face " + str(face_name))
         return True
 
-    def history(self, to_str=False) -> str | List[CubeMove]:
+    def history(self, to_str: bool = False) -> Union[str, List[CubeMove]]:
         """Return the movement history of the cube"""
         if to_str:
             return " ".join([str(x) for x in self._history])
 
         return self._history
 
-    def reverse_history(self, to_str=False) -> str | List[CubeMove]:
+    def reverse_history(self, to_str: bool = False) -> Union[str, List[CubeMove]]:
         """Return the list of moves to revert the cube history"""
         reverse = [x.reverse() for x in reversed(self._history)]
         if to_str:
@@ -315,8 +329,33 @@ class Cube:
 
         return reverse
 
-    def undo(self, num_moves=1) -> None:
+    def get_kociemba_facelet_colors(self) -> str:
+        """Return the string representation of the cube facelet colors in Kociemba order.
+        The order is: U, R, F, D, L, B.
+
+        Ex: WWWWWWWWWRRRRRRRRRGGGGGGGGGYYYYYYYYYOOOOOOOOOBBBBBBBBB."""
+        return self.get(face_order=[Face.U, Face.R, Face.F, Face.D, Face.L, Face.B])
+
+    def get_kociemba_facelet_positions(self) -> str:
+        """Return the string representation of the cube facelet positions in Kociemba order.
+        The order is: U, R, F, D, L, B.
+
+        Ex: UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB."""
+        facelets = self.get_kociemba_facelet_colors()
+
+        for color, face in (
+                ('W', 'U'), ('Y', 'D'),
+                ('G', 'F'), ('O', 'L'),
+        ):
+            facelets = facelets.replace(color, face)
+
+        return facelets
+
+    def undo(self, num_moves: int = 1) -> None:
         """Undo the last num_moves"""
+        if not self._store_history:
+            raise CubeException("can't undo on a cube without history enabled")
+
         if num_moves > len(self._history):
             raise CubeException("not enough history to undo")
 
@@ -327,7 +366,7 @@ class Cube:
             self._history.pop()
 
     def __repr__(self):
-        return str(self.cube)
+        return str(self._cube)
 
     def __str__(self):
         printer = CubePrintStr(self)

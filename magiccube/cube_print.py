@@ -1,6 +1,7 @@
 """Stdout Cube Print implementation"""
 import os
 from enum import Enum
+from typing import Union
 from magiccube.cube_base import Color, Face
 
 C_RESET = "\x1b[0;0m"
@@ -13,8 +14,11 @@ C_WHITE = "\x1b[48;5;248m\x1b[38;5;232m"
 
 
 class Terminal(Enum):
+    """Type of terminal for displaying the cube"""
     default = 0
+    """default terminal - no colors"""
     x256 = 1
+    """xterm-256color - colors supported"""
 
 
 class CubePrintStr:
@@ -28,8 +32,8 @@ class CubePrintStr:
         Color.W: C_WHITE,
     }
 
-    def __init__(self, cube, terminal: Terminal | None = None):
-        self.cube = cube
+    def __init__(self, cube, terminal: Union[Terminal, None] = None):
+        self._cube = cube
         if terminal is not None:
             self.term = terminal
         else:
@@ -63,7 +67,7 @@ class CubePrintStr:
 
     def print_cube(self):
         "Print the cube to stdout"
-        cube = self.cube
+        cube = self._cube
 
         # flatten middle layer
         print_order_mid = zip(cube.get_face(Face.L), cube.get_face(Face.F),

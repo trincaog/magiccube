@@ -12,10 +12,10 @@ description = "NxNxN Rubik Cube implementation"
 keywords = ["rubik", "cube", "solver", "Rubik Cube", "NxNxN"]
 readme = "README.md"
 license = {text = "BSD-3-Clause"}
-requires-python = ">=3.5"
+requires-python = ">=3.9"
 classifiers = [
   "Programming Language :: Python :: 3",
-  "Development Status :: 4 - Beta",
+  "Development Status :: 5 - Production/Stable",
   "Operating System :: OS Independent",
 ]
 dependencies = [

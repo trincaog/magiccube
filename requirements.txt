@@ -3,3 +3,5 @@ pytest
 pylint
 autopep8
 pre-commit
+pdoc
+mypy

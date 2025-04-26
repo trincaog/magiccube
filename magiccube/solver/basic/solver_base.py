@@ -6,7 +6,7 @@ from magiccube.cube_piece import CubePiece
 
 
 class SolverException(Exception):
-    pass
+    """Exception raised when the solver fails to find a solution"""
 
 
 @dataclass
@@ -35,7 +35,8 @@ class Condition:
                 None if color_str == "*" else Color.create(color_str)
                 for color_str in accepted_color
             )))
-        self.color_condition: List[ColorOrientation] = color_condition
+
+        self.color_condition: List[ColorOrientation] = color_condition  # type: ignore # noqa
 
     def _is_color_match(self, orientation_pattern: ColorOrientation, color: ColorOrientation) -> bool:
         """ Return True if the piece colors match the orientation pattern """
@@ -58,7 +59,8 @@ class Condition:
             return False
 
         for accepted_color in self.color_condition:
-            if self._is_color_match(accepted_color, target_piece.get_piece_colors()):
+
+            if self._is_color_match(accepted_color, target_piece.get_piece_colors()):  # type: ignore # noqa
                 return True
         return False
 
@@ -73,8 +75,8 @@ class ConditionAction:
     def __init__(self, conditions: Tuple[Condition, ...], action: str, is_continue: bool):
         self.conditions = conditions
 
-        action_list = action.split(" ")
-        action_list = [CubeMove.create(a) for a in action_list if a != ""]
+        action_list_str = action.split(" ")
+        action_list = [CubeMove.create(a) for a in action_list_str if a != ""]
 
         self.action = action_list
         self.is_continue = is_continue

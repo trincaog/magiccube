@@ -33,7 +33,8 @@ def test_solve_nok_max_iterations():
     random.seed(42)
     cube.scramble(num_steps=50, wide=False)
     solver = BasicSolver(cube)
-    solver.max_iterations_per_stage = 2
+    # pylint: disable=protected-access
+    solver._max_iterations_per_stage = 2
     with pytest.raises(SolverException):
         solver.solve()
 
@@ -55,7 +56,9 @@ def test_solve_white_cross():
                    ]
 
     cube = Cube(hist=False, size=3)
-    solver = BasicSolver(cube, init_stages=init_stages)
+    solver = BasicSolver(cube)
+    # pylint: disable=protected-access
+    solver._set_stages(init_stages)
 
     random.seed(42)
     cube.scramble(num_steps=50, wide=False)
@@ -92,7 +95,9 @@ def test_solve_white_corners():
                    ]
 
     cube = Cube(hist=False, size=3)
-    solver = BasicSolver(cube, init_stages=init_stages)
+    solver = BasicSolver(cube)
+    # pylint: disable=protected-access
+    solver._set_stages(init_stages)
 
     random.seed(42)
     cube.scramble(num_steps=50, wide=False)
@@ -148,7 +153,9 @@ def test_solve_2nd_layer():
                    ]
 
     cube = Cube(hist=False, size=3)
-    solver = BasicSolver(cube, init_stages=init_stages)
+    solver = BasicSolver(cube)
+    # pylint: disable=protected-access
+    solver._set_stages(init_stages)
 
     random.seed(42)
     cube.scramble(num_steps=50, wide=False)
@@ -223,7 +230,9 @@ def test_solve_top_cross():
                    ]
 
     cube = Cube(hist=False, size=3)
-    solver = BasicSolver(cube, init_stages=init_stages)
+    solver = BasicSolver(cube)
+    # pylint: disable=protected-access
+    solver._set_stages(init_stages)
 
     random.seed(42)
     cube.scramble(num_steps=50, wide=False)
@@ -313,7 +322,9 @@ def test_solve_top_corners():
                    ]
 
     cube = Cube(hist=False, size=3)
-    solver = BasicSolver(cube, init_stages=init_stages)
+    solver = BasicSolver(cube)
+    # pylint: disable=protected-access
+    solver._set_stages(init_stages)
 
     random.seed(42)
     cube.scramble(num_steps=50, wide=False)

@@ -47,3 +47,9 @@ def test_move_from_doc():
 
     with pytest.raises(CubeException):
         CubeMove.create("F2'")
+
+
+def test_reversed_double_corrected():
+    move = CubeMove.create("Z2")
+    assert str(move) == "Z2"
+    assert str(move.reverse()) == "Z2"

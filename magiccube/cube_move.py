@@ -72,7 +72,7 @@ class CubeMove():
     __slots__ = ('type', 'is_reversed', 'wide', 'layer', 'count')
 
     regex_pattern = re.compile(
-        "^(?:([0-9]*)(([LRDUBF])([w]?)|([XYZMES]))([']?)([0-9]?))$")
+        "^(?:([0-9]*)(([LRDUBF])([w]?)|([XYZMES]))([']?)(2?))$")
 
     # pylint: disable=too-many-positional-arguments
     def __init__(self, move_type: CubeMoveType, is_reversed: bool = False, wide: bool = False, layer: int = 1, count: int = 1):
@@ -144,7 +144,8 @@ class CubeMove():
         wide = "w" if self.wide else ""
         reversed_move = "'" if self.is_reversed else ""
         count = "" if int(self.count) == 1 else int(self.count)
-        return f"{layer}{self.type.name}{wide}{reversed_move}{count}"
+        string = f"{layer}{self.type.name}{wide}{reversed_move}{count}"
+        return string.replace("'2", "2")
 
     def __repr__(self):
         return str(self)  # pragma: no cover

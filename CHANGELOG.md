@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.2.0
+
+### Changes
+
+- Improved README file.
+- Align rotation notation to [SIGN notation](https://www.speedsolving.com/wiki/index.php?title=SiGN_notation) (#38):
+  - Constrained move count to a maximum of 2.
+  - Implemented x, y, z orientation moves according to SiGN notation standards.
+- Improved API documentation (#35).
+- Improved type hints (#35 #36).
+- Make public objects visible directly in the magiccube namespace (#34).
+
 ## 1.1.2
 
 ### Others

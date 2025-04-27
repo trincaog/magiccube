@@ -34,7 +34,7 @@ print(cube)
 cube.rotate("R' L2 U D' F B'2 R' L")
 
 # Solve the 3x3x3 cube
-from magiccube.solver.basic.basic_solver import BasicSolver
+from magiccube import BasicSolver
 solver = BasicSolver(cube)
 solver.solve()
 
@@ -59,6 +59,8 @@ print("State (Kociemba):", cube.get_kociemba_facelet_colors())
 - [API Documentation](https://trincaog.github.io/magiccube/magiccube/cube.html)
 
 ## Supported Moves and Notation
+
+Uses SIGN notation, including advanced extensions.
 
 ### Basic moves
 
@@ -90,7 +92,7 @@ print("State (Kociemba):", cube.get_kociemba_facelet_colors())
 
 - Cube coordinates are expressed as a tuple of x,y,z.
 - (0,0,0) is the piece on the LEFT,DOWN,BACK corner.
-- In a 3x3x3, (2,2,2) is the piece on the RIGH,UP,FRONT corner.
+- In a 3x3x3, (2,2,2) is the piece on the RIGHT,UP,FRONT corner.
 
 ## Solver
 

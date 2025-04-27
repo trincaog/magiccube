@@ -7,3 +7,4 @@ junit/
 .venv*
 .python-version
 api_docs/
+tmp/

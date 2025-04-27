@@ -84,7 +84,7 @@ print("State (Kociemba):", cube.get_kociemba_facelet_colors())
 |Fw Fw'| Wide rotation of 2 layers.|
 |3Fw 3Fw' | Wide rotation of 3 layers.|
 |3F 3F' | Rotation of the 3rd layer.|
-|F2 F2' | 2x rotation.|
+|F2 F'2 | 2x rotation.|
 
 ## Cube Coordinates
 

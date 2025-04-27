@@ -20,6 +20,10 @@ def test_create_move():
     assert CubeMoveType.create("Y") == CubeMoveType.Y
     assert CubeMoveType.create("Z") == CubeMoveType.Z
 
+    assert CubeMoveType.create("x") == CubeMoveType.X
+    assert CubeMoveType.create("y") == CubeMoveType.Y
+    assert CubeMoveType.create("z") == CubeMoveType.Z
+
     with pytest.raises(CubeException):
         CubeMoveType.create("A")
 
@@ -38,4 +42,19 @@ def test_create_move_str():
 
 def test_move_eq():
     assert CubeMove.create("F") == CubeMove.create("F")
+    assert CubeMove.create("X") == CubeMove.create("x")
     assert CubeMove.create("B") != 1
+
+
+def test_move_from_doc():
+    assert CubeMove.create("F2")
+    assert CubeMove.create("F'2")
+
+    with pytest.raises(CubeException):
+        CubeMove.create("F2'")
+
+
+def test_reversed_double_corrected():
+    move = CubeMove.create("Z2")
+    assert str(move) == "Z2"
+    assert str(move.reverse()) == "Z2"

@@ -8,3 +8,4 @@ junit/
 .python-version
 api_docs/
 tmp/
+uv.lock

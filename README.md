@@ -108,13 +108,33 @@ The move optimizer does the following optimizations:
 
 ## Development
 
+### Setup the environment using UV
+
+Install `UV`
+
+```sh
+pip install uv
+```
+
+Setup the environment
+
+```sh
+uv python install 3.11
+uv python pin 3.11
+uv sync
+direnv allow
+pre-commit install
+```
+
+### Setup the environment using pyenv
+
 Install `pyenv`
 
 ```sh
 curl https://pyenv.run | bash
 ```
 
-Setup the environment using `pyenv`
+Setup the environment
 
 ```sh
 pyenv install 3.11
@@ -122,10 +142,5 @@ pyenv virtualenv 3.11 cube
 pyenv local cube
 pip install -r requirements.txt
 direnv allow
-```
-
-Install commit hooks
-
-```sh
 pre-commit install
 ```

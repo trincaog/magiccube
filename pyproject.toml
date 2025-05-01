@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools>=68.0"]
+requires = ["setuptools>=80.1", "setuptools_scm[toml]>=8.3.1"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "magiccube"
-version = "{{VERSION_PLACEHOLDER}}"
+dynamic = ["version"]
 authors = [
   { name="Gonçalo Trincão Cunha", email="goncalo.cunha@gmail.com" },
 ]
@@ -19,11 +19,26 @@ classifiers = [
   "Operating System :: OS Independent",
 ]
 dependencies = [
-  "numpy"
-]
+  "numpy",
+  ]
 
 [project.urls]
 "Homepage" = "https://github.com/trincaog/magiccube"
 
 [tool.setuptools.packages.find]
 include = ["magiccube", "magiccube.*"]
+
+[tool.setuptools_scm]
+version_scheme = "guess-next-dev"
+local_scheme = "no-local-version"
+
+[dependency-groups]
+dev = [
+    "autopep8>=2.3.2",
+    "mypy>=1.15.0",
+    "numpy>=2.0.2",
+    "pdoc>=15.0.3",
+    "pre-commit>=4.2.0",
+    "pylint>=3.3.6",
+    "pytest>=8.3.5",
+]

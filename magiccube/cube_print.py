@@ -3,6 +3,7 @@ import os
 from enum import Enum
 from typing import Union
 from magiccube.cube_base import Color, Face
+from magiccube.cube_move import CubeMove
 
 C_RESET = "\x1b[0;0m"
 C_GREEN = "\x1b[48;5;40m\x1b[38;5;232m"
@@ -40,7 +41,7 @@ class CubePrintStr:
             self.term = Terminal.x256 if os.environ.get(
                 "TERM") == "xterm-256color" else Terminal.default
 
-    def _format_color(self, color: Color):
+    def _format_color(self, color: Color) -> str:
         """Format color to TTY
         Only print colors on supported terminals (xterm-256color)
         """
@@ -52,7 +53,7 @@ class CubePrintStr:
 
         return formated_color
 
-    def _print_top_down_face(self, cube, face):
+    def _print_top_down_face(self, cube, face) -> str:
         result = ""
         for index, color in enumerate(cube.get_face_flat(face)):
             if index % cube.size == 0:
@@ -65,9 +66,12 @@ class CubePrintStr:
                 result += "\n"
         return result
 
-    def print_cube(self):
+    def print_cube(self, orientation: CubeMove | str = '') -> str:
         "Print the cube to stdout"
         cube = self._cube
+
+        if orientation:
+            cube.rotate([orientation])
 
         # flatten middle layer
         print_order_mid = zip(cube.get_face(Face.L), cube.get_face(Face.F),
@@ -88,4 +92,10 @@ class CubePrintStr:
 
         # BOTTOM
         result += self._print_top_down_face(cube, Face.D)
+
+        if orientation:
+            cube.rotate([orientation])
+            if cube._store_history:
+                cube.undo(2)
+
         return result

@@ -306,7 +306,9 @@ class Cube:
         return True
 
     def check_consistency(self) -> bool:
-        """Check the cube for internal consistency"""
+        """
+        Internal method: Check the cube for internal consistency i.e. if all the faces have a color.
+        """
         for face_name in Face:
             face = self.get_face_flat(face_name)
             if any((x is None for x in face)):

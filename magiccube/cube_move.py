@@ -95,34 +95,35 @@ class CubeMove():
         """Number of repetitions of the move"""
 
     @staticmethod
-    def _create_move(result, special_move):
-        if special_move is not None:
-            is_reversed = result[-2] == "'"
-            if special_move in ("X", "x"):
+    def _create_move(layer_str, move_type_str, wide_str, special_move_str, is_reversed_str):
+
+        if special_move_str is not None:
+            is_reversed = is_reversed_str == "'"
+            if special_move_str in ("X", "x"):
                 return CubeMove(CubeMoveType.X, is_reversed)
-            if special_move in ("Y", "y"):
+            if special_move_str in ("Y", "y"):
                 return CubeMove(CubeMoveType.Y, is_reversed)
-            if special_move in ("Z", "z"):
+            if special_move_str in ("Z", "z"):
                 return CubeMove(CubeMoveType.Z, is_reversed)
-            if special_move == "M":
+            if special_move_str == "M":
                 return CubeMove(CubeMoveType.M, is_reversed)
-            if special_move == "E":
+            if special_move_str == "E":
                 return CubeMove(CubeMoveType.E, is_reversed)
-            if special_move == "S":
+            if special_move_str == "S":
                 return CubeMove(CubeMoveType.S, is_reversed)
 
-            raise CubeException(
-                "Invalid special move")  # pragma: no cover
-        move_type = CubeMoveType.create(result[2])
-        wide = result[3] == "w"
-        is_reversed = result[-2] == "'"
+            raise CubeException("Invalid special move")  # pragma: no cover
 
-        if result[0] == "" and not wide:
+        move_type = CubeMoveType.create(move_type_str)
+        wide = wide_str == "w"
+        is_reversed = is_reversed_str == "'"
+
+        if layer_str == "" and not wide:
             layer = 1
-        elif result[0] == "" and wide:
+        elif layer_str == "" and wide:
             layer = 2
         else:
-            layer = int(result[0])
+            layer = int(layer_str)
 
         move = CubeMove(move_type, is_reversed, wide, layer)
         return move
@@ -135,12 +136,23 @@ class CubeMove():
         result_match = CubeMove._regex_pattern.match(move_str)
         if result_match is None:
             raise CubeException("invalid movement " + str(move_str))
-        result = result_match.groups()
-        special_move = result[4]
-        move_count = result[-1]
+        move_parameters = result_match.groups()
 
-        move = CubeMove._create_move(result, special_move)
-        move.count = int(move_count) if move_count else 1
+        layer_str = move_parameters[0]
+        move_type_str = move_parameters[2]
+        wide_str = move_parameters[3]
+        special_move_str = move_parameters[4]
+        is_reversed_str = move_parameters[-2]
+        move_count_str = move_parameters[-1]
+
+        move = CubeMove._create_move(
+            layer_str,
+            move_type_str,
+            wide_str,
+            special_move_str,
+            is_reversed_str
+        )
+        move.count = int(move_count_str) if move_count_str else 1
         return move
 
     def reverse(self):
